@@ -1,12 +1,6 @@
 <?php
-include 'header.php';
+include 'connection.php';
 include_once 'function.php';
-
-/*$annonces = [];
-$result = [];
-$reparations = [];
-$horaires = [];
-$images = [];*/
 
 //-----Annonces
 $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, 
