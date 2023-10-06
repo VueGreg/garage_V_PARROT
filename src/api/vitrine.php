@@ -1,6 +1,9 @@
 <?php
-include 'connection.php';
-include_once 'function.php';
+
+require_once './function.php';
+require_once './connection.php';
+
+
 
 //-----Annonces
 $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, 

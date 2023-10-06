@@ -1,5 +1,5 @@
 <?php
-include_once 'connection.php';
+require_once './connection.php';
 
 function return_json($success, $msg, $results=null){
     $return["success"] = $success;

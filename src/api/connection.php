@@ -1,9 +1,6 @@
 <?php
-include 'function.php';
-require_once './vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require_once './function.php';
+require_once '../../Dotenv.php';
 
 header('Content-Type: application/json');
 
@@ -13,7 +10,7 @@ $user = $_ENV['DATABASE_USER'];
 $password = $_ENV['DATABASE_PASSWORD'];
 
 try {
-    $data = new PDO("mysql:host=".$host.";dbname=".$dbname.'"', $user, $password);
+    $data = new PDO('mysql:host='.$host.';dbname='.$dbname.';', $user, $password);
 
 } catch (PDOException $e) {
     return_json(false, $e->getMessage());
