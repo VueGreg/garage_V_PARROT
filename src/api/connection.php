@@ -3,6 +3,8 @@ require_once './function.php';
 require_once '../../Dotenv.php';
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 $host = $_ENV['DATABASE_HOST'];
 $dbname = $_ENV['DATABASE_DBNAME'];
