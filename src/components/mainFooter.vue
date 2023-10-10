@@ -10,7 +10,6 @@
     .then (response => {
         informations.value = response.data.informations
         horaires.value = response.data.horaires
-        console.log(horaires.value)
     })
     .catch (e => {
         console.error(e)
@@ -40,11 +39,11 @@
                 </div>
                 <p>Information de contact</p>
             </div>
-            <div class="footer__text">
-                <p>{{ informations[0].adresse }}</p>
-                <p>{{ informations[0].code_postal }}  {{ informations[0].ville }}</p>
-                <p>{{ informations[0].num_telephone }}</p>
-                <p class="mail">{{ informations[0].mail }}</p>
+            <div class="footer__text" v-for="information in informations" :key="information.id">
+                <p>{{ information.adresse }}</p>
+                <p>{{ information.code_postal }}  {{ information.ville }}</p>
+                <p>{{ information.num_telephone }}</p>
+                <p class="mail">{{ information.mail }}</p>
             </div>
         </div>
 
@@ -63,6 +62,11 @@
                     </tr>
                 </table>
             </div>
+        </div>
+
+        <div class="copyright row">
+            <p>Tous droit reservé à l'évaluation ECF STUDI</p>
+            <p>Créer par G.WOLFF</p>
         </div>
 
     </footer>
@@ -138,6 +142,20 @@
 
     .mail{
         color: $primary-color;
+    }
+
+    .copyright{
+        background-color: $primary-color;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 3vh;
+
+        p{
+            margin: 0;
+            width: auto;
+            font-size: 0.7em;
+        }
     }
 
 </style>

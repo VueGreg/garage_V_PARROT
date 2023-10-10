@@ -1,8 +1,9 @@
 <script setup>
+import CarouselHome from '../components/carouselHome.vue';
 
 
 </script>
 
 <template>
-    <p>Ceci est ma page d'acceuil</p>
+    <CarouselHome/>
 </template>
