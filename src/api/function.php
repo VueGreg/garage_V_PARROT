@@ -2,9 +2,9 @@
 require_once './connection.php';
 
 function return_json($success, $msg, $results=null){
+    $return = $results;
     $return["success"] = $success;
     $return["message"] = $msg;
-    $return["data"] = $results;
 
     echo json_encode($return);
 }

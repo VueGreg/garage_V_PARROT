@@ -43,20 +43,10 @@
             &:focus::before{
                 content: '';
                 position: absolute;
-                width: 100%;
-                height: 85%;
+                width: 120%;
+                height: 165%;
                 border-bottom: 5px solid rgb(255, 255, 255);
-                translate: -10%;
-            }
-
-            &:hover::before{
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 85%;
-                border-bottom: 5px solid rgb(255, 255, 255);
-                translate: -10%;
-                animation: animate 0.2s linear;
+                translate: -8%;
             }
         }
 
@@ -83,6 +73,28 @@
 
             a{
                 padding: 1em;
+            }
+        }
+
+        .nav__navigate-link{
+
+            &:focus::before{
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 85%;
+                border-bottom: 5px solid rgb(255, 255, 255);
+                translate: -10%;
+            }
+
+            &:hover::before{
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 85%;
+                border-bottom: 5px solid rgb(255, 255, 255);
+                translate: -10%;
+                animation: animate 0.2s linear;
             }
         }
     }

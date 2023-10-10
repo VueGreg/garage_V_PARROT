@@ -87,6 +87,7 @@
                 font-size: 1em;
                 font-weight: 600;
                 margin-left: 0.5em;
+                margin-top: 0.8em;
             }
         }
     }
