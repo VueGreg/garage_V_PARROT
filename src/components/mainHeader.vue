@@ -1,65 +1,52 @@
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios';
-
-    const logo = ref([])
-
-    axios
-    .get("http://localhost/src/api/vitrine.php?nom=Logo")
-    .then(response => {
-        logo.value = response.data
-    })
-    .catch(e => {
-        console.error(e)
-    })
 
 </script>
 
 <template>
     <header>
         <div class="logo">
-            <img class="logo__image" :src="logo.data.images[0].adresse" :alt="logo.data.images[0].alt">
+            <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
             <p class="logo__text">GARAGE V.PARROT</p>
         </div>
 
         <div class="button">
             <!--Call btn-->
-            <div class="button__header">
+            <a class="button__header" href="#">
                 <div class="button__header-circle">
                     <i class="fa-solid fa-phone" style="color: #ffffff;"></i>
                 </div>
                 <p class="button__header-text">Appeler</p>
-            </div>
+            </a>
 
             <!--Schedule btn-->
-            <div class="button__header">
+            <a class="button__header" href="#">
                 <div class="button__header-circle">
                     <i class="fa-solid fa-clock" style="color: #ffffff;"></i>
                 </div>
                 <p class="button__header-text">Horaires</p>
-            </div>
+            </a>
 
-            <div class="button__header">
+            <!--Connection btn-->
+            <a class="button__header" href="#">
                 <div class="button__header-circle">
                     <i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i>
                 </div>
                 <p class="button__header-text">Connexion</p>
-            </div>
+            </a>
         </div>
     </header>
 </template>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variable.scss';
+@import '@/assets/scss/mixins.scss';
 
     header {
         background-color: $dark-grey;
         height: 22vh;
     }
     .logo{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @include flex-center;
 
             &__image{
                 height: 75px;
@@ -80,10 +67,9 @@ import axios from 'axios';
         align-items: center;
 
         &__header{
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 32vw;
+            @include flex-center;
+            width: 30vw;
+            text-decoration: none;
 
             &-circle{
                 border-radius: 50%;
@@ -100,6 +86,7 @@ import axios from 'axios';
                 font-family: $font-text-primary;
                 font-size: 1em;
                 font-weight: 600;
+                margin-left: 0.5em;
             }
         }
     }

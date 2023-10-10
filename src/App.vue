@@ -1,11 +1,13 @@
 <script setup>
   import mainHeader from './components/mainHeader.vue';
-  import AcceuilView from './views/AcceuilView.vue';
+  import NavBar from './components/navBar.vue';
+  import { RouterView } from 'vue-router';
 </script>
 
 <template>
   <mainHeader/>
-  <AcceuilView />
+  <NavBar />
+  <RouterView />
 </template>
 
 <style scoped>
