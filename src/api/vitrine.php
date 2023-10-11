@@ -34,12 +34,17 @@ require_once './connection.php';
         $sql_infos = "SELECT * FROM entreprise";
         $informations = simple_fetch_data($sql_infos);
 
+        //-----Témoignages
+        $sql_temoignages = "SELECT * FROM temoignages";
+        $temoignages = simple_fetch_data($sql_temoignages);
+
         $result["nb_reparation"] = count($reparations);
         $result["nb_annonces"] = count($annonces);
         $result["annonces"] = $annonces;
         $result["reparations"] = $reparations;
         $result["horaires"] = $horaires;
         $result["informations"] = $informations;
+        $result["temoignages"] = $temoignages;
 
 
 

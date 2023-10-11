@@ -3,13 +3,13 @@
     const images = [
         {
             id:1, 
-            adresse:"http://gregory-wolff.com/images/slide__repair-background.png", 
+            adresse:"http://gregory-wolff.com/images/slide__repair-background(3).png", 
             title:"REPARATIONS", 
             text:"Prenez rendez-vous dans notre centre"
         },
         {
             id:2,
-            adresse:"http://gregory-wolff.com/images/198373918_l_normal_none 1.png",
+            adresse:"http://gregory-wolff.com/images/198373918_l_normal_none 1(5).png",
             title:"VEHICULES D'OCCASION",
             text:"Achetez votre véhicule d’occasion contrôlée & garantie"
         },
@@ -21,18 +21,16 @@
         }
     ]
 
-    console.log(images)
-
 </script>
 
 <template>
-        <div id="carouselExample" class="carousel slide">
+        <div class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active" v-for="image in images" :key="image.id">
                     <img class="d-block w-100" :src= image.adresse>
-                    <div class="carousel-caption d-md-block">
-                        <h5>{{ image.title }}</h5>
-                        <p>{{ image.text }}</p>
+                    <div class="carousel-caption d-md-block carousel__text">
+                        <h5 class="carousel__text-title">{{ image.title }}</h5>
+                        <p class="carousel__text-description">{{ image.text }}</p>
                     </div>
                 </div>
             </div>
@@ -46,3 +44,14 @@
             </button>
     </div>
 </template>
+
+<style lang="scss" scoped>
+
+    .carousel__text{
+        &-title{
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba($color: #000000, $alpha: 0.5);
+        }
+    }
+
+</style>
