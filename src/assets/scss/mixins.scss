@@ -3,3 +3,10 @@
     justify-content: center;
     align-items: center;
 }
+
+@mixin h2-main {
+    text-align: center;
+    color: $primary-color;
+    margin: 3em auto;
+    font-size: 1.4em;
+}

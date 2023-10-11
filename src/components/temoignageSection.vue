@@ -73,10 +73,7 @@
     @import '@/assets/scss/mixins.scss';
 
     h2{
-        text-align: center;
-        color: $primary-color;
-        margin-top: 5em;
-        font-size: 1.4em;
+        @include h2-main;
     }
 
     section{

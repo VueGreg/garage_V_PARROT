@@ -66,16 +66,14 @@
         margin: 0;
     }
 
-    h2,
     h3{
         color: $primary-color;
-        font-weight: 600;
+        font-weight: 800;
+        font-size: 1.6em;
     }
 
     h2{
-        margin: 2em auto;
-        font-size: 1.5em;
-        width: 80vw;
+        @include h2-main;
     }
 
     button{

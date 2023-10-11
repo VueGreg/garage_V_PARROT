@@ -16,11 +16,10 @@
 
     .expertise{
         background-color: $light-grey;
+        padding: 1em;
 
         &__title {
-            color: $primary-color;
-            padding: 2em 0;
-            font-weight: 600;
+            @include h2-main;
         }
 
         &__image {
