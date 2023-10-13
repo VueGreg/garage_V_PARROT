@@ -77,12 +77,7 @@
     }
 
     button{
-        border: 3px solid $color-text-dark;
-        color: $color-text-dark;
-        border-radius: 10px;
-        background: white;
-        padding: 0.5em 1em;
-        margin: 3em 0;
+        @include btn-style($dark-grey);
     }
     .cards{
         display: flex;
