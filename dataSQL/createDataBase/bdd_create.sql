@@ -16,7 +16,7 @@ CREATE TABLE `entreprise` (
   `twitter` VARCHAR(255) NOT NULL,
   `linkedin` VARCHAR(255) NOT NULL,
   `instagram` VARCHAR(255) NOT NULL
-) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_unicode_ci;
 
 CREATE TABLE `reparations` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -99,7 +99,7 @@ CREATE TABLE `list_equipements` (
     `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
     `id_equipements` INT(11) NOT NULL , 
     `id_annonces` INT(11) NOT NULL 
-) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_general_ci; 
+) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_bin; 
 
 ALTER TABLE `list_equipements`
 ADD CONSTRAINT `equipements` FOREIGN KEY (`id_equipements`) REFERENCES `equipements`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 

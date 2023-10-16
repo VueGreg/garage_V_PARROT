@@ -1,27 +1,25 @@
 <script setup>
-    import axios from 'axios';
+    import axios from 'axios'
     import { ref } from 'vue';
-    import { RouterLink } from 'vue-router';
 
     const annonces = ref([])
-    const lastAnnonces = ref([])
-    
+
+
     axios
     .get('http://localhost/src/api/vitrine.php')
     .then (response => {
         annonces.value = response.data.annonces
-        lastAnnonces.value = annonces.value.slice(-3)
     })
     .catch (e => {
         console.error(e)
     })
 
+
 </script>
 
 <template>
-    <section class="container text-center">
-        <h2>NOS DERNIERS VEHICULES INTRODUIT DANS LE PARC</h2>
-        <div class="cards" v-for="annonce in lastAnnonces" :key="annonce.numero_annonce">
+    <h2>RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
+        <div class="cards" v-for="annonce in annonces" :key="annonce.numero_annonce">
             <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
             <div class="cards__image">
                 <img :src=annonce.photo>
@@ -39,32 +37,18 @@
                     <h3>{{ annonce.prix }}€</h3>
                 </div>
             </div>
-            </RouterLink>
+        </RouterLink>
         </div>
-
-        <button><RouterLink class="link" active-class="active" to="/annonces">Afficher tous les véhicules</RouterLink></button>
-    </section>
 </template>
 
 <style lang="scss" scoped>
+
     @import '@/assets/scss/variable.scss';
     @import '@/assets/scss/mixins.scss';
-
-    .active {
-        color: $dark-grey;
-    }
 
     .link {
         text-decoration: none;
         color: $dark-grey;
-    }
-
-    .send{
-        @include flex-center;
-
-        & p{
-            margin-left: 0.5em;
-        }
     }
 
     p {
@@ -86,11 +70,9 @@
 
     h2{
         @include h2-main;
+        width: 80vw;
     }
 
-    button{
-        @include btn-style($dark-grey);
-    }
     .cards{
         display: flex;
         flex-direction: column;

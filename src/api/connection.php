@@ -28,7 +28,7 @@ $user = $_ENV['DATABASE_USER'];
 $password = $_ENV['DATABASE_PASSWORD'];
 
 try {
-    $data = new PDO('mysql:host='.$host.';dbname='.$dbname.';', $user, $password);
+    $data = new PDO('mysql:host='.$host.';dbname='.$dbname.';charset=utf8', $user, $password);
 
 } catch (PDOException $e) {
     return_json(false, $e->getMessage());

@@ -16,7 +16,7 @@
         console.error(e)
     })
 
-    const getHoraires = () => {
+    function getHoraires() {
         horaires.value.forEach(horaire => {
             //const horaireReplace = new Date(horaire)
             //horaires.indexOf(horaire) = horaireReplace.getHours() & ":" & horaireReplace.getMinutes()

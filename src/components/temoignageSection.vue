@@ -1,17 +1,7 @@
 <script setup>
-    import axios from 'axios';
-    import { ref } from 'vue';
+    import { defineProps } from 'vue';
 
-    const temoignages = ref([])
-
-    axios
-    .get('http://localhost/src/api/vitrine.php')
-    .then (response => {
-        temoignages.value = response.data.temoignages
-    })
-    .catch (e => {
-        console.error(e)
-    })
+    const {temoignages} = defineProps(['temoignages'])
 
 </script>
 

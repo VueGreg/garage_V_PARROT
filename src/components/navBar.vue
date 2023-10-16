@@ -1,14 +1,14 @@
 <script setup>
-
+    import { RouterLink } from 'vue-router';
 </script>
 
 
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark nav__navigate">
     <div class="container-fluid">
-            <a class="nav__navigate-link" href="#">Acceuil</a>
+            <RouterLink class="nav__navigate-link" active-class="active" to="/">Acceuil</RouterLink>
             <a class="nav__navigate-link" href="#">Reparation</a>
-            <a class="nav__navigate-link" href="#">Véhicules d'occasion</a>
+            <RouterLink class="nav__navigate-link" active-class="active" to="/annonces">Véhicules d'occasion</RouterLink>
         <button class="nav__navigate-btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -26,6 +26,10 @@
 <style lang="scss" scoped>
 @import '@/assets/scss/variable.scss';
 @import '@/assets/scss/mixins.scss';
+
+    .active {
+        color: $dark-grey;
+    }
     .nav__navigate{
         background-color: $primary-color;
 

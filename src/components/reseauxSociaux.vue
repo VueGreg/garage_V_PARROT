@@ -8,7 +8,6 @@
     .get('http://localhost/src/api/vitrine.php')
     .then (response => {
         socialNetworks.value = response.data.informations[0]
-        console.log(socialNetworks.value)
     })
     .catch (e => {
         console.error(e)
