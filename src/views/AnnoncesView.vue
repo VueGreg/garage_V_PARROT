@@ -51,7 +51,6 @@
         .post('http://localhost/src/api/vehicle.php')
         .then (response => {
             annonces.value = response.data
-            console.log(annonces.value)
         })
         .catch (e => {
             console.error(e)
@@ -143,7 +142,6 @@
         .then(response => {
             annonces.value = []
             annonces.value = response.data
-            console.log(annonces.value)
         })
         .catch(e => {
             console.error(e)

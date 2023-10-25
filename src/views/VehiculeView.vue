@@ -5,19 +5,19 @@
     import { ref } from 'vue';
 
     const route = useRoute()
-    const vehicule = ref ([])
-    const informations = ref ([])
+    const vehicules = ref ([])
+    //const informations = ref ([])
     const showStats = ref(false)
 
-    const carId = route.params.annonce
+    const carId = parseInt(route.params.annonce)
 
     axios
-    .get(`http://localhost/src/api/vehicle.php?annonce=${carId}`)
+    .post('http://localhost/src/api/vehicle.php', {
+        annonce: carId
+    })
     .then (response => {
-        if (response.data.success == true) {
-            vehicule.value = response.data
-            informations.value = response.data.infos
-        } else document.location.href="/erreur"; 
+            vehicules.value = response.data
+        // else document.location.href="/erreur"; 
     })
     .catch (e => {
         console.error(e)
@@ -26,10 +26,10 @@
 </script>
 
 <template>
-    <div class="title" v-for="info in informations">
-        <h2>{{ info.marque }} {{ info.modele }}</h2>
-        <h4>{{ info.motorisation }}</h4>
-        <h5>{{ info.prix }}€</h5>
+    <div class="title" v-for="vehicule in vehicules">
+        <h2>{{ vehicule.marque }} {{ vehicule.modele }}</h2>
+        <h4>{{ vehicule.motorisation }}</h4>
+        <h5>{{ vehicule.prix }}€</h5>
     </div>
 
     <div class="btn">
@@ -37,9 +37,11 @@
         <span>Je souhaite en savoir plus</span>
     </div>
 
+    <div class="photos" v-for="vehicule in vehicules">
         <div class="images" v-for="image in vehicule.images" :key="image.id">
             <img :src="image.photo" alt="">
         </div>
+    </div>
     
     <div class="informations">
 
@@ -47,36 +49,36 @@
                     <button @click="showStats=false" :class="{active: !showStats}">Caractéristiques</button>
                     <button @click="showStats=true" :class="{active: showStats}">Equipements</button>
         </div>
-        <div class="informations__caracteristiques" v-if="!showStats" v-for="info in informations">
+        <div class="informations__caracteristiques" v-if="!showStats" v-for="vehicule in vehicules">
             <table class="table-responsive">
                 <tr>
                     <td>Année:</td>
-                    <td>{{ info.annee }}</td>
+                    <td>{{ vehicule.annee }}</td>
                 </tr>
                 <tr>
                     <td>Kilométrage:</td>
-                    <td>{{ info.kilometrage }}km</td>
+                    <td>{{ vehicule.kilometrage }}km</td>
                 </tr>
                 <tr>
                     <td>Energie:</td>
-                    <td>{{ info.energie }}</td>
+                    <td>{{ vehicule.energie }}</td>
                 </tr>
                 <tr>
                     <td>Puissance:</td>
-                    <td>{{ info.puissance }}ch</td>
+                    <td>{{ vehicule.puissance }}ch</td>
                 </tr>
                 <tr>
                     <td>Motorisation:</td>
-                    <td>{{ info.motorisation }}</td>
+                    <td>{{ vehicule.motorisation }}</td>
                 </tr>
                 <tr>
                     <td>Boite de vitesse:</td>
-                    <td>{{ info.boite_vitesse }}</td>
+                    <td>{{ vehicule.boite_vitesse }}</td>
                 </tr>
             </table>
         </div>
-            <div class="informations__equipement" >
-                <p v-if="showStats" v-for="equipement in vehicule.equipement" :key="equipement.id">{{ equipement.equipement }}</p>
+            <div class="informations__equipement" v-for="vehicule in vehicules" >
+                <p v-if="showStats" v-for="equipement in vehicule.equipements" :key="equipement.id">{{ equipement.equipement }}</p>
             </div>
     </div>
 

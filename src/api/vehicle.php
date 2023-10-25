@@ -1,5 +1,7 @@
 <?php
 
+use function PHPSTORM_META\type;
+
 require_once './function.php';
 require_once './connection.php';
 
@@ -77,42 +79,45 @@ function getCars() {
                         )";
 
                         //Remplacer les valeurs vide par une valeur traitable par BETWEEN
-                        if ($minYear == "") {
-                                $minYear = 1900;
-                        }
+                        if ($annonce == "") {
+
+                                if ($minYear == "") {
+                                        $minYear = 1900;
+                                }
 
 
-                        if ($maxYear == "") {
-                                $currentDate = new DateTime();
-                                $maxYear = $currentDate->format("Y");
-                        }
+                                if ($maxYear == "") {
+                                        $currentDate = new DateTime();
+                                        $maxYear = $currentDate->format("Y");
+                                }
 
-                        if ($minKilometer == "") {
-                                $minKilometer = 0;
-                        }
+                                if ($minKilometer == "") {
+                                        $minKilometer = 0;
+                                }
 
-                        if ($maxKilometer == "") {
-                                $maxKilometer = 500000;
-                        }
+                                if ($maxKilometer == "") {
+                                        $maxKilometer = 500000;
+                                }
 
-                        if ($mark == "") {
-                                $mark = "%";
-                        }
+                                if ($mark == "") {
+                                        $mark = "%";
+                                }
 
-                        if ($model == "") {
-                                $model = "%";
-                        }
+                                if ($model == "") {
+                                        $model = "%";
+                                }
 
-                        if ($energy == "") {
-                                $energy = "%";
-                        }
+                                if ($energy == "") {
+                                        $energy = "%";
+                                }
 
-                        if ($minPrice == "") {
-                                $minPrice = 0;
-                        }
+                                if ($minPrice == "") {
+                                        $minPrice = 0;
+                                }
 
-                        if ($maxPrice == "") {
-                                $maxPrice = 500000;
+                                if ($maxPrice == "") {
+                                        $maxPrice = 500000;
+                                }
                         }
 
                         global $data;
