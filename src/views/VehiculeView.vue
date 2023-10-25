@@ -217,7 +217,12 @@
     .images img{
         width: 80vw;
         height: auto;
-        margin: 2em auto;
+        margin: 1em auto;
+    }
+
+    img {
+        border-radius: 3px;
+        box-shadow: 2px 2px 10px rgba($color: #000000, $alpha: 0.3);
     }
 
 </style>
