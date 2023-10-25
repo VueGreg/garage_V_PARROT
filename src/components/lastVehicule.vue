@@ -7,9 +7,9 @@
     const lastAnnonces = ref([])
     
     axios
-    .get('http://localhost/src/api/vitrine.php')
+    .post('http://localhost/src/api/vehicle.php')
     .then (response => {
-        annonces.value = response.data.annonces
+        annonces.value = response.data
         lastAnnonces.value = annonces.value.slice(-3)
     })
     .catch (e => {

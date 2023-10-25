@@ -15,12 +15,22 @@
     axios
     .get('http://localhost/src/api/vitrine.php')
     .then (response => {
-        annonces.value = response.data.annonces
         temoignages.value = response.data.temoignages
     })
     .catch (e => {
         console.error(e)
     })
+
+    axios
+    .get('http://localhost/src/api/vehicle.php')
+    .then (response => {
+        annonces.value = response.data
+    })
+    .catch (e => {
+        console.error(e)
+    })
+
+
 
 
 </script>

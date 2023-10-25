@@ -3,110 +3,150 @@
     import { ref, watch } from 'vue';
 
     const annonces = ref([])
-    const modeles = ref([])
-    const arrayMarque = ref([])
-    const uniqueMarque= ref([])
-    const energies = ref([])
-    const arrayEnergie = ref([])
-    const uniqueEnergie = ref([])
 
-    const marque = ref()
-    const modele = ref()
-    const energie = ref()
-    const prixMin = ref(40)
-    const prixMax = ref(60)
-    const kilometerMax = ref(40)
-    const kilometerMin = ref(60)
-    const yearMax = ref(2010)
-    const yearMin = ref(1990)
+    const marques = ref([])
+    const modeles = ref([])
+    const energies = ref([])
+
+    //models
+    const marque = ref("")
+    const modele = ref("")
+    const energie = ref("")
+    const prixMin = ref(9790)
+    const prixMax = ref(31099)
+    const kilometerMin = ref(8600)
+    const kilometerMax = ref(152900)
+    const yearMin = ref(2010)
+    const yearMax = ref(2021)
+
+    const yearMaxRequest = ref()
+    const yearMinRequest = ref()
+    const kilometerMaxRequest = ref()
+    const kilometerMinRequest = ref()
+    const prixMaxRequest = ref()
+    const prixMinRequest = ref()
 
     //HTTP REQUEST-------------------------------------------------
 
     axios
-    .get('http://localhost/src/api/vitrine.php')
+    .get('http://localhost/src/api/filter.php')
     .then (response => {
-        annonces.value = response.data.annonces
-        getModeles(annonces.value)
-        getEnergie(annonces.value)
-        filterTable(annonces.value, uniqueMarque, arrayMarque)
-        //filterTableEnergie(annonces.value, uniqueEnergie, arrayEnergie)
+        marques.value = response.data.marque
+        modeles.value = response.data.modele
+        energies.value = response.data.energie
+        yearMinRequest.value = response.data.annee_min
+        yearMaxRequest.value = response.data.annee_max
+        kilometerMinRequest.value = response.data.kilometre_min
+        kilometerMaxRequest.value = response.data.kilometre_max
+        prixMinRequest.value = response.data.prix_min
+        prixMaxRequest.value = response.data.prix_max
     })
     .catch (e => {
         console.error(e)
     })
 
+
+    if (annonces.value.length == 0) {
+        axios
+        .post('http://localhost/src/api/vehicle.php')
+        .then (response => {
+            annonces.value = response.data
+            console.log(annonces.value)
+        })
+        .catch (e => {
+            console.error(e)
+        })
+    }
+
     //WATCHER-------------------------------------------------
 
     watch(() => marque.value, () => {
-        modeles.value = []
-        getModeles(annonces.value, marque.value)
-        energies.value = []
-        getEnergie(annonces.value)
+        axios
+        .get(`http://localhost/src/api/filter.php?mark=${marque.value}`)
+        .then (response => {
+            modeles.value = []
+            energies.value = []
+            energie.value = ""
+            modeles.value = response.data.modele
+            energies.value = response.data.energie
+        })
+        .catch (e => {
+            console.error(e)
+        })
     })
 
     watch(() => modele.value, () => {
-        energies.value = []
-        getEnergie(annonces.value, modele.value)
+        axios
+        .get(`http://localhost/src/api/filter.php?model=${modele.value}`)
+        .then (response => {
+            energies.value = []
+            energies.value = response.data.energie
+        })
+        .catch (e => {
+            console.error(e)
+        })
     })
 
+
     watch(() => prixMin.value, () => {
-        document.querySelector('#outputPriceMini').style.left = prixMin.value * 3 + 'px'
+        document.querySelector('#outputPriceMini').style.left = prixMin.value / 120 + 'px'
     })
 
     watch(() => prixMax.value, () => {
-        document.querySelector('#outputPriceMaxi').style.left = prixMax.value * 3 + 'px'
+        document.querySelector('#outputPriceMaxi').style.left = prixMax.value / 120 + 'px'
     })
 
-    watch(() => kilometerMin.value, () => {
-        document.querySelector('#outputKilometerMin').style.left = kilometerMin.value * 3 + 'px'
+    watch(() => kilometerMin.value, (event) => {
+        document.querySelector('#outputKilometerMin').style.left = kilometerMin.value / 550 + 'px'
     })
 
-    watch(() => kilometerMax.value, () => {
-        document.querySelector('#outputKilometerMax').style.left = kilometerMax.value * 3 + 'px'
+    watch(() => kilometerMax.value, (event) => {
+        document.querySelector('#outputKilometerMax').style.left = kilometerMax.value / 550 + 'px'
     })
 
     watch(() => yearMin.value, () => {
-        document.querySelector('#outputYearMin').style.left = (yearMin.value-1980) * 3 + 'px'
+        document.querySelector('#outputYearMin').style.left = (yearMin.value-yearMinRequest.value) * 25 + 'px'
     })
 
     watch(() => yearMax.value, () => {
-        document.querySelector('#outputYearMax').style.left = (yearMax.value-1950) * 3 + 'px'
+        document.querySelector('#outputYearMax').style.left = (yearMax.value-yearMinRequest.value) * 25 + 'px'
     })
 
 
     //FUNCTIONS-------------------------------------------------
 
-    const getModeles = (array, mark = null) => {
-        array.forEach(annonce => {
-            if (annonce.marque == mark && mark != null) {
-                modeles.value.push(annonce.modele)
-            }else if (mark == null) {
-                modeles.value.push(annonce.modele)
-            }
-        })
+    const initialize = () => {
+        marque.value = ""
+        modele.value = ""
+        energie.value = ""
+        prixMin.value = prixMinRequest.value*40/100
+        prixMax.value = prixMaxRequest.value*60/100
+        kilometerMin.value = kilometerMinRequest.value*40/100
+        kilometerMax.value = kilometerMaxRequest.value*60/100
+        yearMin.value = 2010
+        yearMax.value = 2021
     }
 
-    const getEnergie = (array, mod = null) => {
-        array.forEach(annonce => {
-            if (annonce.modele == mod && mod != null) {
-                energies.value.push(annonce.energie)
-            }else if (mod == null) {
-                energies.value.push(annonce.energie)
-            }
+    const searchCars = () => {
+        axios
+        .post('http://localhost/src/api/vehicle.php', {
+            mark: marque.value,
+            model: modele.value,
+            energy: energie.value,
+            minyear: yearMin.value,
+            maxyear: yearMax.value,
+            minkilometer: kilometerMin.value,
+            maxkilometer: kilometerMax.value,
+            minprice: prixMin.value,
+            maxprice: prixMax.value
         })
-    }
-
-    const filterTable = (arraySearch, uniqueTable, pushTable) => {
-        arraySearch.forEach(element => {
-            pushTable.value.push(element.marque)
-            uniqueTable.value = pushTable.value.filter((x, i) => pushTable.value.indexOf(x) === i);
+        .then(response => {
+            annonces.value = []
+            annonces.value = response.data
+            console.log(annonces.value)
         })
-    }
-
-    const filterTableEnergie = (arraySearch, uniqueTable, pushTable) => {
-        arraySearch.forEach(element => {
-            pushTable.value.push(element.energie)
-            uniqueTable.value = pushTable.value.filter((x, i) => pushTable.value.indexOf(x) === i);
+        .catch(e => {
+            console.error(e)
         })
     }
 
@@ -122,67 +162,67 @@
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Affiner ma recherche</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Affiner ma recherche</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="offcanvas__row">
+            <div class="offcanvas__selectdiv">
+                <select class="offcanvas__select" v-model="marque" name="marque" id="marque">
+                    <option value="0" disabled selected>Marque</option>
+                    <option v-for="marque in marques" :value="marque">{{ marque }}</option>
+                </select>
             </div>
-            <div class="offcanvas-body">
-                <div class="offcanvas__row">
-                    <div class="offcanvas__selectdiv">
-                        <select class="offcanvas__select" v-model="marque" name="marque" id="marque">
-                            <option value="0" disabled selected>Marque</option>
-                            <option v-for="marque in uniqueMarque" :value="marque">{{ marque }}</option>
-                        </select>
-                    </div>
-                    <div class="offcanvas__selectdiv">
-                        <select class="offcanvas__select" v-model="modele" name="modele" id="modele">
-                            <option value="0" disabled selected>Modèle</option>
-                            <option v-for="modele in modeles" :value="modele">{{ modele }}</option>
-                        </select>
-                    </div>
-                    <div class="offcanvas__selectdiv">
-                        <select class="offcanvas__select" v-model="energie" name="energie" id="energie">
-                            <option value="0" disabled selected>Energie</option>
-                            <option v-for="energie in energies" :value="energie">{{ energie }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="offcanvas__row">
-                    <section class="range-slider">
-                        <h6>Prix</h6>
-                        <label for="priceMini" id="outputPriceMini" class="output outputOne">{{ prixMin }}</label>
-                        <label for="priceMaxi" id="outputPriceMaxi" class="output outputTwo">{{ prixMax }}</label>
-                        <span class="full-range"></span>
-                        <span class="incl-range"></span>
-                        <input id="priceMini" name="priceMini" min="0" max="100" step="1" type="range" v-model="prixMin">
-                        <input id="priceMaxi" name="priceMaxi" min="0" max="100" step="1" type="range" v-model="prixMax">
-                    </section>
-
-                    <section class="range-slider">
-                        <h6>Kilométrage</h6>
-                        <label for="kilometerMin" id="outputKilometerMin" class="output outputOne">{{ kilometerMin }}</label>
-                        <label for="kilometerMax" id="outputKilometerMax" class="output outputTwo">{{ kilometerMax }}</label>
-                        <span class="full-range"></span>
-                        <span class="incl-range"></span>
-                        <input id="kilometerMin" name="kilometerMin" min="0" max="100" step="1" type="range" v-model="kilometerMin">
-                        <input id="kilometerMax" name="kilometerMax" min="0" max="100" step="1" type="range" v-model="kilometerMax">
-                    </section>
-
-                    <section class="range-slider">
-                        <h6>Année</h6>
-                        <label for="yearMin" id="outputYearMin" class="output outputOne">{{ yearMin }}</label>
-                        <label for="yearMax" id="outputYearMax" class="output outputTwo">{{ yearMax }}</label>
-                        <span class="full-range"></span>
-                        <span class="incl-range"></span>
-                        <input id="yearMin" name="yearMin" min="1980" max="2023" step="1" type="range" v-model="yearMin">
-                        <input id="yearMax" name="yearMax" min="1980" max="2023" step="1" type="range" v-model="yearMax">
-                    </section>
-                </div>
-
-                <div class="offcanvas__btn">
-                    <button>Reinitialiser</button>
-                    <button>Rechercher</button>
-                </div>
+            <div class="offcanvas__selectdiv">
+                <select class="offcanvas__select" v-model="modele" name="modele" id="modele">
+                    <option value="0" disabled selected>Modèle</option>
+                    <option v-for="modele in modeles" :value="modele">{{ modele }}</option>
+                </select>
             </div>
+            <div class="offcanvas__selectdiv">
+                <select class="offcanvas__select" v-model="energie" name="energie" id="energie">
+                    <option value="0" disabled selected>Energie</option>
+                    <option v-for="energie in energies" :value="energie">{{ energie }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="offcanvas__row">
+            <section class="range-slider">
+                <h6>Prix</h6>
+                <label for="priceMini" id="outputPriceMini" class="output outputOne">{{ prixMin }}€</label>
+                <label for="priceMaxi" id="outputPriceMaxi" class="output outputTwo">{{ prixMax }}€</label>
+                <span class="full-range"></span>
+                <span class="incl-range"></span>
+                <input id="priceMini" name="priceMini" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMin">
+                <input id="priceMaxi" name="priceMaxi" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMax">
+            </section>
+
+            <section class="range-slider">
+                <h6>Kilométrage</h6>
+                <label for="kilometerMin" id="outputKilometerMin" class="output outputOne">{{ kilometerMin }}km</label>
+                <label for="kilometerMax" id="outputKilometerMax" class="output outputTwo">{{ kilometerMax }}km</label>
+                <span class="full-range"></span>
+                <span class="incl-range"></span>
+                <input id="kilometerMin" name="kilometerMin" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMin">
+                <input id="kilometerMax" name="kilometerMax" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMax">
+            </section>
+
+            <section class="range-slider">
+                <h6>Année</h6>
+                <label for="yearMin" id="outputYearMin" class="output outputOne">{{ yearMin }}</label>
+                <label for="yearMax" id="outputYearMax" class="output outputTwo">{{ yearMax }}</label>
+                <span class="full-range"></span>
+                <span class="incl-range"></span>
+                <input id="yearMin" name="yearMin" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMin">
+                <input id="yearMax" name="yearMax" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMax">
+            </section>
+        </div>
+
+        <div class="offcanvas__btn">
+            <button @click="initialize()">Reinitialiser</button>
+            <button data-bs-dismiss="offcanvas" @click="searchCars()">Rechercher</button>
+        </div>
+    </div>
         </div>
 
         <div class="cards" v-for="annonce in annonces" :key="annonce.numero_annonce">
@@ -401,8 +441,6 @@
     .output {
         position: absolute;
         border:1px solid #999;
-        width: 40px;
-        height: 30px;
         text-align: center;
         color: $primary-color;
         border-radius: 4px;
@@ -411,6 +449,7 @@
         bottom: 75%;
         left: 40%;
         transform: translate(-50%, 0);
+        padding: 0.1em 0.5em;
     }
 
     .output.outputTwo {
@@ -496,5 +535,4 @@
     .incl-range {
         background: rgb(195, 195, 195);
     }
-
 </style>

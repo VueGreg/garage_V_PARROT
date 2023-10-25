@@ -12,7 +12,7 @@
     const carId = route.params.annonce
 
     axios
-    .get(`http://localhost/src/api/vitrine.php?annonce=${carId}`)
+    .get(`http://localhost/src/api/vehicle.php?annonce=${carId}`)
     .then (response => {
         if (response.data.success == true) {
             vehicule.value = response.data
