@@ -12,6 +12,10 @@ require_once './connection.php';
         $sql_reparation = "SELECT * FROM reparations";
         $reparations = simple_fetch_data($sql_reparation);
 
+        //------Categorie Réparations
+        $sql_cat_reparation = "SELECT DISTINCT categorie FROM reparations";
+        $cat_reparations = simple_fetch_data($sql_cat_reparation);
+
         //-----Horaires
         $sql_horaires = "SELECT * FROM horaires";
         $horaires = simple_fetch_data($sql_horaires);
@@ -30,5 +34,6 @@ require_once './connection.php';
         $result["informations"] = $informations;
         $result["temoignages"] = $temoignages;
         $result["images"] = $images;
+        $result["categorie_reparations"] = $cat_reparations;
 
         return_json(true, "200", $result);

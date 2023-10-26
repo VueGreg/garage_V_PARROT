@@ -10,18 +10,10 @@
     .then (response => {
         informations.value = response.data.informations
         horaires.value = response.data.horaires
-        getHoraires()
     })
     .catch (e => {
         console.error(e)
     })
-
-    function getHoraires() {
-        horaires.value.forEach(horaire => {
-            //const horaireReplace = new Date(horaire)
-            //horaires.indexOf(horaire) = horaireReplace.getHours() & ":" & horaireReplace.getMinutes()
-        })
-    }
 
 </script>
 

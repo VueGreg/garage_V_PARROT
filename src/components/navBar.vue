@@ -7,7 +7,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark nav__navigate">
     <div class="container-fluid">
             <RouterLink class="nav__navigate-link" active-class="active" to="/">Acceuil</RouterLink>
-            <a class="nav__navigate-link" href="#">Reparation</a>
+            <RouterLink class="nav__navigate-link" active-class="active" to="/reparations">Reparation</RouterLink>
             <RouterLink class="nav__navigate-link" active-class="active" to="/annonces">Véhicules d'occasion</RouterLink>
         <button class="nav__navigate-btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
