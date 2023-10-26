@@ -6,9 +6,9 @@
 </script>
 
 <template>
-    <section class="container">
-        <h2>NOS CLIENTS TEMOIGNES</h2>
-        <div class="testimony__card" v-for="temoignage in temoignages" :key="temoignage.id">
+    <section class="container row">
+        <h2 class="col-10">NOS CLIENTS TEMOIGNES</h2>
+        <div class="testimony__card col-8" v-for="temoignage in temoignages" :key="temoignage.id">
             <div class="testimony__card-person">
                 <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
             </div>
@@ -64,6 +64,7 @@
 
     h2{
         @include h2-main;
+        margin-bottom: 1em;
     }
 
     section{
@@ -71,7 +72,6 @@
     }
 
     .testimony__card{
-        width: 80vw;
         display: flex;
         flex-direction: column;
         align-items: center;

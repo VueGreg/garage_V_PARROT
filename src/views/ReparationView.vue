@@ -47,8 +47,8 @@
     .repair__card {
         border-radius: 5px;
         box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.2);
-        margin: 2em auto;
         padding: 1em;
+        margin: 3em auto;
         font-size: 0.8em;
         color: $color-text-dark;
         border: 1px solid rgba($color: $color-text-dark, $alpha: 0.4);

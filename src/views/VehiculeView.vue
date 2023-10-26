@@ -26,66 +26,64 @@
 </script>
 
 <template>
-    <div class="title" v-for="vehicule in vehicules">
-        <h2>{{ vehicule.marque }} {{ vehicule.modele }}</h2>
-        <h4>{{ vehicule.motorisation }}</h4>
-        <h5>{{ vehicule.prix }}€</h5>
-    </div>
-
-    <div class="btn">
-        <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
-        <span>Je souhaite en savoir plus</span>
-    </div>
-
-    <div class="photos" v-for="vehicule in vehicules">
-        <div class="images" v-for="image in vehicule.images" :key="image.id">
-            <img :src="image.photo" alt="">
-        </div>
-    </div>
-    
-    <div class="informations">
-
-        <div class="informations__title">
-                    <button @click="showStats=false" :class="{active: !showStats}">Caractéristiques</button>
-                    <button @click="showStats=true" :class="{active: showStats}">Equipements</button>
-        </div>
-        <div class="informations__caracteristiques" v-if="!showStats" v-for="vehicule in vehicules">
-            <table class="table-responsive">
-                <tr>
-                    <td>Année:</td>
-                    <td>{{ vehicule.annee }}</td>
-                </tr>
-                <tr>
-                    <td>Kilométrage:</td>
-                    <td>{{ vehicule.kilometrage }}km</td>
-                </tr>
-                <tr>
-                    <td>Energie:</td>
-                    <td>{{ vehicule.energie }}</td>
-                </tr>
-                <tr>
-                    <td>Puissance:</td>
-                    <td>{{ vehicule.puissance }}ch</td>
-                </tr>
-                <tr>
-                    <td>Motorisation:</td>
-                    <td>{{ vehicule.motorisation }}</td>
-                </tr>
-                <tr>
-                    <td>Boite de vitesse:</td>
-                    <td>{{ vehicule.boite_vitesse }}</td>
-                </tr>
-            </table>
-        </div>
-            <div class="informations__equipement" v-for="vehicule in vehicules" >
-                <p v-if="showStats" v-for="equipement in vehicule.equipements" :key="equipement.id">{{ equipement.equipement }}</p>
+    <main class="row">
+        <div class="title col-8" v-for="vehicule in vehicules">
+            <h2>{{ vehicule.marque }} {{ vehicule.modele }}</h2>
+            <h4>{{ vehicule.motorisation }}</h4>
+            <h5>{{ vehicule.prix }}€</h5>
+        <RouterLink class="router" :to="`/contact/${vehicule.numero_annonce}`">
+            <div class="btn col-8">
+                <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
+                <span>Je souhaite en savoir plus</span>
             </div>
-    </div>
+        </RouterLink>
+        </div>
 
-    <div class="btn">
-        <i class="fa-solid fa-envelope"></i>
-        <span>Je souhaite en savoir plus</span>
-    </div>
+        <div class="photos col-8" v-for="vehicule in vehicules">
+            <div class="images" v-for="image in vehicule.images" :key="image.id">
+                <img :src="image.photo" alt="">
+            </div>
+        </div>
+        
+        <div class="informations col-8">
+
+            <div class="informations__title">
+                        <button @click="showStats=false" :class="{active: !showStats}">Caractéristiques</button>
+                        <button @click="showStats=true" :class="{active: showStats}">Equipements</button>
+            </div>
+            <div class="informations__caracteristiques" v-if="!showStats" v-for="vehicule in vehicules">
+                <table class="table-responsive">
+                    <tr>
+                        <td>Année:</td>
+                        <td>{{ vehicule.annee }}</td>
+                    </tr>
+                    <tr>
+                        <td>Kilométrage:</td>
+                        <td>{{ vehicule.kilometrage }}km</td>
+                    </tr>
+                    <tr>
+                        <td>Energie:</td>
+                        <td>{{ vehicule.energie }}</td>
+                    </tr>
+                    <tr>
+                        <td>Puissance:</td>
+                        <td>{{ vehicule.puissance }}ch</td>
+                    </tr>
+                    <tr>
+                        <td>Motorisation:</td>
+                        <td>{{ vehicule.motorisation }}</td>
+                    </tr>
+                    <tr>
+                        <td>Boite de vitesse:</td>
+                        <td>{{ vehicule.boite_vitesse }}</td>
+                    </tr>
+                </table>
+            </div>
+                <div class="informations__equipement" v-for="vehicule in vehicules" >
+                    <p v-if="showStats" v-for="equipement in vehicule.equipements" :key="equipement.id">{{ equipement.equipement }}</p>
+                </div>
+        </div>
+    </main>
 
 </template>
 
@@ -94,9 +92,11 @@
     @import '@/assets/scss/variable.scss';
     @import '@/assets/scss/mixins.scss';
 
+    .router {
+        text-decoration: none
+    }
     .btn {
         @include btn-style($primary-color);
-        width: 50vw;
         margin: 2em auto;
         display: flex;
         justify-content: space-around;
@@ -118,6 +118,8 @@
 
     .informations {
 
+        margin: auto;
+
         &__caracteristiques{
             margin-bottom: 2em;
         }
@@ -128,7 +130,6 @@
             justify-content: space-around;
             align-items: center;
             margin: 2em auto;
-            width: 80vw;
 
             p {
                 border: 1px solid $dark-grey;
@@ -145,7 +146,6 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 80vw;
             margin: auto;
         }
     }
@@ -154,9 +154,9 @@
     table {
         font-size: 0.8em;
         font-weight: 600;
-        width: 80vw;
         margin: auto;
         height: 50vh;
+        width: 100%;
         color: $dark-grey;
 
         tr {
@@ -170,6 +170,7 @@
     }
 
     .title {
+        margin: auto;
         margin-top: 2em;
         font-family: $font-text-nav-card;
     }
@@ -177,7 +178,6 @@
     h2,
     h4,
     h5 {
-        width: 80vw;
         margin: auto;
         text-align: center;
         font-weight: 600;
@@ -214,10 +214,13 @@
         }
     }
 
+    .photos {
+        margin: auto;
+    }
 
     .images,
     .images img{
-        width: 80vw;
+        width: 100%;
         height: auto;
         margin: 1em auto;
     }

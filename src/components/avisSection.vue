@@ -44,9 +44,9 @@
 
 <template>
 
-    <section class="section__form">
-        <h2>LAISSEZ NOUS UN AVIS</h2>
-        <form action="" class="form">
+    <section class="section__form row">
+        <h2 class="col-10">LAISSEZ NOUS UN AVIS</h2>
+        <form class="form col-10">
             <div class="note">
                 <p>Notez nous</p>
                 <div class="rating__stars">
@@ -82,7 +82,7 @@
             </div>
         </form>
 
-        <button @click="sendCom()">Envoyer mon avis</button>
+        <button class="col-6" @click="sendCom()">Envoyer mon avis</button>
         <span class="form__input-alert" v-if="stateForm">Tous les champs ne sont pas renseigné</span>
     </section>
 
@@ -102,7 +102,6 @@
     }
 
     .note{
-        width: 80vw;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -119,6 +118,7 @@
     }
 
     .form {
+        margin: auto;
 
         &__input {
             display: flex;
@@ -126,6 +126,7 @@
             color: $orange-formular;
             position: relative;
             padding: 15px 0 0;
+            margin: auto;
             margin-top: 10px;
 
             &-alert {
@@ -141,8 +142,8 @@
 
     .form__field {
         font-family: inherit;
-        width: 80vw;
         border: 0;
+        width: 100%;
         border-bottom: 2px solid $orange-formular;
         outline: 0;
         font-size: 0.8em;
@@ -166,7 +167,6 @@
     .form__label {
         position: absolute;
         top: 0;
-        left: 2em;
         display: block;
         transition: 0.2s;
         font-size: 0.8em;

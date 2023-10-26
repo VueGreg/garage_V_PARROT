@@ -18,8 +18,8 @@
 </script>
 
 <template>
-    <footer class="container-fluid">
-        <div class="enseigne">
+    <footer class="container row">
+        <div class="enseigne col-12">
             <div class="logo">
                 <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
                 <p class="logo__text">GARAGE V.PARROT</p>
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div class="footer">
+        <div class="footer col-12">
             <div class="footer__title">
                 <div class="footer__logo">
                     <i class="fa-solid fa-circle-info" style="color: #ffffff;"></i>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="footer">
+        <div class="footer col-12">
             <div class="footer__title">
                 <div class="footer__logo">
                     <i class="fa-solid fa-clock" style="color: #ffffff;"></i>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="copyright row">
+        <div class="copyright col-12">
             <p>Tous droit reservé à l'évaluation ECF STUDI</p>
             <p>Créer par G.WOLFF</p>
         </div>
@@ -77,11 +77,14 @@
 @import '@/assets/scss/variable.scss';
 @import '@/assets/scss/mixins.scss';
 
-    .container-fluid{
+    
+    .container{
         background-color: $dark-grey;
         color: white;
         font-size: 0.8em;
         font-weight: 500;
+        margin: 0;
+        padding: 0;
     }
 
     .enseigne{

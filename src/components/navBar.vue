@@ -1,22 +1,31 @@
 <script setup>
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRoute } from 'vue-router';
+    import { watch , ref } from 'vue';
+    
+    const route = useRoute()
+    const routeName = ref("")
+
+    watch(() => route.name, () => {
+        routeName.value = route.name
+    })
+
 </script>
 
 
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark nav__navigate">
     <div class="container-fluid">
-            <RouterLink class="nav__navigate-link" active-class="active" to="/">Acceuil</RouterLink>
-            <RouterLink class="nav__navigate-link" active-class="active" to="/reparations">Reparation</RouterLink>
-            <RouterLink class="nav__navigate-link" active-class="active" to="/annonces">Véhicules d'occasion</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'Acceuil' || routeName === undefined }" to="/">Acceuil</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'reparations'}" to="/reparations">Reparation</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'Annonces'}" to="/annonces">Véhicules d'occasion</RouterLink>
         <button class="nav__navigate-btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav__navigate-link" href="#">Contacts</a>
+            <RouterLink class="nav__navigate-link" active-class="active" to="/contact/0">Contact</RouterLink>
             <a class="nav__navigate-link" href="#">A propos</a>
-            <a class="nav__navigate-link" href="#">blabla</a>
+            <a class="nav__navigate-link" href="#">Tableau de bord</a>
         </div>
         </div>
     </div>
@@ -28,7 +37,21 @@
 @import '@/assets/scss/mixins.scss';
 
     .active {
+
         color: $dark-grey;
+
+        &:focus{
+                color: $dark-grey;
+            }
+
+        &:focus::before{
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 140%;
+            border-bottom: 5px solid rgb(255, 255, 255);
+            translate: -8%;
+        }
     }
     .nav__navigate{
         background-color: $primary-color;
@@ -48,7 +71,7 @@
                 content: '';
                 position: absolute;
                 width: 120%;
-                height: 165%;
+                height: 140%;
                 border-bottom: 5px solid rgb(255, 255, 255);
                 translate: -8%;
             }

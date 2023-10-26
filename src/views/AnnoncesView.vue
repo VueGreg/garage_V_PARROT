@@ -152,97 +152,101 @@
 </script>
 
 <template>
-    <h2>RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-            <i class="fa-solid fa-filter" style="color: #ffffff;"></i>
-            <span>Filtrer</span>
-        </button>
+    <main class="row">
+        <h2 class="col-10">RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
+            <button class="btn btn-primary col-6" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                <i class="fa-solid fa-filter" style="color: #ffffff;"></i>
+                <span>Filtrer</span>
+            </button>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Affiner ma recherche</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="offcanvas__row">
-            <div class="offcanvas__selectdiv">
-                <select class="offcanvas__select" v-model="marque" name="marque" id="marque">
-                    <option value="0" disabled selected>Marque</option>
-                    <option v-for="marque in marques" :value="marque">{{ marque }}</option>
-                </select>
-            </div>
-            <div class="offcanvas__selectdiv">
-                <select class="offcanvas__select" v-model="modele" name="modele" id="modele">
-                    <option value="0" disabled selected>Modèle</option>
-                    <option v-for="modele in modeles" :value="modele">{{ modele }}</option>
-                </select>
-            </div>
-            <div class="offcanvas__selectdiv">
-                <select class="offcanvas__select" v-model="energie" name="energie" id="energie">
-                    <option value="0" disabled selected>Energie</option>
-                    <option v-for="energie in energies" :value="energie">{{ energie }}</option>
-                </select>
-            </div>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Affiner ma recherche</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas__row">
-            <section class="range-slider">
-                <h6>Prix</h6>
-                <label for="priceMini" id="outputPriceMini" class="output outputOne">{{ prixMin }}€</label>
-                <label for="priceMaxi" id="outputPriceMaxi" class="output outputTwo">{{ prixMax }}€</label>
-                <span class="full-range"></span>
-                <span class="incl-range"></span>
-                <input id="priceMini" name="priceMini" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMin">
-                <input id="priceMaxi" name="priceMaxi" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMax">
-            </section>
-
-            <section class="range-slider">
-                <h6>Kilométrage</h6>
-                <label for="kilometerMin" id="outputKilometerMin" class="output outputOne">{{ kilometerMin }}km</label>
-                <label for="kilometerMax" id="outputKilometerMax" class="output outputTwo">{{ kilometerMax }}km</label>
-                <span class="full-range"></span>
-                <span class="incl-range"></span>
-                <input id="kilometerMin" name="kilometerMin" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMin">
-                <input id="kilometerMax" name="kilometerMax" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMax">
-            </section>
-
-            <section class="range-slider">
-                <h6>Année</h6>
-                <label for="yearMin" id="outputYearMin" class="output outputOne">{{ yearMin }}</label>
-                <label for="yearMax" id="outputYearMax" class="output outputTwo">{{ yearMax }}</label>
-                <span class="full-range"></span>
-                <span class="incl-range"></span>
-                <input id="yearMin" name="yearMin" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMin">
-                <input id="yearMax" name="yearMax" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMax">
-            </section>
-        </div>
-
-        <div class="offcanvas__btn">
-            <button @click="initialize()">Reinitialiser</button>
-            <button data-bs-dismiss="offcanvas" @click="searchCars()">Rechercher</button>
-        </div>
-    </div>
-        </div>
-
-        <div class="cards" v-for="annonce in annonces" :key="annonce.numero_annonce">
-            <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
-            <div class="cards__image">
-                <img :src=annonce.photo>
-            </div>
-            <div class="cards__description">
-                <div class="cards__description-title">
-                    <h5>{{ annonce.marque }} {{ annonce.modele }}</h5>
-                    <p>{{ annonce.motorisation }}</p>
+        <div class="offcanvas-body">
+            <div class="offcanvas__row">
+                <div class="offcanvas__selectdiv">
+                    <select class="offcanvas__select" v-model="marque" name="marque" id="marque">
+                        <option value="0" disabled selected>Marque</option>
+                        <option v-for="marque in marques" :value="marque">{{ marque }}</option>
+                    </select>
                 </div>
-                <div class="cards__description-message">
-                    <div class="send">
-                        <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
-                        <p>Demande de renseignement</p>
+                <div class="offcanvas__selectdiv">
+                    <select class="offcanvas__select" v-model="modele" name="modele" id="modele">
+                        <option value="0" disabled selected>Modèle</option>
+                        <option v-for="modele in modeles" :value="modele">{{ modele }}</option>
+                    </select>
+                </div>
+                <div class="offcanvas__selectdiv">
+                    <select class="offcanvas__select" v-model="energie" name="energie" id="energie">
+                        <option value="0" disabled selected>Energie</option>
+                        <option v-for="energie in energies" :value="energie">{{ energie }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="offcanvas__row">
+                <section class="range-slider">
+                    <h6>Prix</h6>
+                    <label for="priceMini" id="outputPriceMini" class="output outputOne">{{ prixMin }}€</label>
+                    <label for="priceMaxi" id="outputPriceMaxi" class="output outputTwo">{{ prixMax }}€</label>
+                    <span class="full-range"></span>
+                    <span class="incl-range"></span>
+                    <input id="priceMini" name="priceMini" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMin">
+                    <input id="priceMaxi" name="priceMaxi" :min="prixMinRequest" :max="prixMaxRequest" step="100" type="range" v-model="prixMax">
+                </section>
+
+                <section class="range-slider">
+                    <h6>Kilométrage</h6>
+                    <label for="kilometerMin" id="outputKilometerMin" class="output outputOne">{{ kilometerMin }}km</label>
+                    <label for="kilometerMax" id="outputKilometerMax" class="output outputTwo">{{ kilometerMax }}km</label>
+                    <span class="full-range"></span>
+                    <span class="incl-range"></span>
+                    <input id="kilometerMin" name="kilometerMin" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMin">
+                    <input id="kilometerMax" name="kilometerMax" :min="kilometerMinRequest" :max="kilometerMaxRequest" step="1000" type="range" v-model="kilometerMax">
+                </section>
+
+                <section class="range-slider">
+                    <h6>Année</h6>
+                    <label for="yearMin" id="outputYearMin" class="output outputOne">{{ yearMin }}</label>
+                    <label for="yearMax" id="outputYearMax" class="output outputTwo">{{ yearMax }}</label>
+                    <span class="full-range"></span>
+                    <span class="incl-range"></span>
+                    <input id="yearMin" name="yearMin" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMin">
+                    <input id="yearMax" name="yearMax" :min="yearMinRequest" :max="yearMaxRequest" step="1" type="range" v-model="yearMax">
+                </section>
+            </div>
+
+            <div class="offcanvas__btn">
+                <button @click="initialize()">Reinitialiser</button>
+                <button data-bs-dismiss="offcanvas" @click="searchCars()">Rechercher</button>
+            </div>
+        </div>
+        </div>
+
+            <div class="cards col-9" v-for="annonce in annonces" :key="annonce.numero_annonce">
+                <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
+                    <div class="cards__image">
+                        <img :src=annonce.photo>
                     </div>
-                    <h3>{{ annonce.prix }}€</h3>
-                </div>
+                    <div class="cards__description">
+                        <div class="cards__description-title">
+                            <h5>{{ annonce.marque }} {{ annonce.modele }}</h5>
+                            <p>{{ annonce.motorisation }}</p>
+                        </div>
+                        <div class="cards__description-message">
+                            <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
+                                <div class="send">
+                                    <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
+                                    <p>Demande de renseignement</p>
+                                </div>
+                            </RouterLink>
+                            <h3>{{ annonce.prix }}€</h3>
+                        </div>
+                    </div>
+                </RouterLink>
             </div>
-        </RouterLink>
-        </div>
+    </main>
 </template>
 
 <style lang="scss" scoped>
@@ -257,6 +261,20 @@
 
     p {
         font-size: 0.7em;
+    }
+
+    .router {
+        text-decoration: none;
+    }
+
+    .send {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        & p {
+            margin-left: 0.5em;
+        }
     }
 
     h2,
@@ -274,14 +292,12 @@
 
     h2{
         @include h2-main;
-        width: 80vw;
     }
 
     .cards{
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 80vw;
         margin: 3em auto;
         font-family: $font-text-nav-card;
         box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.3);
@@ -295,6 +311,7 @@
 
             &-title{
                 margin-top: 0.5em;
+                margin-left: 0.5em;
                 & p{
                     font-size: 0.8em;
                 }
@@ -302,11 +319,10 @@
 
             &-message{
                 display: flex;
-                justify-content: space-between;
+                justify-content: space-around;
                 align-items: center;
-                width: 75vw;
-                margin-top: 1em;
-                margin-bottom: 0.5em;
+                width: 100%;
+                margin: 1em auto;
             }
         }
 
@@ -321,11 +337,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 50vw;
         margin: auto;
 
         span {
-            padding: 0 1em;
+            padding: 0.5em 1em;
         }
     }
 

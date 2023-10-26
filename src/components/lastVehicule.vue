@@ -19,9 +19,9 @@
 </script>
 
 <template>
-    <section class="container text-center">
-        <h2>NOS DERNIERS VEHICULES INTRODUIT DANS LE PARC</h2>
-        <div class="cards" v-for="annonce in lastAnnonces" :key="annonce.numero_annonce">
+    <section class="row">
+        <h2 class="col-10">NOS DERNIERS VEHICULES INTRODUIT DANS LE PARC</h2>
+        <div class="cards col-10" v-for="annonce in lastAnnonces" :key="annonce.numero_annonce">
             <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
             <div class="cards__image">
                 <img :src=annonce.photo>
@@ -32,23 +32,28 @@
                     <p>{{ annonce.motorisation }}</p>
                 </div>
                 <div class="cards__description-message">
-                    <div class="send">
-                        <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
-                        <p>Demande de renseignement</p>
-                    </div>
+                    <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
+                        <div class="send">
+                            <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
+                            <p>Demande de renseignement</p>
+                        </div>
+                    </RouterLink>
                     <h3>{{ annonce.prix }}€</h3>
                 </div>
             </div>
             </RouterLink>
         </div>
-
-        <button><RouterLink class="link" active-class="active" to="/annonces">Afficher tous les véhicules</RouterLink></button>
     </section>
+    <button><RouterLink class="link" active-class="active" to="/annonces">Afficher tous les véhicules</RouterLink></button>
 </template>
 
 <style lang="scss" scoped>
     @import '@/assets/scss/variable.scss';
     @import '@/assets/scss/mixins.scss';
+
+    .router {
+        text-decoration: none;
+    }
 
     .active {
         color: $dark-grey;
@@ -86,6 +91,7 @@
 
     h2{
         @include h2-main;
+        margin-bottom: 1em;
     }
 
     button{
@@ -95,7 +101,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 80vw;
         margin: 3em auto;
         font-family: $font-text-nav-card;
         box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.3);
@@ -109,6 +114,7 @@
 
             &-title{
                 margin-top: 0.5em;
+                margin-left: 1em;
                 & p{
                     font-size: 0.8em;
                 }
@@ -118,9 +124,10 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                width: 75vw;
                 margin-top: 1em;
                 margin-bottom: 0.5em;
+                width: 90%;
+                padding: 0 1em;
             }
         }
 
