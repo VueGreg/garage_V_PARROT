@@ -1,6 +1,6 @@
 <script setup>
     import axios from "axios";
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
     import { useRoute } from "vue-router";
 
     const isVisible = ref(false)
@@ -12,6 +12,7 @@
     const vehicules = ref([])
     const numValide = ref(false)
     const mailValide = ref(false)
+    const success = ref(false)
 
     const errorMessage = ref("")
 
@@ -62,12 +63,58 @@
         }else numValide.value = false
     }
 
+    const sendMessage = () => {
+        if (name.value!="" && surname.value!="" && message.value !="" && tel.value != "" && email.value != "") {
+
+            axios
+            .post('http://localhost/src/api/postMessage.php', {
+                date: new Date().toJSON().slice(0, 10),
+                name: name.value,
+                surname: surname.value,
+                message: message.value,
+                tel: tel.value,
+                mail: email.value,
+                numAnnonce : numAnnonce
+            })
+            .then(response => {
+                if (response.data.success == true) {
+                    success.value = true
+                }
+                
+            })
+            .catch(e => {
+                console.error(e)
+            })
+
+        }
+    }
+
+    const refreshForm = () => {
+        if (success.value === true) {
+            success.value = false
+            name.value = ""
+            surname.value = ""
+            message.value = ""
+            tel.value = ""
+            email.value = ""
+        }
+    }
+
     returnVisible()
 
 </script>
 
 
 <template>
+    <!-- Modal -->
+    <div class="container__modal" v-if="success">
+        <div class="container__modal-message">
+            <p class="container__modal-text">Le message à bien été envoyé</p>
+            <button class="container__modal-button" @click="refreshForm()">Merci !</button>
+        </div>
+    </div>
+
+    <!-- Main -->
     <main class="row">
         <div class="title col-10">
             <h2>CONTACT</h2>
@@ -105,7 +152,7 @@
                 <label class="form__label" for="message">Votre message</label>
             </div>
         </form>
-        <button class="col-6">Envoyer message</button>
+        <button class="col-6" @click="sendMessage()">Envoyer message</button>
     </main>
 </template>
 
@@ -230,6 +277,43 @@
 .form__field{
 &:required,&:invalid { box-shadow:none; }
 }
+
+.container__modal {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba($color: grey, $alpha: 0.4);
+        z-index: 20;
+
+        &-message {
+            position: absolute;
+            height: 20vh;
+            width: 80vw;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba($color: #000000, $alpha: 0.2);
+            left: 10vw;
+            top: 30vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-text {
+            color: $color-text-dark;
+        }
+
+        &-button {
+            border: none;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            font-size: 0.8em;
+            background-color: rgb(225, 225, 225);
+            box-shadow: 2px 2px 5px rgba($color: $primary-color, $alpha: 0.2);
+            margin: 0;
+        }
+    }
 
 </style>
 

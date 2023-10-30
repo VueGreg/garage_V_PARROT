@@ -1,5 +1,5 @@
 <script setup>
-
+    import { RouterLink } from 'vue-router';
 </script>
 
 <template>
@@ -27,12 +27,12 @@
             </a>
 
             <!--Connection btn-->
-            <a class="button__header" href="#">
+            <RouterLink class="navigate-link button__header" to="/connexion">
                 <div class="button__header-circle">
                     <i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i>
                 </div>
                 <p class="button__header-text">Connexion</p>
-            </a>
+            </RouterLink>
         </div>
     </header>
 </template>
@@ -90,5 +90,9 @@
                 margin-top: 0.8em;
             }
         }
+    }
+
+    .navigate-link {
+        text-decoration: none;
     }
 </style>

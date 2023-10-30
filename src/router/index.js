@@ -5,6 +5,7 @@ import VehiculeView from '../views/VehiculeView.vue'
 import ErrorView from '../views/ErrorView.vue'
 import ReparationView from "../views/ReparationView.vue"
 import ContactView from "../views/ContactView.vue"
+import Connexion from "../views/connexionView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/contact/:id',
       name: 'contact',
       component: ContactView
+    },
+    {
+      path: '/connexion',
+      name: 'connexion',
+      component: Connexion
     }
   ]
 })
