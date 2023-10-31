@@ -1,10 +1,34 @@
 <script setup>
 
+    import axios from "axios";
     import { ref } from "vue";
     
     const email = ref("")
     const password = ref("")
     const errorMessage = ref(false)
+
+    const postConnect = () => {
+        if (password.value!="" && email.value!="") {
+
+            axios
+            .post('http://localhost/src/api/userConnection.php', {
+                email: email.value,
+                password: password.value
+            })
+            .then(response => {
+                if (response.data.success === true) {
+                    document.cookie = `userName = ${response.data.name}`
+                    document.cookie = `userSurname = ${response.data.surname}`
+                    document.cookie = `userPermissions = ${response.data.permissions}`
+                    document.location.href='http://localhost:5173/dashboard/messages'
+                }
+            })
+            .catch(e => {
+                console.error(e)
+            })
+
+        }
+    }
 
 </script>
 
@@ -13,17 +37,17 @@
     <main class="row">
         <form class="form col-8">
             <div class="form__input">
-                <input class="form__field" @focusout="testCaracters()" v-model="email" type="email" name="email" id="email" placeholder="Votre adresse mail">
+                <input class="form__field" v-model="email" type="email" name="email" id="email" placeholder="Votre adresse mail">
                 <label class="form__label" for="email">Votre adresse mail</label>
-                <span class="form__input-alert" v-if="errorMessage">{{ errorMessage }}</span>
+                <span class="form__input-alert"></span>
             </div>
             <div class="form__input">
-                <input class="form__field" @focusout="testCaracters()" v-model="password" type="password" name="password" id="password" placeholder="Votre mot de passe">
+                <input class="form__field" v-model="password" type="password" name="password" id="password" placeholder="Votre mot de passe">
                 <label class="form__label" for="prenom">Votre mot de passe</label>
-                <span class="form__input-alert" v-if="errorMessage">{{ errorMessage }}</span>
+                <span class="form__input-alert"></span>
             </div>
         </form>
-        <button class="form__btn col-6">Connexion</button>
+        <button class="form__btn col-6" @click="postConnect()">Connexion</button>
     </main>
 
 </template>

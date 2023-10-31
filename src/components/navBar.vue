@@ -1,13 +1,26 @@
 <script setup>
     import { RouterLink, useRoute } from 'vue-router';
     import { watch , ref } from 'vue';
+    import { useCookies } from 'vue3-cookies';
     
     const route = useRoute()
     const routeName = ref("")
+    const isConnect = ref(false)
+    const { cookies } = useCookies()
+
+    const userPermissions = cookies.get('userPermissions')
+
+
 
     watch(() => route.name, () => {
         routeName.value = route.name
     })
+
+    watch(() => route.path, () => {
+        if (userPermissions != null) {
+            isConnect.value = true
+        }else isConnect.value = false
+    }) 
 
 </script>
 
@@ -25,7 +38,7 @@
         <div class="navbar-nav">
             <RouterLink class="nav__navigate-link" active-class="active" to="/contact/0">Contact</RouterLink>
             <a class="nav__navigate-link" href="#">A propos</a>
-            <a class="nav__navigate-link" href="#">Tableau de bord</a>
+            <RouterLink class="nav__navigate-link" to="/dashboard" v-if="isConnect">Tableau de bord</RouterLink>
         </div>
         </div>
     </div>

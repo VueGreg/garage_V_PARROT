@@ -5,7 +5,10 @@ import VehiculeView from '../views/VehiculeView.vue'
 import ErrorView from '../views/ErrorView.vue'
 import ReparationView from "../views/ReparationView.vue"
 import ContactView from "../views/ContactView.vue"
-import Connexion from "../views/connexionView.vue"
+import ConnexionView from "../views/connexionView.vue"
+import DashboardView from "../views/dashboardView.vue"
+import MessagesView from "../views/children/messageView.vue"
+import UserView from "../views/children/userView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,7 +46,21 @@ const router = createRouter({
     {
       path: '/connexion',
       name: 'connexion',
-      component: Connexion
+      component: ConnexionView
+    },
+    {
+      path: '/dashboard',
+      component: DashboardView,
+      children: [
+        {
+          path: 'messages',
+          component: MessagesView,
+        },
+        {
+          path: 'utilisateurs',
+          component: UserView,
+        },
+      ]
     }
   ]
 })

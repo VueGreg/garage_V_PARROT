@@ -1,5 +1,40 @@
 <script setup>
+    import axios from 'axios';
     import { RouterLink } from 'vue-router';
+    import { useCookies } from 'vue3-cookies';
+    import { ref, watch } from "vue";
+    import { useRoute } from 'vue-router';
+
+    const { cookies } = useCookies()
+    const userPermissions = cookies.get('userPermissions')
+    const isConnect = ref(false)
+    const route = useRoute()
+
+    watch(() => route.path, () => {
+        if (userPermissions != null) {
+            axios
+            .post('http://localhost/src/api/authorize.php', {
+                permissions: userPermissions
+            }).then (response => {
+                if (response.data.success == true) {
+                    isConnect.value = true
+                }else isConnect.value = false
+            }).catch (e => {
+                console.error(e)
+            })
+        }else isConnect.value = false
+    })
+
+    const removeCookie = () => {
+        cookies.remove('userPermissions')
+        cookies.remove('userName')
+        cookies.remove('userSurname')
+        isConnect.value = false
+        document.location.href="http://localhost:5173"
+    }
+
+
+
 </script>
 
 <template>
@@ -27,7 +62,13 @@
             </a>
 
             <!--Connection btn-->
-            <RouterLink class="navigate-link button__header" to="/connexion">
+            <div class="navigate-link button__header" v-if="isConnect" @click="removeCookie()">
+                <div class="button__header-circle">
+                    <i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i>
+                </div>
+                <p class="button__header-text">Déconnexion</p>
+            </div>
+            <RouterLink class="navigate-link button__header" to="/connexion" v-else>
                 <div class="button__header-circle">
                     <i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i>
                 </div>

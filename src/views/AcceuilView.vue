@@ -18,7 +18,6 @@
     })
 
     watch(() => position.value, () => {
-        console.log(position.value)
         if (position.value >= 1400) {
             animate.value = true
         }
@@ -44,7 +43,7 @@
 <template>
     <CarouselHome/>
     <LastVehicule/>
-    <Transition :name="animationType">
+    <Transition>
         <div class="scroll__test" v-if="animate"> 
             <ExpertiseSite/>
         </div>

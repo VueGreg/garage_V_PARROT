@@ -6,7 +6,7 @@ CREATE TABLE `utilisateurs` (
     `prenom` VARCHAR(50) NOT NULL , 
     `mdp` VARCHAR(32) NOT NULL , 
     `mail` VARCHAR(100) NOT NULL ,
-    `token`VARCHAR(64) NOT NULL ,
+    `token` TEXT (64) NOT NULL,
     `id_permissions` INT(11) NOT NULL
 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_general_ci; 
 
