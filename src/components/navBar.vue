@@ -38,7 +38,7 @@
         <div class="navbar-nav">
             <RouterLink class="nav__navigate-link" active-class="active" to="/contact/0">Contact</RouterLink>
             <a class="nav__navigate-link" href="#">A propos</a>
-            <RouterLink class="nav__navigate-link" to="/dashboard" v-if="isConnect">Tableau de bord</RouterLink>
+            <RouterLink class="nav__navigate-link" to="/dashboard/messages" v-if="isConnect">Tableau de bord</RouterLink>
         </div>
         </div>
     </div>

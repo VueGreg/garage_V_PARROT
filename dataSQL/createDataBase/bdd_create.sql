@@ -247,7 +247,7 @@ INSERT INTO permissions (`id`, `nom`, `rang`)
 VALUES
     (NULL, 'admin', '1'),
     (NULL, 'modérateur', '2'),
-    (NULL, 'salarié', '3');
+    (NULL, 'vendeur', '3');
 
 INSERT INTO utilisateurs (`id`, `nom`, `prenom`,`mdp`,`mail`,`token`,`id_permissions`) 
 VALUES

@@ -1,22 +1,33 @@
 <script setup>
 
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRoute } from 'vue-router';
+    import { ref , watch } from "vue";
+
+    const route = useRoute()
+    const path = ref()
+
+    watch(() => route.path, () => {
+        path.value = route.path
+    })
+
 
 </script>
 
 <template>
     <div class="bar">
         <RouterLink class="link" to="/dashboard/utilisateurs">
-            <div class="bar__btn">
-                <i class="fa-solid fa-users" style="color: #ffffff;"></i>
+            <div class="bar__btn" :class="{'active': path == '/dashboard/utilisateurs'}">
+                <i class="fa-solid fa-users"></i>
             </div>
         </RouterLink>
-        <div class="bar__btn">
-            <i class="fa-solid fa-gear" style="color: #ffffff;"></i>
-        </div>
+        <RouterLink class="link" to="/dashboard/parametre">
+            <div class="bar__btn" :class="{'active': path == '/dashboard/parametre'}">
+                <i class="fa-solid fa-gear"></i>
+            </div>
+        </RouterLink>
         <RouterLink class="link" to="/dashboard/messages">
-            <div class="bar__btn">
-                <i class="fa-solid fa-message" style="color: #ffffff;"></i>
+            <div class="bar__btn" :class="{'active': path =='/dashboard/messages'}">
+                <i class="fa-solid fa-message"></i>
             </div>
         </RouterLink>
         <div class="bar__btn">
@@ -54,6 +65,19 @@
             height: 9vh;
             width: 9vh;
             @include flex-center;
+
+            & i {
+                color: white;
+            }
+        }
+    }
+
+    .active {
+        background: none;
+        box-shadow: 0 0 8px rgba($color: white, $alpha: 0.8);
+
+        & i {
+            color: $primary-color;
         }
     }
 

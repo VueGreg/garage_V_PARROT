@@ -8,7 +8,8 @@
     const isAction = ref(false)
 
     axios
-    .post('http://localhost/src/api/messages.php', {
+    .post('http://localhost/src/api/dashboard.php', {
+        messages: 'getMessages'
     }).then (response => {
         messages.value = response.data.messages
         countMessages.value = response.data.nombres

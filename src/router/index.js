@@ -9,6 +9,7 @@ import ConnexionView from "../views/connexionView.vue"
 import DashboardView from "../views/dashboardView.vue"
 import MessagesView from "../views/children/messageView.vue"
 import UserView from "../views/children/userView.vue"
+import SettingView from "../views/children/settingView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,9 +61,13 @@ const router = createRouter({
           path: 'utilisateurs',
           component: UserView,
         },
+        {
+          path: 'parametre',
+          component: SettingView,
+        },
       ]
     }
-  ]
+  ],
 })
 
 export default router
