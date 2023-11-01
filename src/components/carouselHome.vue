@@ -15,7 +15,7 @@
             title:"VEHICULES D'OCCASION",
             text:"Achetez votre véhicule d’occasion contrôlée & garantie",
             button:"Voir les véhicules",
-            link:""
+            link:"/annonces"
         },
         {
             id:3,

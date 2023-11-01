@@ -7,6 +7,8 @@
     const email = ref("")
     const password = ref("")
     const { cookies } = useCookies()
+    const connectError = ref(false)
+    const mailValide = ref(false)
 
     const postConnect = () => {
         if (password.value!="" && email.value!="") {
@@ -18,14 +20,19 @@
             })
             .then(response => {
                 if (response.data.success === true) {
+                    connectError.value = false
                     document.cookie = `userName = ${response.data.name}`
                     document.cookie = `userSurname = ${response.data.surname}`
                     document.cookie = `userPermissions = ${response.data.permissions}`
                     document.location.href='http://localhost:5173/dashboard/messages'
-                } else {
+                }
+                else {
+                    connectError.value = true
                     cookies.remove('userName')
                     cookies.remove('userSurname')
                     cookies.remove('userPermissions')
+                    email.value = ""
+                    password.value = ""
                 }
             })
             .catch(e => {
@@ -35,6 +42,14 @@
         }
     }
 
+    const Mail_Valide = (mail) => {
+        let valide_mail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if(!valide_mail.test(mail) && document.querySelector('#email').value != "")
+        {
+            mailValide.value = true
+        }else mailValide.value = false
+    }
+
 </script>
 
 <template>
@@ -42,9 +57,9 @@
     <main class="row">
         <form class="form col-8">
             <div class="form__input">
-                <input class="form__field" v-model="email" type="email" name="email" id="email" placeholder="Votre adresse mail">
+                <input class="form__field" @focusout="Mail_Valide(email)" v-model="email" type="email" name="email" id="email" placeholder="Votre adresse mail">
                 <label class="form__label" for="email">Votre adresse mail</label>
-                <span class="form__input-alert"></span>
+                <span class="form__input-alert" v-if="mailValide">*Adresse e-mail invalide</span>
             </div>
             <div class="form__input">
                 <input class="form__field" v-model="password" type="password" name="password" id="password" placeholder="Votre mot de passe">
@@ -52,6 +67,7 @@
                 <span class="form__input-alert"></span>
             </div>
         </form>
+        <span v-if="connectError" class="error">Adresse mail ou mot de passe incorrect</span>
         <button class="form__btn col-6" @click="postConnect()">Connexion</button>
     </main>
 
@@ -148,12 +164,15 @@
     border-image-slice: 1;
     }
 
-/* reset input */
-.form__field{
-&:required,&:invalid { box-shadow:none; }
-}
+    /* reset input */
+    .form__field{
+    &:required,&:invalid { box-shadow:none; }
+    }
 
-
+    .error {
+        text-align: center;
+        color: red;
+    }
 
 
 </style>

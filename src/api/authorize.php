@@ -18,16 +18,21 @@ function getAuthorized() {
 
         if (isset($_GET['permissions'])) {
 
-            $sql = "SELECT token FROM utilisateurs WHERE token LIKE :permissions";
+            $sql = "SELECT utilisateurs.token, permissions.rang AS rank 
+                    FROM utilisateurs
+                    INNER JOIN permissions ON permissions.id = id_permissions
+                    WHERE utilisateurs.token LIKE :permissions";
+
             global $data;
 
             $statement = $data->prepare($sql);
             $statement->bindParam(':permissions', $_GET['permissions']);
             $statement->execute();
-            $result = $statement-> fetch(PDO::FETCH_COLUMN);
+            $result = $statement-> fetch(PDO::FETCH_ASSOC);
+            $rank['rang'] = $result['rank'];
 
-            if ($result == $_GET['permissions']) {
-                return_json(true, 'autorized');
+            if ($result['token'] == $_GET['permissions']) {
+                return_json(true, 'autorized', $rank);
             }else return_json(false, 'nok', $result);
         }
 

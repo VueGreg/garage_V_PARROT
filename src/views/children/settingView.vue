@@ -2,12 +2,35 @@
 
     import axios from 'axios'
     import { ref } from 'vue'
+    import { useCookies } from 'vue3-cookies';
+
+    const { cookies } = useCookies()
 
     const informations = ref([])
     const horaires = ref([])
     const reparations = ref([])
     const categories = ref([])
     const isAction = ref(false)
+    const userPermissions = cookies.get('userPermissions')
+    const rank = ref()
+
+    const userAuthorized = () => {
+        if (userPermissions != null) {
+                axios
+                .post('http://localhost/src/api/authorize.php', {
+                    permissions: userPermissions
+                }).then (response => {
+                    if (response.data.success == true) {
+                        rank.value = response.data.rang
+                        if (rank.value > 1) {
+                            document.location.href='http://localhost:5173/erreur'
+                        }
+                    }else document.location.href='http://localhost:5173/erreur'
+                }).catch (e => {
+                    console.error(e)
+                })
+        }
+    }
 
     axios
     .get('http://localhost/src/api/vitrine.php')
@@ -20,6 +43,8 @@
     .catch (e => {
         console.error(e)
     })
+
+    userAuthorized()
 
 </script>
 

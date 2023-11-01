@@ -3,17 +3,23 @@
     import { RouterLink, useRoute } from 'vue-router';
     import { ref , watch } from "vue";
     import axios from 'axios';
+    import { useCookies } from 'vue3-cookies';
 
     const route = useRoute()
     const path = ref()
     const countMessages = ref()
     const countUsers = ref()
     const countVehicles = ref()
+    const { cookies } = useCookies() 
+    const userPermissions = cookies.get('userPermissions')
+    const rank = ref()
 
+    //------ WATCHER
     watch(() => route.path, () => {
         path.value = route.path
     })
 
+    //------HTTP REQUEST
     axios
     .post('http://localhost/src/api/dashboard.php', {
         messages: 'getMessages'
@@ -41,11 +47,30 @@
         console.error(e)
     })
 
+
+    //------MOUNTED EXEC
+    const userAuthorized = () => {
+        if (userPermissions != null) {
+                axios
+                .post('http://localhost/src/api/authorize.php', {
+                    permissions: userPermissions
+                }).then (response => {
+                    if (response.data.success == true) {
+                        rank.value = response.data.rang
+                    }
+                }).catch (e => {
+                    console.error(e)
+                })
+        }
+    }
+
+    userAuthorized()
+
 </script>
 
 <template>
     <div class="bar">
-        <RouterLink class="link" to="/dashboard/utilisateurs">
+        <RouterLink class="link" to="/dashboard/utilisateurs" v-if="rank<2">
             <div class="bar__btn" :class="{'active': path == '/dashboard/utilisateurs'}">
                 <i class="fa-solid fa-users"></i>
                 <div class="bar__btn-indicator">
@@ -53,7 +78,7 @@
                 </div>
             </div>
         </RouterLink>
-        <RouterLink class="link" to="/dashboard/parametre">
+        <RouterLink class="link" to="/dashboard/parametre" v-if="rank<2">
             <div class="bar__btn" :class="{'active': path == '/dashboard/parametre'}">
                 <i class="fa-solid fa-gear"></i>
             </div>

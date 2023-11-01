@@ -4,18 +4,19 @@
     import { useCookies } from 'vue3-cookies';
     
     const route = useRoute()
-    const routeName = ref("")
+    const path = ref(route.path)
     const isConnect = ref(false)
     const { cookies } = useCookies()
 
     const userPermissions = cookies.get('userPermissions')
 
 
-
-    watch(() => route.name, () => {
-        routeName.value = route.name
+    //------ Observe le changement de route
+    watch(() => route.path, () => {
+        path.value = route.path
     })
 
+    //----- Observe la connection si elle est encore en cours
     watch(() => route.path, () => {
         if (userPermissions != null) {
             isConnect.value = true
@@ -28,9 +29,9 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark nav__navigate">
     <div class="container-fluid">
-            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'Acceuil' || routeName === undefined }" to="/">Acceuil</RouterLink>
-            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'reparations'}" to="/reparations">Reparation</RouterLink>
-            <RouterLink class="nav__navigate-link" :class="{ 'active': routeName === 'Annonces'}" to="/annonces">Véhicules d'occasion</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{'active': path == '/'}" to="/">Acceuil</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{'active': path == '/reparations'}" to="/reparations">Reparation</RouterLink>
+            <RouterLink class="nav__navigate-link" :class="{'active': path == '/annonces'}" to="/annonces">Véhicules d'occasion</RouterLink>
         <button class="nav__navigate-btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
