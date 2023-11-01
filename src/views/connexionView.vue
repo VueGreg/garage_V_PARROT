@@ -2,10 +2,11 @@
 
     import axios from "axios";
     import { ref } from "vue";
+    import { useCookies } from "vue3-cookies";
     
     const email = ref("")
     const password = ref("")
-    const errorMessage = ref(false)
+    const { cookies } = useCookies()
 
     const postConnect = () => {
         if (password.value!="" && email.value!="") {
@@ -21,6 +22,10 @@
                     document.cookie = `userSurname = ${response.data.surname}`
                     document.cookie = `userPermissions = ${response.data.permissions}`
                     document.location.href='http://localhost:5173/dashboard/messages'
+                } else {
+                    cookies.remove('userName')
+                    cookies.remove('userSurname')
+                    cookies.remove('userPermissions')
                 }
             })
             .catch(e => {

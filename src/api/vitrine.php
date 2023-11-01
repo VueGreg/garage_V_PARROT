@@ -28,6 +28,11 @@ require_once './connection.php';
         $sql_temoignages = "SELECT * FROM temoignages";
         $temoignages = simple_fetch_data($sql_temoignages);
 
+        //-----Nombres de véhicules
+        $sql_annonces = "SELECT * FROM annonces";
+        $annonces = simple_fetch_data($sql_annonces);
+        $countAnnonces = count($annonces);
+
 
         $result["reparations"] = $reparations;
         $result["horaires"] = $horaires;
@@ -35,5 +40,6 @@ require_once './connection.php';
         $result["temoignages"] = $temoignages;
         $result["images"] = $images;
         $result["categorie_reparations"] = $cat_reparations;
+        $result["nombre_vehicules"] = $countAnnonces;
 
         return_json(true, "200", $result);

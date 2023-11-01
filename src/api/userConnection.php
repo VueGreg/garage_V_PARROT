@@ -47,8 +47,9 @@ function postConnection()
         $result['name'] = $user['nom'];
         $result['surname'] = $user['prenom'];
 
-
-        return_json(true, "Connexion reussi", $result);
+        if ($user != []) {
+            return_json(true, "Connexion reussi", $result);
+        }else return_json(false, "Connexion imossible");
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
 }
