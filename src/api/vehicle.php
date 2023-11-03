@@ -32,6 +32,7 @@ function getCars() {
 
                 foreach ($annonces as $key => $value) {
 
+                        //Pictures
                         $id = $annonces[$key]['numero_annonce'];
 
                         $sql_photos =  "SELECT images.adresse AS photo 
@@ -45,6 +46,20 @@ function getCars() {
                         $stmt->execute();
 
                         $annonces[$key]['photo'] = $stmt->fetch(PDO::FETCH_COLUMN);
+
+                        //Messages
+                        $sql_messages =  "SELECT * FROM messages WHERE num_annonce LIKE :id";
+
+                        $stmt = $data->prepare($sql_messages);
+                        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+                        $stmt->execute();
+
+                        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        if ($messages != null) {
+                                $annonces[$key]['messages'] = count($messages);
+                        }else $annonces[$key]['messages'] = 0;
+
                 }
 
         }elseif (isset($_GET['annonce']) || (isset($_GET['minyear']) && isset($_GET['maxyear']) && isset($_GET['minkilometer']) && isset($_GET['maxkilometer'])

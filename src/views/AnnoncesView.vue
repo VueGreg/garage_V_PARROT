@@ -1,8 +1,17 @@
 <script setup>
     import axios from 'axios'
     import { ref, watch } from 'vue';
+    import { useCookies } from 'vue3-cookies';
+    import appBar from '../components/appBar.vue';
+
+    //Cookies
+    const { cookies } = useCookies()
+    const userPermissions = cookies.get('userPermissions')
+    const isConnect = ref(false)
 
     const annonces = ref([])
+    const countAnnonces = ref()
+    const messages = ref([])
 
     const marques = ref([])
     const modeles = ref([])
@@ -51,6 +60,7 @@
         .post('http://localhost/src/api/vehicle.php')
         .then (response => {
             annonces.value = response.data
+            countAnnonces.value = response.data.length
         })
         .catch (e => {
             console.error(e)
@@ -148,12 +158,34 @@
         })
     }
 
+     //------MOUNTED EXEC
+     const userAuthorized = () => {
+        if (userPermissions != null) {
+                axios
+                .post('http://localhost/src/api/authorize.php', {
+                    permissions: userPermissions
+                }).then (response => {
+                    if (response.data.success == true) {
+                        isConnect.value = true
+                    }
+                }).catch (e => {
+                    console.error(e)
+                })
+        }
+    }
+
+    userAuthorized()
+
+
 
 </script>
 
 <template>
     <main class="row">
-        <h2 class="col-10">RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
+        <h1 class="col-10" v-if="isConnect">{{ countAnnonces }}</h1>
+        <h2 class="col-10" v-if="isConnect">VEHICULES EN VENTE</h2>
+        <appBar v-if="isConnect"/>
+        <h2 class="col-10" v-else>RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
             <button class="btn btn-primary col-6" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                 <i class="fa-solid fa-filter" style="color: #ffffff;"></i>
                 <span>Filtrer</span>
@@ -224,6 +256,8 @@
         </div>
         </div>
 
+        <button v-if="isConnect" class="addbtn col-5"><i class="fa-solid fa-plus"></i></button>
+
             <div class="cards col-9" v-for="annonce in annonces" :key="annonce.numero_annonce">
                 <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
                     <div class="cards__image">
@@ -235,7 +269,16 @@
                             <p>{{ annonce.motorisation }}</p>
                         </div>
                         <div class="cards__description-message">
-                            <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
+                            <RouterLink class="router" to="/dashboard/messages" v-if="isConnect">
+                                <div class="send">
+                                    <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
+                                    <div class="send__indicator" v-if="isConnect">
+                                        <span>{{ annonce.messages }}</span>
+                                    </div>
+                                    <p>Demande de renseignement</p>
+                                </div>
+                            </RouterLink>
+                            <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`" v-else>
                                 <div class="send">
                                     <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
                                     <p>Demande de renseignement</p>
@@ -275,6 +318,28 @@
         & p {
             margin-left: 0.5em;
         }
+
+        &__indicator {
+            border-radius: 50%;
+            background-color: blue;
+            width: 1em;
+            height: 1em;
+            @include flex-center;
+            color: white;
+            position: absolute;
+            transform: translate(-3.5em, -0.6em);
+
+            & span {
+                font-size: 0.7em;
+            }
+        }
+    }
+
+    h1 {
+        margin: auto;
+        text-align: center;
+        margin-top: 2em;
+        font-size: 2em;
     }
 
     h2,
@@ -292,6 +357,21 @@
 
     h2{
         @include h2-main;
+        margin-top: 0.5em;
+    }
+
+    .addbtn {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 2em;
+        height: 2em;
+        font-size: 1.8em;
+        position: fixed;
+        right: 0;
+        bottom: 20vh;
+        box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
     }
 
     .cards{

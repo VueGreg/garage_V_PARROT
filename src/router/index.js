@@ -10,7 +10,6 @@ import DashboardView from "../views/dashboardView.vue"
 import MessagesView from "../views/children/messageView.vue"
 import UserView from "../views/children/userView.vue"
 import SettingView from "../views/children/settingView.vue"
-import CarsView from "../views/children/carsView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,10 +64,6 @@ const router = createRouter({
         {
           path: 'parametre',
           component: SettingView,
-        },
-        {
-          path: 'voitures',
-          component: CarsView,
         },
       ]
     }

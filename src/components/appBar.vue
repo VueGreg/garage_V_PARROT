@@ -91,8 +91,8 @@
                 </div>
             </div>
         </RouterLink>
-        <RouterLink class="link" to="/dashboard/voitures">
-            <div class="bar__btn" :class="{'active': path =='/dashboard/voitures'}"> 
+        <RouterLink class="link" to="/annonces">
+            <div class="bar__btn" :class="{'active': path =='/annonces'}"> 
                 <i class="fa-solid fa-car"></i>
                 <div class="bar__btn-indicator">
                     <span>{{ countVehicles }}</span>

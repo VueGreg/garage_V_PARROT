@@ -20,7 +20,7 @@
     const numAnnonce = parseInt(route.params.id)
 
     const testCaracters = () => {
-        if(! name.value.match(/^([a-zA-Z ]+)$/)) {
+        if(! name.value.match(/^([a-zA-Z ]+)$/) && name.value != "") {
             errorMessage.value = `*Ce champ ne peut contenir que des lettres`
             name.value=""
         }else errorMessage.value = ""
@@ -49,7 +49,7 @@
 
     const Mail_Valide = (mail) => {
         let valide_mail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if(!valide_mail.test(mail))
+        if(!valide_mail.test(mail) && document.querySelector('#email').value != "")
         {
             mailValide.value = true
         }else mailValide.value = false
@@ -57,7 +57,7 @@
 
     const Portable_Valide = (num) => {
         let valide = /^0[1-6]\d{8}$/;
-        if (!valide.test(num))
+        if (!valide.test(num) && document.querySelector('#tel').value != "")
         {
             numValide.value = true;
         }else numValide.value = false
