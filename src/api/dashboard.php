@@ -45,11 +45,13 @@ function getUsers() {
         global $data;
         $statement = $data->prepare($sql);
         $statement->execute();
-        $users['list_permissions'] = $statement->fetchAll(PDO::FETCH_COLUMN, 4);
-
-        $statement->execute();
         $users['utilisateurs'] = $statement->fetchAll(PDO::FETCH_ASSOC);
         $users['nombres'] = count($users['utilisateurs']);
+
+        $sql_permissions = "SELECT * FROM permissions";
+        $statement = $data->prepare($sql_permissions);
+        $statement->execute();
+        $users['list_permissions'] = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return_json(true, 'utilisateur trouve', $users);
     } catch (PDOException $e) {

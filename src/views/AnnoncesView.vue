@@ -3,11 +3,13 @@
     import { ref, watch } from 'vue';
     import { useCookies } from 'vue3-cookies';
     import appBar from '../components/appBar.vue';
+    import newCar from "../components/newCar.vue";
 
     //Cookies
     const { cookies } = useCookies()
     const userPermissions = cookies.get('userPermissions')
     const isConnect = ref(false)
+    const isClick = ref(false)
 
     const annonces = ref([])
     const countAnnonces = ref()
@@ -182,6 +184,7 @@
 
 <template>
     <main class="row">
+        <newCar v-if="isConnect && isClick"/>
         <h1 class="col-10" v-if="isConnect">{{ countAnnonces }}</h1>
         <h2 class="col-10" v-if="isConnect">VEHICULES EN VENTE</h2>
         <appBar v-if="isConnect"/>
@@ -256,7 +259,7 @@
         </div>
         </div>
 
-        <button v-if="isConnect" class="addbtn col-5"><i class="fa-solid fa-plus"></i></button>
+        <button v-if="isConnect" class="addbtn col-5" :class="{ closebtn: isClick }"><i class="fa-solid fa-plus" @click="isClick ? isClick=false : isClick=true"></i></button>
 
             <div class="cards col-9" v-for="annonce in annonces" :key="annonce.numero_annonce">
                 <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
@@ -372,6 +375,12 @@
         right: 0;
         bottom: 20vh;
         box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
+        z-index: 20;
+        transition: all 0.5s ease-in;
+    }
+
+    .closebtn {
+        transform: rotate(405deg);
     }
 
     .cards{

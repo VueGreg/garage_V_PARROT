@@ -1,7 +1,7 @@
 <script setup>
 
     import axios from 'axios'
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
     import { useCookies } from 'vue3-cookies';
 
     const { cookies } = useCookies()
@@ -14,6 +14,13 @@
     const mailValide = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
+
+    //Form variables
+    const name = ref("")
+    const surname = ref("")
+    const email = ref("")
+    const password = ref("")
+    const role = ref()
 
     const userAuthorized = () => {
         if (userPermissions != null) {
@@ -41,7 +48,6 @@
         users.value = response.data.utilisateurs
         listPermissions.value = response.data.list_permissions
         countUsers.value = response.data.nombres
-        console.log(response.data)
     }).catch (e => {
         console.error(e)
     })
@@ -52,6 +58,31 @@
         {
             mailValide.value = true
         }else mailValide.value = false
+    }
+
+    const postNewUser = async() => {
+        if (name.value!="" && surname.value!="" && email.value!="" && password.value!="" && role.value!="") {
+            await axios
+            .post('http://localhost/src/api/postUser.php', {
+                email: email.value,
+                name: name.value,
+                surname: surname.value,
+                password: password.value,
+                role: role.value,
+            })
+            .then (response => {
+                if (response.data.success === true) {
+                    email.value=""
+                    name.value=""
+                    surname.value = ""
+                    password.value = ""
+                    role.value = ""
+                }
+            })
+            .catch(e => {
+                console.error(e)
+            })
+        }else console.log("Un champ est resté vide")
     }
 
     userAuthorized()
@@ -79,7 +110,7 @@
             <div class="message__element" v-if="changePermission">
                 <p class="message__element-title">Changer le rôle:</p>
                 <select name="permissions" id="permissions">
-                        <option :value="permission" v-for="permission in listPermissions" :key="permission.id">{{ permission }}</option>
+                        <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
                 </select>
                 <button><i class="fa-regular fa-circle-check" style="color: #f36639;"></i></button>
             </div>
@@ -108,11 +139,11 @@
                 </div>
                 <div class="form__input">
                     <label class="form__label" for="permissions">Role</label>
-                    <select name="permission" id="permission">
-                        <option :value="permission" v-for="permission in listPermissions">{{ permission }}</option>
+                    <select name="permission" id="permission" v-model="role">
+                        <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
                     </select>
                 </div>
-                <button>Créer un utilisateur</button>
+                <button type="button" @click="postNewUser()">Créer un utilisateur</button>
             </form>
         </div>
     </main>

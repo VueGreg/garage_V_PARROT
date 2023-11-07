@@ -196,30 +196,30 @@
     .form {
         margin: auto;
 
-    &__input {
-        display: flex;
-        flex-direction: column;
-        color: $orange-formular;
-        position: relative;
-        padding: 15px 0 0;
-        margin-top: 10px;
-
-        &-alert {
+        &__input {
+            display: flex;
+            flex-direction: column;
+            color: $orange-formular;
             position: relative;
-            top: -3em;
-            width: 100%;
-            text-align: start;
-            font-size: 0.6em;
-            display: block;
-            margin: 0 auto;
-            color: red;
-            padding-left: 0.2em;
+            padding: 15px 0 0;
+            margin-top: 10px;
+
+            &-alert {
+                position: relative;
+                top: -3em;
+                width: 100%;
+                text-align: start;
+                font-size: 0.6em;
+                display: block;
+                margin: 0 auto;
+                color: red;
+                padding-left: 0.2em;
+            }
         }
-    }
-    & p {
-        font-size: 1.1em;
-        margin-top: 1em;
-    }
+        & p {
+            font-size: 1.1em;
+            margin-top: 1em;
+        }
     }
 
     .form__field {
@@ -236,15 +236,15 @@
     margin: 0.2em auto;
     margin-bottom: 3em;
 
-    &::placeholder {
-        color: transparent;
-    }
+        &::placeholder {
+            color: transparent;
+        }
 
-    &:placeholder-shown ~ .form__label {
-        font-size: 0.8em;
-        cursor: text;
-        top: 20px;
-    }
+        &:placeholder-shown ~ .form__label {
+            font-size: 0.8em;
+            cursor: text;
+            top: 20px;
+        }
     }
 
     .form__label {
