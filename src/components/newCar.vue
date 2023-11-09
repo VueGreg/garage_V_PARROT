@@ -1,15 +1,17 @@
 <script setup>
 
     import axios from 'axios';
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue'
+    import FormData from 'form-data'
 
     const marques = ref([])
     const modeles = ref([])
     const energies = ref([])
     const equipements = ref([])
 
-    const marque = ref()
-    const modele = ref()
+    const marque = ref(0)
+    const modele = ref(0)
+    const energie = ref(0)
     const year = ref(0)
     const kilometer = ref(0)
     const motor = ref()
@@ -18,7 +20,11 @@
     const options = ref([])
     const box = ref()
     const fileName = ref()
-    const images = ref([])
+    const fileImages = ref([])
+    const price = ref(0)
+    const finish = ref()
+    const optionsDescription = ref([])
+    const Form_Data = new FormData()
 
     const getCars = async() => {
         await axios
@@ -54,23 +60,118 @@
 
     const addOption = (e, option) => {
         e.preventDefault()
-        options.value.push(option) 
+        options.value.push(option)
+        equipements.value.forEach(equipement => {
+            if (equipement.id == option) {
+                optionsDescription.value.push(equipement.description)
+            }
+        })
     }
 
     const deleteOption = (option) => {
-        let index = options.value.indexOf(`${option}`)
-        delete options.value[index]
+        let index = optionsDescription.value.indexOf(`${option}`)
+        options.value.slice(index, 1)
+
+        let o = optionsDescription.value[index]
+        optionsDescription.value.slice(index, 1)
+
 
         let p = document.querySelectorAll('p')
         p.forEach(element => {
-            if (element.innerHTML == "" || element.innerHTML == option) {
+            if (element.innerHTML == "" || element.innerHTML == o) {
                 element.remove()
             }
         })
     }
 
+
     const getAdresseFile = (e) => {
-        fileName.value = e.target.files[0].name
+        fileName.value = e.target.files[0]
+        fileImages.value.push(fileName.value)
+
+        for(let i=0; i< e.target.files.length; i++){
+            Form_Data.append('image[]', e.target.files[i])
+        }
+    }
+
+    const previewPicture = (e) => {
+        e.preventDefault()
+
+        let imgs = document.querySelectorAll('.preview__container-img')
+        let i = 0
+        imgs.forEach(img => {
+            img.src = URL.createObjectURL(fileImages.value[i])
+            i++
+        })
+    }
+
+    const deleteImage = (image) => {
+        let index = fileImages.value.indexOf(`${image}`)
+        delete fileImages.value[index]
+
+        let img = document.querySelectorAll('.preview__container-img')
+        img.forEach(element => {
+            if (element.innerHTML == "" || element.innerHTML == image) {
+                element.remove()
+            }
+        })
+    }
+
+    const sendNewCar = async() => {
+        if (modele.value != "Modèle" && energie.value != "Energie" && motor.value != "" && year.value != 0 && kilometer.value != 0 && power.value != 0
+        && price.value != 0 && box.value != "" && finish.value != "" && options.value.length != 0 && fileImages.value.length !=  0) {
+
+            Form_Data.append("vehicle", modele.value)
+            Form_Data.append("energy", energie.value)
+            Form_Data.append("price", price.value)
+            Form_Data.append("kilometer", kilometer.value)
+            Form_Data.append("year", year.value)
+            Form_Data.append("power", power.value)
+            Form_Data.append("motor", motor.value)
+            Form_Data.append("speedbox", box.value)
+            Form_Data.append("finish", finish.value)
+            Form_Data.append("equipments", options.value)
+
+            for(let [name, value] of Form_Data) {
+                console.log(`${name} = ${value}`); // key1 = value1, ensuite key2 = value2
+            }
+
+            await axios
+            .post ('http://localhost/src/api/addNewCar.php', Form_Data, {
+
+                header: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                if (response.data.success == true) {
+                    modele.value = 0
+                    marque.value = 0
+                    energie.value = 0
+                    price.value = 0
+                    kilometer.value = 0
+                    year.value = 0
+                    power.value = 0
+                    box.value = ""
+                    motor.value = ""
+                    finish.value = ""
+                    options.value = []
+                    optionsDescription.value =[]
+
+                    let p = document.querySelectorAll('p')
+                    p.forEach(element => {
+                        if (element.innerHTML == "") {
+                            element.remove()
+                        }
+                    })
+
+                    console.log(response.data)
+                }else console.log(response.data)
+            })
+            .catch(e => {
+                console.error(e)
+            })
+        }
     }
 
     getCars()
@@ -84,8 +185,12 @@
         <form class="form col-10">
             <h5>Caracteristiques du véhicule</h5>
             <div class="form__input">
-                <input class="form__field" type="file" name="image" id="image" placeholder="Photos" @change="getAdresseFile($event)">
+                <input class="form__field" type="file" name="image" id="image" placeholder="Photos" multiple @change="getAdresseFile($event)">
                 <label class="form__label" for="image">Photos</label>
+            </div>
+            <button @click="previewPicture($event)"><i class="fa-solid fa-plus"></i>Ajouter la photo</button>
+            <div class="preview__container">
+                <img class="preview__container-img" v-for="fileImage in fileImages" @click="deleteImage(fileImage)">
             </div>
             <div class="offcanvas__selectdiv">
                     <select class="offcanvas__select" @focusout="getModel()" v-model="marque" name="marque" id="marque">
@@ -96,13 +201,13 @@
                 <div class="offcanvas__selectdiv">
                     <select class="offcanvas__select" v-model="modele" name="modele" id="modele">
                         <option value="0" disabled selected>Modèle</option>
-                        <option v-for="modele in modeles" :value="modele">{{ modele }}</option>
+                        <option v-for="modele in modeles" :value="modele.id">{{ modele.modele }}</option>
                     </select>
                 </div>
                 <div class="offcanvas__selectdiv">
-                    <select class="offcanvas__select" name="energie" id="energie">
+                    <select class="offcanvas__select" v-model="energie" name="energie" id="energie">
                         <option value="0" disabled selected>Energie</option>
-                        <option v-for="energie in energies" :value="energie">{{ energie.nom }}</option>
+                        <option v-for="energie in energies" :value="energie.id">{{ energie.nom }}</option>
                     </select>
                 </div>
                 <div class="form__input">
@@ -125,19 +230,27 @@
                     <input class="form__field" v-model="box" type="text" name="box" id="box" placeholder="Boite de vitesse">
                     <label class="form__label" for="box">Boite de vitesse</label>
                 </div>
+                <div class="form__input">
+                    <input class="form__field" v-model="finish" type="text" name="finish" id="finish" placeholder="Finition">
+                    <label class="form__label" for="finish">Finition</label>
+                </div>
+                <div class="form__input">
+                    <input class="form__field" v-model="price" type="number" name="price" id="price" placeholder="Prix">
+                    <label class="form__label" for="price">Prix</label>
+                </div>
                 <h5>Equipements et options du véhicule</h5>
                 <div class="offcanvas__selectdiv">
                     <select class="offcanvas__select" name="equipement" id="equipement" v-model="equipement">
                         <option value="0" disabled selected>Equipements</option>
-                        <option v-for="equipement in equipements" :value="equipement.description">{{ equipement.description}}</option>
+                        <option v-for="equipement in equipements" :value="equipement.id">{{ equipement.description }}</option>
                     </select>
                 </div>
                 <button @click="addOption($event, equipement)"><i class="fa-solid fa-plus"></i>Ajouter un équipement</button>
                 <div class="information__equipement">
-                    <p v-for="option in options" @click="deleteOption(option)">{{ option }}</p>
+                    <p v-for="option in optionsDescription" @click="deleteOption(option)">{{ option }}</p>
                 </div>
         </form>
-        <button type="button" class="col-8">Enregistrer le véhicule</button>
+        <button type="button" class="col-8" @click="sendNewCar()">Enregistrer le véhicule</button>
     </main>
 </template>
 
@@ -170,6 +283,20 @@
 
     button {
         @include btn-style($orange-formular);
+    }
+
+    .preview__container {
+        @include flex-center;
+        flex-wrap: wrap;
+        gap: 1em;
+        margin-bottom: 2em;
+        padding: 0.5em;
+        box-shadow: 1px 1px 8px rgba($color: #000000, $alpha: 0.4);
+
+         &-img {
+            height: 10vh;
+            width: auto;
+         }
     }
 
     .form {

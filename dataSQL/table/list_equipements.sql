@@ -9,7 +9,7 @@ CREATE TABLE `list_equipements` (
 ALTER TABLE `list_equipements`
 ADD CONSTRAINT `equipements` FOREIGN KEY (`id_equipements`) REFERENCES `equipements`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
 ALTER TABLE `list_equipements`
-ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonces`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonces`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 INSERT INTO list_equipements (`id`, `id_annonces`, `id_equipements`) 
 VALUES

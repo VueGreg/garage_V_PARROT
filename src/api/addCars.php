@@ -14,24 +14,24 @@ function getCars() {
 
     try {
         if(empty($_POST)) {
-            $sql_modeles = "SELECT DISTINCT modele FROM vehicules";
+            $sql_modeles = "SELECT DISTINCT id, modele FROM vehicules GROUP BY modele";
             
             global $data;
 
             $statement = $data->prepare($sql_modeles);
             $statement->execute();
-            $modeles = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $modeles = $statement->fetchAll(PDO::FETCH_ASSOC);
     
             
         }
         elseif (isset($_POST['mark'])) {
-            $sql_modeles = "SELECT DISTINCT modele FROM vehicules WHERE marque LIKE :mark";
+            $sql_modeles = "SELECT DISTINCT id, modele FROM vehicules WHERE marque LIKE :mark GROUP BY modele";
 
             global $data;
             $statement = $data->prepare($sql_modeles);
             $statement ->bindParam(':mark', $_POST['mark']);
             $statement->execute();
-            $modeles = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $modeles = $statement->fetchAll(PDO::FETCH_ASSOC);
         }
 
             $sql_marques = "SELECT DISTINCT marque FROM vehicules";

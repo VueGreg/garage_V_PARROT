@@ -9,7 +9,7 @@ CREATE TABLE `galeries` (
 ALTER TABLE `galeries`
 ADD CONSTRAINT `images` FOREIGN KEY (`id_images`) REFERENCES `images`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
 ALTER TABLE `galeries`
-ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 INSERT INTO galeries (`id`, `id_images`, `id_annonces`) 
 VALUES 
