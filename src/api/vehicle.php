@@ -9,6 +9,8 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 
 if ($request_method == 'POST') {
         getCars();
+}elseif ($request_method == 'PUT') {
+        modifyCars();
 }else return_json(false, "La methode POST est requise");
 
 
@@ -156,7 +158,7 @@ function getCars() {
 
                                 $id = $annonces[$key]['numero_annonce'];
 
-                                $sql_equipements ="SELECT equipements.categorie AS categorie , equipements.description AS equipement
+                                $sql_equipements ="SELECT equipements.id, equipements.categorie AS categorie , equipements.description AS equipement
                                         FROM list_equipements
                                         INNER JOIN equipements ON list_equipements.id_equipements = equipements.id
                                         WHERE id_annonces LIKE :id";
@@ -187,4 +189,69 @@ function getCars() {
 
 echo json_encode($annonces);
 
+}
+
+
+function modifyCars(){
+
+        $_DELETE = json_decode(file_get_contents("php://input"),true);
+
+        if (isset($_DELETE['option']) && isset($_DELETE['annonce']) && !isset($_DELETE['addOption'])) {
+                $id = $_DELETE['option'];
+                $id_annonce = $_DELETE['annonce'];
+                
+                $sql_equipment = "DELETE FROM `list_equipements` WHERE id_equipements = :id AND id_annonces = :id_annonce";
+
+                global $data;
+                $statement = $data->prepare($sql_equipment);
+                $statement->bindParam(':id', $id, PDO::PARAM_INT);
+                $statement->bindParam(':id_annonce', $id_annonce, PDO::PARAM_INT);
+                
+                if ($statement->execute()) {
+                        $sql_equipements ="SELECT equipements.id, equipements.categorie AS categorie , equipements.description AS equipement
+                                        FROM list_equipements
+                                        INNER JOIN equipements ON list_equipements.id_equipements = equipements.id
+                                        WHERE id_annonces LIKE :id";
+                        $stmt = $data->prepare($sql_equipements);
+                        $stmt->bindParam(":id", $id_annonce, PDO::PARAM_INT);
+                        
+                        if ($stmt->execute()) {
+                                $result['equipements'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                return_json(true, 'option supprime', $result);
+                        }else return_json(false, 'equipements non charge');
+
+                }else return_json(false, 'element non supprime');
+
+        }else return_json(false, 'marche pas');
+
+        //------------ADD
+        if (isset($_DELETE['addOption']) && isset($_DELETE['annonce'])) {
+
+                $id = $_DELETE['addOption'];
+                $id_annonce = $_DELETE['annonce'];
+                
+                $sql_equipment = "INSERT INTO list_equipements (`id`, `id_annonces`, `id_equipements`)
+                                VALUES (NULL, :id_annonce, :id)";
+
+                global $data;
+                $statement = $data->prepare($sql_equipment);
+                $statement->bindParam(':id', $id, PDO::PARAM_INT);
+                $statement->bindParam(':id_annonce', $id_annonce, PDO::PARAM_INT);
+                
+                if ($statement->execute()) {
+                        $sql_equipements ="SELECT equipements.id, equipements.categorie AS categorie , equipements.description AS equipement
+                                        FROM list_equipements
+                                        INNER JOIN equipements ON list_equipements.id_equipements = equipements.id
+                                        WHERE id_annonces LIKE :id";
+                        $stmt = $data->prepare($sql_equipements);
+                        $stmt->bindParam(":id", $id_annonce, PDO::PARAM_INT);
+                        
+                        if ($stmt->execute()) {
+                                $result['equipements'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                return_json(true, 'option ajouté', $result);
+                        }else return_json(false, 'equipements non charge');
+
+                }else return_json(false, 'element non ajouté');
+
+        }else return_json(false, 'marche pas');
 }

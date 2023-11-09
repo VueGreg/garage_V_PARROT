@@ -262,7 +262,7 @@
         <button v-if="isConnect" class="addbtn col-5" :class="{ closebtn: isClick }"><i class="fa-solid fa-plus" @click="isClick ? isClick=false : isClick=true"></i></button>
 
             <div class="cards col-9" v-for="annonce in annonces" :key="annonce.numero_annonce">
-                <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
+                <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`" v-if="isConnect">
                     <div class="cards__image">
                         <img :src=annonce.photo>
                     </div>
@@ -272,16 +272,30 @@
                             <p>{{ annonce.motorisation }}</p>
                         </div>
                         <div class="cards__description-message">
-                            <RouterLink class="router" to="/dashboard/messages" v-if="isConnect">
+                            <RouterLink class="router" to="/dashboard/messages">
                                 <div class="send">
                                     <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
-                                    <div class="send__indicator" v-if="isConnect">
+                                    <div class="send__indicator">
                                         <span>{{ annonce.messages }}</span>
                                     </div>
                                     <p>Demande de renseignement</p>
                                 </div>
                             </RouterLink>
-                            <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`" v-else>
+                            <h3>{{ annonce.prix }}€</h3>
+                        </div>
+                    </div>
+                </RouterLink>
+                <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`" v-else>
+                    <div class="cards__image">
+                        <img :src=annonce.photo>
+                    </div>
+                    <div class="cards__description">
+                        <div class="cards__description-title">
+                            <h5>{{ annonce.marque }} {{ annonce.modele }}</h5>
+                            <p>{{ annonce.motorisation }}</p>
+                        </div>
+                        <div class="cards__description-message">
+                            <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
                                 <div class="send">
                                     <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
                                     <p>Demande de renseignement</p>
