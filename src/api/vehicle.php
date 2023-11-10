@@ -194,11 +194,14 @@ echo json_encode($annonces);
 
 function modifyCars(){
 
-        $_DELETE = json_decode(file_get_contents("php://input"),true);
+        $_PUT = json_decode(file_get_contents("php://input"),true);
 
-        if (isset($_DELETE['option']) && isset($_DELETE['annonce']) && !isset($_DELETE['addOption'])) {
-                $id = $_DELETE['option'];
-                $id_annonce = $_DELETE['annonce'];
+        if (isset($_PUT['option']) && isset($_PUT['annonce']) && empty($_PUT['addOption']) && empty($_PUT['year'])
+                && empty($_PUT['kilometer']) && empty($_PUT['energy']) && empty($_PUT['motor'])
+                && empty($_PUT['power']) && empty($_PUT['speedbox']) && empty($_PUT['finish'])) {
+
+                $id = $_PUT['option'];
+                $id_annonce = $_PUT['annonce'];
                 
                 $sql_equipment = "DELETE FROM `list_equipements` WHERE id_equipements = :id AND id_annonces = :id_annonce";
 
@@ -212,23 +215,23 @@ function modifyCars(){
                                         FROM list_equipements
                                         INNER JOIN equipements ON list_equipements.id_equipements = equipements.id
                                         WHERE id_annonces LIKE :id";
+
                         $stmt = $data->prepare($sql_equipements);
                         $stmt->bindParam(":id", $id_annonce, PDO::PARAM_INT);
-                        
+
                         if ($stmt->execute()) {
                                 $result['equipements'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                return_json(true, 'option supprime', $result);
-                        }else return_json(false, 'equipements non charge');
+                                return_json(true, 'Suppression réussi', $result); 
+                        }else return_json(false, 'Les equipements ne ce sont pas mis a jour');
 
                 }else return_json(false, 'element non supprime');
 
-        }else return_json(false, 'marche pas');
+        }elseif (isset($_PUT['addOption']) && isset($_PUT['annonce']) && empty($_PUT['year'])
+                && empty($_PUT['kilometer']) && empty($_PUT['energy']) && empty($_PUT['motor'])
+                && empty($_PUT['power']) && empty($_PUT['speedbox']) && empty($_PUT['finish'])) {
 
-        //------------ADD
-        if (isset($_DELETE['addOption']) && isset($_DELETE['annonce'])) {
-
-                $id = $_DELETE['addOption'];
-                $id_annonce = $_DELETE['annonce'];
+                $id = $_PUT['addOption'];
+                $id_annonce = $_PUT['annonce'];
                 
                 $sql_equipment = "INSERT INTO list_equipements (`id`, `id_annonces`, `id_equipements`)
                                 VALUES (NULL, :id_annonce, :id)";
@@ -253,5 +256,55 @@ function modifyCars(){
 
                 }else return_json(false, 'element non ajouté');
 
-        }else return_json(false, 'marche pas');
+        }elseif (isset($_PUT['annonce']) && isset($_PUT['year']) && isset($_PUT['kilometer']) && isset($_PUT['energy']) && isset($_PUT['motor'])
+                && isset($_PUT['power']) && isset($_PUT['speedbox']) && isset($_PUT['finish']) && isset($_PUT['price']) && empty($_PUT['addOption']) && empty($_PUT['option'])) {
+                
+                $id = $_PUT['annonce'];
+                $year = $_PUT['year'];
+                $kilometer = $_PUT['kilometer'];
+                $energy = $_PUT['energy'];
+                $motor = $_PUT['motor'];
+                $power = $_PUT['power'];
+                $speedbox = $_PUT['speedbox'];
+                $finish = $_PUT['finish'];
+                $price = $_PUT['price'];
+
+
+                $sql_modifyCar = "UPDATE annonces 
+                        SET id_energies = :energy, prix = :price, kilometrage = :kilometer, annee = :annee, 
+                        puissance = :power, boite_vitesse = :speedbox, motorisation = :motor, finition = :finish
+                        WHERE numero_annonce LIKE :id";
+                
+                global $data;
+
+                $statement = $data->prepare($sql_modifyCar);
+                $statement->bindParam(':energy', $energy, PDO::PARAM_INT);
+                $statement->bindParam(':price', $price, PDO::PARAM_INT);
+                $statement->bindParam(':kilometer', $kilometer, PDO::PARAM_INT);
+                $statement->bindParam(':annee', $year, PDO::PARAM_INT);
+                $statement->bindParam(':power', $power, PDO::PARAM_INT);
+                $statement->bindParam(':speedbox', $speedbox, PDO::PARAM_STR);
+                $statement->bindParam(':motor', $motor, PDO::PARAM_STR);
+                $statement->bindParam(':finish', $finish, PDO::PARAM_STR);
+                $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+                if ($statement->execute()) {
+                        $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, 
+                                        energies.nom AS energie, vehicules.marque AS marque, vehicules.modele AS modele
+                                        FROM annonces
+                                        INNER JOIN energies ON annonces.id_energies = energies.id
+                                        INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
+                                        WHERE annonces.numero_annonce = :id";
+                        
+                        $stmt = $data->prepare($sql_annonces);
+                        $stmt->bindParam(':id', $id);
+
+                        if ($stmt->execute()) {
+                                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                return_json(true, 'annonce mis a jour', $result);
+
+                        }else return_json(false, 'l\'annonce n\'a pu être chargé');
+
+                }else return_json(false, 'Les modifications n\'ont pas été pris en compte');
+        }
 }
