@@ -18,6 +18,10 @@ if ($request_method == 'POST') {
                 getUsers();
                 break;
             
+            case isset($_POST['temoignages']):
+                getTestimony();
+                break;
+            
             default:
             return_json(false, "une variable est attendue");
             break;
@@ -29,7 +33,7 @@ function getMessages() {
     try {
         $sql = "SELECT * FROM messages";
         $messages['messages'] = simple_fetch_data($sql);
-        $messages['nombres'] = count($messages);
+        $messages['nombres'] = count($messages['messages']);
 
         return_json(true, "messages trouvés", $messages);
     } catch (PDOException $e) {
@@ -56,5 +60,23 @@ function getUsers() {
         return_json(true, 'utilisateur trouve', $users);
     } catch (PDOException $e) {
         return_json(false, 'Aucuns utilisateurs trouvés', $e->getMessage());
+    }
+}
+
+function getTestimony() {
+    try {
+        $sql = "SELECT * FROM temoignages";
+        $temoignages['temoignages'] = simple_fetch_data($sql);
+        $temoignages['nombres'] = 0;
+
+        foreach ($temoignages['temoignages'] as $temoignage) {
+            if ($temoignage['etat'] == 0) {
+                $temoignages['nombres'] +=1;
+            }
+        }
+
+        return_json(true, "temoignages trouvés", $temoignages);
+    } catch (PDOException $e) {
+        return_json(false, "aucuns temoignages trouvés", $e->getMessage());
     }
 }

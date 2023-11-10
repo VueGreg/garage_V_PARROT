@@ -10,6 +10,7 @@
     const countMessages = ref()
     const countUsers = ref()
     const countVehicles = ref()
+    const countTestimony = ref()
     const { cookies } = useCookies() 
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
@@ -44,6 +45,15 @@
         countVehicles.value = response.data.nombre_vehicules
     })
     .catch (e => {
+        console.error(e)
+    })
+
+    axios
+    .post('http://localhost/src/api/dashboard.php', {
+        temoignages: 'getTestimony'
+    }).then (response => {
+        countTestimony.value = response.data.nombres
+    }).catch (e => {
         console.error(e)
     })
 
@@ -99,9 +109,14 @@
                 </div>
             </div>
         </RouterLink>
-        <div class="bar__btn">
-            <i class="fa-regular fa-comment-dots" style="color: #ffffff;"></i>
-        </div>
+        <RouterLink class="link" to="/dashboard/temoignage">
+            <div class="bar__btn" :class="{'active': path =='/dashboard/temoignage'}"> 
+                <i class="fa-regular fa-comment-dots"></i>
+                <div class="bar__btn-indicator">
+                    <span>{{ countTestimony }}</span>
+                </div>
+            </div>
+        </RouterLink>
     </div>
 </template>
 

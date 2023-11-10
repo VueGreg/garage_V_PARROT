@@ -7,6 +7,8 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 
 if ($request_method == 'POST') {
     postCommentaires();
+}elseif ($request_method == 'PUT') {
+        commentaryAccept();
 }else return_json(false, "La methode POST est requise");
 
 
@@ -47,4 +49,42 @@ function postCommentaires()
         return_json(true, "Insertion reussi", $result);
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
+}
+
+function commentaryAccept() {
+
+    $_PUT = json_decode(file_get_contents('php://input'), true);
+
+    if (isset($_PUT['accept']) && isset($_PUT['id'])) {
+
+        $id = $_PUT['id'];
+        $state = $_PUT['accept'];
+
+        if ($state == 'yes') {
+
+            try {
+                $sql = "UPDATE temoignages SET etat = '1' WHERE id = :id";
+    
+                global $data;
+                $statement = $data->prepare($sql);
+                $statement->bindParam(':id', $id);
+                $statement->execute();
+                return_json(true, 'temoignage accepté');
+                
+            } catch (Exception $e){ return_json(false, $e->getMessage());}
+        }
+        elseif ($state == 'no') {
+
+            try {
+                $sql = "DELETE FROM temoignages WHERE id = :id";
+    
+                global $data;
+                $statement = $data->prepare($sql);
+                $statement->bindParam(':id', $id);
+                $statement->execute();
+                return_json(true, 'temoignage effacé');
+                
+            } catch (Exception $e){ return_json(false, $e->getMessage());}
+        }
+    }else return_json(false, 'des paramètres sont manquant');
 }

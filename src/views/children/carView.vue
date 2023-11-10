@@ -130,9 +130,7 @@
                 box.value = response.data[0].boite_vitesse
                 finish.value = response.data[0].finition
                 price.value = response.data[0].prix
-                console.log(response.data)
             }*/
-            console.log(response.data)
         })
         .catch (e => {
             console.error(e)

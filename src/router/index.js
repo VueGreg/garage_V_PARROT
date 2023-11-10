@@ -11,6 +11,7 @@ import MessagesView from "../views/children/messageView.vue"
 import UserView from "../views/children/userView.vue"
 import SettingView from "../views/children/settingView.vue"
 import carView from "../views/children/carView.vue"
+import testimonyView from "../views/children/testimonyView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,10 @@ const router = createRouter({
         {
           path: 'vehicule/:id',
           component: carView,
+        },
+        {
+          path: 'temoignage',
+          component: testimonyView,
         },
       ]
     }
