@@ -44,4 +44,10 @@
         }
     }
 
+    @media screen and (min-width: 600px) {
+        h1 {
+            width: 80vw;
+        }
+    }
+
 </style>

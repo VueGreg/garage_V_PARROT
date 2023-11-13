@@ -6,9 +6,9 @@
 </script>
 
 <template>
-    <section class="container row">
-        <h2 class="col-10">NOS CLIENTS TEMOIGNES</h2>
-        <div class="testimony__card col-8" v-for="temoignage in temoignages" :key="temoignage.id">
+    <section class="row">
+        <h2 class="col-10 col-sm-7 col-md-10">NOS CLIENTS TEMOIGNES</h2>
+        <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in temoignages" :key="temoignage.id">
             <div class="testimony__card-person">
                 <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
             </div>
@@ -99,5 +99,47 @@
             font-weight: 600;
         }
     }
+
+    @media screen and (min-width: 480px) {
+
+        section {
+            padding: 2em;
+        }
+        .testimony__card{
+
+            &-person img{
+                width: 15vw;
+                height: 15vw;
+            }
+        }
+    }
+
+    @media screen and (min-width: 960px) {
+        .testimony__card{
+
+            &-person img{
+                width: 8vw;
+                height: 8vw;
+            }
+
+            &-text {
+                font-size: 0.8em;
+            }
+        }
+    }
+
+    @media screen and (min-width: 1260px) {
+        .testimony__card{
+
+            &-person img{
+                width: 6vw;
+                height: 6vw;
+            }
+
+            &-text {
+                font-size: 0.9em;
+            }
+        }
+}
 
 </style>

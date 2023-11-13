@@ -84,7 +84,7 @@
 
     header {
         background-color: $dark-grey;
-        height: 22vh;
+        height: 16vh;
     }
     .logo{
         @include flex-center;
@@ -135,5 +135,32 @@
 
     .navigate-link {
         text-decoration: none;
+    }
+
+    @media screen and (min-width: 580px) {
+
+        header {
+            height: 12vh;
+        }
+        
+        .button__header-text {
+            margin: 0;
+            margin-left: 0.5em;
+        }
+    }
+
+    @media screen and (min-width: 960px) {
+
+        header {
+            height: 8vh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .button {
+
+            width: 45vw;
+        }
     }
 </style>

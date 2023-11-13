@@ -20,28 +20,30 @@
 
 <template>
     <section class="row">
-        <h2 class="col-10">NOS DERNIERS VEHICULES INTRODUIT DANS LE PARC</h2>
-        <div class="cards col-10" v-for="annonce in lastAnnonces" :key="annonce.numero_annonce">
-            <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
-            <div class="cards__image">
-                <img :src=annonce.photo>
-            </div>
-            <div class="cards__description">
-                <div class="cards__description-title">
-                    <h5>{{ annonce.marque }} {{ annonce.modele }}</h5>
-                    <p>{{ annonce.motorisation }}</p>
+        <h2 class="col-10 col-sm-7 col-md-8 col-lg-10">NOS DERNIERS VEHICULES INTRODUIT DANS LE PARC</h2>
+        <div class="container-card m-auto col-sm-10">
+            <div class="cards col-8 col-lg-6 col-xl-3" v-for="annonce in lastAnnonces" :key="annonce.numero_annonce">
+                <RouterLink class="link" active-class="active" :to="`/annonces/${annonce.numero_annonce}`">
+                <div class="cards__image">
+                    <img :src=annonce.photo>
                 </div>
-                <div class="cards__description-message">
-                    <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
-                        <div class="send">
-                            <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
-                            <p>Demande de renseignement</p>
-                        </div>
-                    </RouterLink>
-                    <h3>{{ annonce.prix }}€</h3>
+                <div class="cards__description">
+                    <div class="cards__description-title">
+                        <h5>{{ annonce.marque }} {{ annonce.modele }}</h5>
+                        <p>{{ annonce.motorisation }}</p>
+                    </div>
+                    <div class="cards__description-message">
+                        <RouterLink class="router" :to="`/contact/${annonce.numero_annonce}`">
+                            <div class="send">
+                                <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
+                                <p>Demande de renseignement</p>
+                            </div>
+                        </RouterLink>
+                        <h3>{{ annonce.prix }}€</h3>
+                    </div>
                 </div>
+                </RouterLink>
             </div>
-            </RouterLink>
         </div>
     </section>
     <button><RouterLink class="link" active-class="active" to="/annonces">Afficher tous les véhicules</RouterLink></button>
@@ -135,6 +137,42 @@
             width: 100%;
             height: auto;
             border-radius: 6px 6px 0px 0px;
+        }
+    }
+
+
+    @media screen and (min-width: 1200px) {
+
+        .container-card {
+
+            display: flex;
+        }
+    }
+
+    @media screen and (min-width: 1600px) {
+
+        .container-card {
+
+            display: flex;
+        }
+        
+        .cards {
+            font-size: 1.2em;
+
+                &__description-title p{
+
+                    font-size: 1em;
+                }
+
+                &__description-message p {
+                    font-size: 0.9em;
+                }
+            }
+        
+
+        h5 {
+            font-size: 1.6em;
+            font-weight: 600;
         }
     }
 

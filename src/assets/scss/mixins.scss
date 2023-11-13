@@ -11,6 +11,10 @@
     color: $primary-color;
     margin: 3em auto;
     font-size: 1.4em;
+
+    @media screen and (min-width: 480px) {
+        font-size: 1.8em;
+    }
 }
 
 @mixin btn-style($color-btn) {

@@ -18,8 +18,8 @@
 </script>
 
 <template>
-    <footer class="container row">
-        <div class="enseigne col-12">
+    <footer class="row">
+        <div class="enseigne col-12 col-lg-4">
             <div class="logo">
                 <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
                 <p class="logo__text">GARAGE V.PARROT</p>
@@ -31,36 +31,37 @@
                 </ul>
             </div>
         </div>
-
-        <div class="footer col-12">
-            <div class="footer__title">
-                <div class="footer__logo">
-                    <i class="fa-solid fa-circle-info" style="color: #ffffff;"></i>
+        <div class="commune col-lg-8">
+            <div class="footer col-12 col-sm-6">
+                <div class="footer__title">
+                    <div class="footer__logo">
+                        <i class="fa-solid fa-circle-info" style="color: #ffffff;"></i>
+                    </div>
+                    <p>Information de contact</p>
                 </div>
-                <p>Information de contact</p>
-            </div>
-            <div class="footer__text" v-for="information in informations" :key="information.id">
-                <p>{{ information.adresse }}</p>
-                <p>{{ information.code_postal }}  {{ information.ville }}</p>
-                <p>{{ information.num_telephone }}</p>
-                <p class="mail">{{ information.mail }}</p>
-            </div>
-        </div>
-
-        <div class="footer col-12">
-            <div class="footer__title">
-                <div class="footer__logo">
-                    <i class="fa-solid fa-clock" style="color: #ffffff;"></i>
+                <div class="footer__text" v-for="information in informations" :key="information.id">
+                    <p>{{ information.adresse }}</p>
+                    <p>{{ information.code_postal }}  {{ information.ville }}</p>
+                    <p>{{ information.num_telephone }}</p>
+                    <p class="mail">{{ information.mail }}</p>
                 </div>
-                <p>Horaires d'ouverture</p>
             </div>
-            <div class="footer__text">
-                <table class="footer__text-table">
-                    <tr v-for="horaire in horaires" :key="horaire.id">
-                        <td>{{ horaire.jour_semaine }}:</td>
-                        <td>{{ horaire.h_debut_matin }}-{{ horaire.h_fin_matin }} / {{ horaire.h_debut_soir }}-{{ horaire.h_fin_soir }}</td>
-                    </tr>
-                </table>
+
+            <div class="footer col-12 col-sm-6">
+                <div class="footer__title">
+                    <div class="footer__logo">
+                        <i class="fa-solid fa-clock" style="color: #ffffff;"></i>
+                    </div>
+                    <p>Horaires d'ouverture</p>
+                </div>
+                <div class="footer__text">
+                    <table class="footer__text-table">
+                        <tr v-for="horaire in horaires" :key="horaire.id">
+                            <td>{{ horaire.jour_semaine }}:</td>
+                            <td>{{ horaire.h_debut_matin }} / {{ horaire.h_fin_soir }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -78,7 +79,7 @@
 @import '@/assets/scss/mixins.scss';
 
     
-    .container{
+    footer{
         background-color: $dark-grey;
         color: white;
         font-size: 0.8em;
@@ -158,6 +159,27 @@
             margin: 0;
             width: auto;
             font-size: 0.7em;
+        }
+    }
+
+    @media screen and (min-width: 480px) {
+        .commune {
+            display: flex;
+            margin: 2em auto;
+        }
+
+        .copyright {
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        .row {
+            align-items: center;
+        }
+
+        .commune {
+            align-items: center;
         }
     }
 

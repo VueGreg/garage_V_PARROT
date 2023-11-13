@@ -1,7 +1,7 @@
 <script setup>
 
     import axios from 'axios'
-    import { ref } from 'vue'
+    import { ref, reactive, watch } from 'vue'
     import { useCookies } from 'vue3-cookies';
 
     const { cookies } = useCookies()
@@ -13,6 +13,15 @@
     const isAction = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
+
+    //-----v-models
+    const models = reactive({
+        adresse: null,
+        postal: null,
+        city: null,
+        tel: null,
+        mail: null
+    })
 
     const userAuthorized = () => {
         if (userPermissions != null) {
@@ -44,6 +53,11 @@
         console.error(e)
     })
 
+    const changeBusinessSetting = async() => {
+        await axios
+        .put()
+    }
+
     userAuthorized()
 
 </script>
@@ -60,19 +74,28 @@
             </div>
             <form class="form col-9">
                 <div class="form__input">
-                    <input class="form__field" type="text" name="adresse" id="adresse" :placeholder="information.adresse">
+                    <input class="form__field" v-model="models.adresse" type="text" name="adresse" id="adresse" :placeholder="information.adresse">
                     <label class="form__label" for="nom">{{ information.adresse }}</label>
                 </div>
                 <div class="form__group">
                     <div class="form__input col-5">
-                        <input class="form__field" type="text" name="postal_code" id="postal_code" :placeholder="information.code_postal">
+                        <input class="form__field" v-model="models.postal" type="text" name="postal_code" id="postal_code" :placeholder="information.code_postal">
                         <label class="form__label" for="postal_code">{{ information.code_postal }}</label>
                     </div>
                     <div class="form__input col-5">
-                        <input class="form__field" type="text" name="city" id="city" :placeholder="information.ville">
+                        <input class="form__field" v-model="models.city" type="text" name="city" id="city" :placeholder="information.ville">
                         <label class="form__label" for="city">{{ information.ville }}</label>
                     </div>
                 </div>
+                <div class="form__input">
+                    <input class="form__field" v-model="models.tel" type="tel" name="tel" id="tel" :placeholder="information.num_telephone">
+                    <label class="form__label" for="tel">{{ information.num_telephone }}</label>
+                </div>
+                <div class="form__input">
+                    <input class="form__field" v-model="models.mail" type="email" name="email" id="email" :placeholder="information.mail">
+                    <label class="form__label" for="email">{{ information.mail }}</label>
+                </div>
+                <button type="button" @click="changeBusinessSetting()">Modifier les informations</button>
             </form>
         </section>
         <section class="row">

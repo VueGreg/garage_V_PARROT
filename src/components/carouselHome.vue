@@ -1,53 +1,39 @@
-<script setup>
-
-    const images = [
-        {
-            id:1, 
-            adresse:"http://gregory-wolff.com/images/slide__repair-background(3).png", 
-            title:"REPARATIONS", 
-            text:"Prenez rendez-vous dans notre centre",
-            button:"Appeler maintenant",
-            link:""
-        },
-        {
-            id:2,
-            adresse:"http://gregory-wolff.com/images/198373918_l_normal_none 1(5).png",
-            title:"VEHICULES D'OCCASION",
-            text:"Achetez votre véhicule d’occasion contrôlée & garantie",
-            button:"Voir les véhicules",
-            link:"/annonces"
-        },
-        {
-            id:3,
-            adresse:"http://gregory-wolff.com/images/212596211_l_normal_none.jpg",
-            title:"PRENDRE CONTACT",
-            text:"Prenez contact rapidement avec nous",
-            button:"Envoyer un message",
-            link:"/contact/0"
-        }
-    ]
-
-</script>
-
 <template>
-        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselAutoplaying" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <div class="carousel-item active" v-for="image in images" :key="image.id">
-                    <img class="d-block w-100" :src= image.adresse>
+                <div class="carousel-item carousel-image carousel-img-1 active">
                     <div class="carousel-caption d-md-block carousel__text">
-                        <h5 class="carousel__text-title">{{ image.title }}</h5>
-                        <p class="carousel__text-description">{{ image.text }}</p>
-                        <RouterLink :to="image.link">
-                            <button class="carousel__text-button">{{ image.button }}</button>
+                        <h5 class="carousel__text-title">REPARATIONS</h5>
+                        <p class="carousel__text-description">Prenez rendez-vous dans notre centre</p>
+                        <RouterLink to="/reparations">
+                            <button class="carousel__text-button">Appeler maintenant</button>
+                        </RouterLink>
+                    </div>
+                </div>
+                <div class="carousel-item carousel-image carousel-img-2">
+                    <div class="carousel-caption d-md-block carousel__text">
+                        <h5 class="carousel__text-title">VEHICULES D'OCCASION</h5>
+                        <p class="carousel__text-description">Achetez votre véhicule d’occasion contrôlée & garantie</p>
+                        <RouterLink to="/annonces">
+                            <button class="carousel__text-button">Voir les véhicules</button>
+                        </RouterLink>
+                    </div>
+                </div>
+                <div class="carousel-item carousel-image carousel-img-3">
+                    <div class="carousel-caption d-md-block carousel__text">
+                        <h5 class="carousel__text-title">PRENDRE CONTACT</h5>
+                        <p class="carousel__text-description">Prenez contact rapidement avec nous</p>
+                        <RouterLink to="/contact/0">
+                            <button class="carousel__text-button">Envoyer un message</button>
                         </RouterLink>
                     </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutoplaying" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselAutoplaying" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
@@ -56,6 +42,24 @@
 
 <style lang="scss" scoped>
 
+    .carousel-img-1 {
+        background: url("http://gregory-wolff.com/images/slide__repair-background(3).png");
+    }
+
+    .carousel-img-2 {
+        background: url("http://gregory-wolff.com/images/198373918_l_normal_none 1(5).png");
+    }
+
+    .carousel-img-3 {
+        background: url("http://gregory-wolff.com/images/212596211_l_normal_none.jpg");
+    }
+
+    .carousel-image {
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        height: 35vh;
+    }
     .carousel__text{
         &-title{
             font-size: 1.6em;
@@ -79,8 +83,69 @@
         }
     }
 
-    .d-block {
-        height: 35vh;
+    @media screen and (min-width: 480px) {
+        
+        .carousel-image {
+            height: 40vh;
+        }
+
+        .carousel__text {
+            position: absolute;
+            transform: translate(25%, -80%);
+
+            &-title {
+                font-size: 2.5em;
+            }
+
+            &-button {
+                font-size: 1em;
+            }
+
+            & p {
+                font-size: 1em;
+            }
+        }
     }
+
+    @media screen and (min-width: 960px) {
+
+        .carousel-image {
+            height: 60vh;
+        }
+
+        .carousel__text {
+
+            transform: translate(25%, -120%);
+
+        &-title {
+                font-size: 3.5em;
+            }
+
+            &-button {
+                font-size: 1.2em;
+            }
+
+            & p {
+                font-size: 1.2em;
+            }
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+
+        .carousel-image {
+            height: 75vh;
+        }
+
+    }
+
+    @media screen and (min-width: 1700px) {
+
+        .carousel-image {
+            height: 90vh;
+        }
+
+    }
+
 
 </style>

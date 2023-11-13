@@ -16,9 +16,9 @@
 </script>
 
 <template>
-    <section class="social">
-        <h2>SUIVEZ NOUS</h2>
-        <div class="social__network">
+    <section class="social row">
+        <h2 class="col-10 col-sm-7">SUIVEZ NOUS</h2>
+        <div class="social__network col-10 col-md-8">
             <a :href=socialNetworks.facebook><img src="http://gregory-wolff.com/images/facebook_logo.png" alt=""></a>
             <a :href=socialNetworks.twitter><img src="http://gregory-wolff.com/images/twitter_logo.png" alt=""></a>
             <a :href=socialNetworks.linkedin><img src="http://gregory-wolff.com/images/linkedin_logo.png" alt=""></a>

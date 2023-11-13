@@ -116,11 +116,11 @@
 
     <!-- Main -->
     <main class="row">
-        <div class="title col-10">
+        <div class="title col-10 col-sm-7">
             <h2>CONTACT</h2>
             <p>Envoyez nous votre demande avec vos coordonnées, notre équipe reviendra vers vous dans les meilleurs délais.</p>
         </div>
-        <form class="form col-8">
+        <form class="form col-8 col-sm-7 col-md-5">
             <Transition>
                 <div class="vehicle" v-if="isVisible">
                     <p>Ma demande concerne le véhicule: <br> {{ vehicules.marque }} {{ vehicules.modele }} {{ vehicules.motorisation }}</p>
@@ -152,7 +152,7 @@
                 <label class="form__label" for="message">Votre message</label>
             </div>
         </form>
-        <button class="col-6" @click="sendMessage()">Envoyer message</button>
+        <button class="col-6 col-sm-4 col-md-3" @click="sendMessage()">Envoyer message</button>
     </main>
 </template>
 
@@ -312,6 +312,12 @@
             background-color: rgb(225, 225, 225);
             box-shadow: 2px 2px 5px rgba($color: $primary-color, $alpha: 0.2);
             margin: 0;
+        }
+    }
+
+    @media screen and (min-width: 520px) {
+        .row {
+            flex-direction: column;
         }
     }
 

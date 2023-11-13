@@ -9,7 +9,7 @@ CREATE TABLE `entreprise` (
   `adresse` VARCHAR(255) NOT NULL,
   `code_postal` INT(5) NOT NULL,
   `ville` VARCHAR(255) NOT NULL,
-  `num_telephone` INT(10) NOT NULL,
+  `num_telephone` VARCHAR(10) NOT NULL,
   `mail` VARCHAR (100) NOT NULL,
   `adresse_logo` VARCHAR(255) NOT NULL,
   `facebook` VARCHAR(255) NOT NULL,

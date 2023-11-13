@@ -185,11 +185,11 @@
 <template>
     <main class="row">
         <newCar v-if="isConnect && isClick"/>
-        <h1 class="col-10" v-if="isConnect">{{ countAnnonces }}</h1>
-        <h2 class="col-10" v-if="isConnect">VEHICULES EN VENTE</h2>
+        <h1 class="col-10 col-sm-8" v-if="isConnect">{{ countAnnonces }}</h1>
+        <h2 class="col-10 col-sm-8" v-if="isConnect">VEHICULES EN VENTE</h2>
         <appBar v-if="isConnect"/>
         <h2 class="col-10" v-else>RETROUVEZ TOUS NOS VEHICULES EN VENTE</h2>
-            <button class="btn btn-primary col-6" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            <button class="btn btn-primary col-6 col-sm-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                 <i class="fa-solid fa-filter" style="color: #ffffff;"></i>
                 <span>Filtrer</span>
             </button>
@@ -261,7 +261,7 @@
 
         <button v-if="isConnect" class="addbtn col-5" :class="{ closebtn: isClick }"><i class="fa-solid fa-plus" @click="isClick ? isClick=false : isClick=true"></i></button>
 
-            <div class="cards col-9" v-for="annonce in annonces" :key="annonce.numero_annonce">
+            <div class="cards col-9 col-sm-8" v-for="annonce in annonces" :key="annonce.numero_annonce">
                 <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`" v-if="isConnect">
                     <div class="cards__image">
                         <img :src=annonce.photo>

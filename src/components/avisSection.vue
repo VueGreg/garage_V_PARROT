@@ -45,8 +45,8 @@
 <template>
 
     <section class="section__form row">
-        <h2 class="col-10">LAISSEZ NOUS UN AVIS</h2>
-        <form class="form col-10">
+        <h2 class="col-10 col-sm-7 col-md-8">LAISSEZ NOUS UN AVIS</h2>
+        <form class="form col-10 col-sm-7 col-md-8 col-lg-6">
             <div class="note">
                 <p>Notez nous</p>
                 <div class="rating__stars">
@@ -82,7 +82,7 @@
             </div>
         </form>
 
-        <button class="col-6" @click="sendCom()">Envoyer mon avis</button>
+        <button class="col-6 col-sm-4" @click="sendCom()">Envoyer mon avis</button>
         <span class="form__input-alert" v-if="stateForm">Tous les champs ne sont pas renseigné</span>
     </section>
 
@@ -249,6 +249,14 @@
             transition: all 0.5s ease 0s;
         }
 
+    }
+
+    @media screen and (min-width: 1000px) {
+        
+        .row {
+            flex-direction: column;
+        }
+    
     }
 
     

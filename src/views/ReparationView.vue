@@ -22,7 +22,7 @@
     <main class="row">
         <h2 class="col-10">RETROUVEZ L'ENSEMBLE DE NOS PRESTATIONS</h2>
         <section>
-            <div class="repair__card col-10" v-for="categorie in categories" :key="categorie.id">
+            <div class="repair__card col-10 col-sm-7" v-for="categorie in categories" :key="categorie.id">
                 <h4 class="repair__card-title">{{ categorie.categorie }}</h4>
                 <div class="repair__card-description" v-for="prestation in prestations" :key="prestation.id">
                     <ul>
