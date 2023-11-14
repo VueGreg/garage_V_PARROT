@@ -1,7 +1,6 @@
 <script setup>
 
     import { useCookies } from 'vue3-cookies';
-    import appBar from '../components/appBar.vue'
     import { RouterView } from "vue-router";
 
     const { cookies } = useCookies();
@@ -17,7 +16,6 @@
     <div class="dashboard__header">
         <h1>TABLEAU DE BORD DE {{ upperName }} {{ upperSurname }}</h1>
     </div>
-    <appBar/>
     <RouterView />
 </template>
 
@@ -48,6 +46,30 @@
         h1 {
             width: 80vw;
         }
+    }
+
+    @media screen and (min-width: 960px) {
+
+        .dashboard__header {
+            height: 60vh;
+            margin-bottom: 10em;
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+
+        .dashboard__header {
+            height: 75vh;
+        }
+
+    }
+
+    @media screen and (min-width: 1700px) {
+
+        .dashboard__header {
+            height: 90vh;
+        }
+
     }
 
 </style>

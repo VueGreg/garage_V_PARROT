@@ -55,7 +55,7 @@
 <template>
 
     <main class="row">
-        <form class="form col-8">
+        <form class="form col-8 col-sm-6 col-md-5 col-lg-3">
             <div class="form__input">
                 <input class="form__field" @focusout="Mail_Valide(email)" v-model="email" type="email" name="email" id="email" placeholder="Votre adresse mail">
                 <label class="form__label" for="email">Votre adresse mail</label>
@@ -68,7 +68,7 @@
             </div>
         </form>
         <span v-if="connectError" class="error">Adresse mail ou mot de passe incorrect</span>
-        <button class="form__btn col-6" @click="postConnect()">Connexion</button>
+        <button class="form__btn col-6 col-sm-4 col-md-2 col-lg-1" @click="postConnect()">Connexion</button>
     </main>
 
 </template>
@@ -172,6 +172,17 @@
     .error {
         text-align: center;
         color: red;
+    }
+
+    @media screen and (min-width: 560px) {
+        
+        .row {
+            flex-direction: column;
+        }
+
+        .form {
+            margin: 5.5em auto;
+        }
     }
 
 

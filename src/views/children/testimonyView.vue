@@ -1,31 +1,40 @@
 <script setup>
 
     import axios from 'axios';
-    import { ref } from 'vue';
+    import { ref, defineEmits } from 'vue';
     import { useCookies } from 'vue3-cookies';
+    import informationModal from '../../components/informationModal.vue';
 
     const countMessages = ref()
     const temoignages = ref([])
     const isAction = ref(false)
     const showAwaitTestimonys = ref([])
-    
 
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        temoignages: 'getTestimony'
-    }).then (response => {
-        temoignages.value = response.data.temoignages
-        countMessages.value = response.data.nombres
-        
-        temoignages.value.forEach(temoignage => {
-            if (temoignage.etat == 0) {
-                showAwaitTestimonys.value.push(temoignage)
-            }
+    //-----Modal response
+    const isModal = ref(false)
+    const emit = defineEmits(['close'])
+    const messageModal = ref()
+
+
+    //-----Functions
+    const getTestimony = async() => {
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            temoignages: 'getTestimony'
+        }).then (response => {
+            temoignages.value = response.data.temoignages
+            countMessages.value = response.data.nombres
+            
+            temoignages.value.forEach(temoignage => {
+                showAwaitTestimonys.value = []
+                if (temoignage.etat == 0) {
+                    showAwaitTestimonys.value.push(temoignage)
+                }
+            })
+        }).catch (e => {
+            console.error(e)
         })
-
-    }).catch (e => {
-        console.error(e)
-    })
+    }
 
     const goAccept = async(id) => {
         await axios
@@ -34,7 +43,11 @@
             accept: 'yes'
         })
         .then(response => {
-            console.log(response.data)
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getTestimony()
+            }
         }).catch (e => {
             console.error(e)
         })
@@ -47,15 +60,22 @@
             accept: 'no'
         })
         .then(response => {
-            console.log(response.data)
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getTestimony()
+            }
         }).catch (e => {
             console.error(e)
         })
     }
 
+    getTestimony()
+
 </script>
 
 <template>
+    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
     <main class="row">
         <h1 class="col-9">{{ countMessages }}</h1>
         <h2 class="col-9" v-if="countMessages<=1">TEMOIGNAGE NON TRAITE</h2>

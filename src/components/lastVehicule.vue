@@ -161,17 +161,13 @@
 
                 &__description-title p{
 
-                    font-size: 1em;
-                }
-
-                &__description-message p {
                     font-size: 0.9em;
                 }
             }
         
 
         h5 {
-            font-size: 1.6em;
+            font-size: 1.5em;
             font-weight: 600;
         }
     }

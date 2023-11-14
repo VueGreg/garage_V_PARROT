@@ -32,20 +32,20 @@
             <h4>{{ vehicule.motorisation }}</h4>
             <h5>{{ vehicule.prix }}€</h5>
         <RouterLink class="router" :to="`/contact/${vehicule.numero_annonce}`">
-            <div class="btn col-8">
+            <div class="btn col-8 col-sm-6 col-md-5 col-lg-3">
                 <i class="fa-solid fa-envelope" style="color: #f36639;"></i>
                 <span>Je souhaite en savoir plus</span>
             </div>
         </RouterLink>
         </div>
 
-        <div class="photos col-8" v-for="vehicule in vehicules">
-            <div class="images" v-for="image in vehicule.images" :key="image.id">
-                <img :src="image.photo" alt="">
+            <div class="photos col-9 col-sm-7 col-lg-5" v-for="vehicule in vehicules">
+                <div class="images" v-for="image in vehicule.images" :key="image.id">
+                    <img :src="image.photo" alt="">
+                </div>
             </div>
-        </div>
         
-        <div class="informations col-8">
+        <div class="informations col-8 col-lg-5">
 
             <div class="informations__title">
                         <button @click="showStats=false" :class="{active: !showStats}">Caractéristiques</button>
@@ -215,7 +215,7 @@
     }
 
     .photos {
-        margin: auto;
+        margin: 5em auto;
     }
 
     .images,
@@ -228,6 +228,24 @@
     img {
         border-radius: 3px;
         box-shadow: 2px 2px 10px rgba($color: #000000, $alpha: 0.3);
+    }
+
+    @media screen and (min-width: 1000px) {
+        
+        .row {
+            flex-direction: column;
+        }
+
+        .photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+
+            & .images {
+                width: 20vw;
+            }
+        }
+
     }
 
 </style>

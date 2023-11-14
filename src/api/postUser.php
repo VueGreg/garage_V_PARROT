@@ -43,7 +43,7 @@ function postUser()
             "prenom" => $surname
         );
 
-        return_json(true, "Insertion reussi", $result);
+        return_json(true, "Le nouvel utilisateur à été créé", $result);
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
 }

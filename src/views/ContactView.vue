@@ -2,6 +2,7 @@
     import axios from "axios";
     import { ref, watch } from "vue";
     import { useRoute } from "vue-router";
+    import carouselHome from "../components/carouselHome.vue";
 
     const isVisible = ref(false)
     const name = ref("")
@@ -106,6 +107,7 @@
 
 
 <template>
+    <carouselHome/>
     <!-- Modal -->
     <div class="container__modal" v-if="success">
         <div class="container__modal-message">
@@ -116,7 +118,7 @@
 
     <!-- Main -->
     <main class="row">
-        <div class="title col-10 col-sm-7">
+        <div class="title col-10 col-sm-7 col-md-5">
             <h2>CONTACT</h2>
             <p>Envoyez nous votre demande avec vos coordonnées, notre équipe reviendra vers vous dans les meilleurs délais.</p>
         </div>

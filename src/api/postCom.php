@@ -25,8 +25,8 @@ function postCommentaires()
         $com = $_POST['com'];
         $note = $_POST['note'];
 
-        $sql= "INSERT INTO temoignages (`id`, `date`, `nom`, `prenom`, `commentaire`, `note`, `id_image`) 
-            VALUES (NULL, :date_post, :nom, :prenom, :commentaire, :note, NULL)";
+        $sql= "INSERT INTO temoignages (`id`, `date`, `nom`, `prenom`, `commentaire`, `note`, `etat`) 
+            VALUES (NULL, :date_post, :nom, :prenom, :commentaire, :note, 0)";
 
         $statement = $data->prepare($sql);
 
@@ -46,7 +46,7 @@ function postCommentaires()
             "note" => $note
         );
 
-        return_json(true, "Insertion reussi", $result);
+        return_json(true, "Votre témoignage à été pris en compte.", $result);
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
 }

@@ -13,7 +13,7 @@
     const animate = ref(false)
     const position = ref()
 
-    window.addEventListener('scroll', () => {
+    /*window.addEventListener('scroll', () => {
         position.value = window.scrollY
     })
 
@@ -21,21 +21,28 @@
         if (position.value >= 1400) {
             animate.value = true
         }
-    })
+    })*/
 
-
-    axios
-    .get('http://localhost/src/api/vitrine.php')
-    .then (response => {
-        temoignages.value = response.data.temoignages
-    })
-    .catch (e => {
-        console.error(e)
-    })
-
-    const getScroll = (e) => {
-        console.log(e)
+    const getTemoignages = async() => {
+        await axios
+        .get('http://localhost/src/api/vitrine.php')
+        .then (response => {
+            response.data.temoignages.forEach(temoignage => {
+                if (temoignage.etat == 1) {
+                    temoignages.value.push(temoignage)
+                }
+            })
+        })
+        .catch (e => {
+            console.error(e)
+        })
     }
+
+    /*const getScroll = (e) => {
+        console.log(e)
+    }*/
+
+    getTemoignages()
 
 
 </script>
@@ -43,11 +50,11 @@
 <template>
     <CarouselHome/>
     <LastVehicule/>
-    <Transition>
-        <div class="scroll__test" v-if="animate"> 
+    <!--<Transition>
+        <div class="scroll__test" v-if="animate">-->
             <ExpertiseSite/>
-        </div>
-    </Transition>
+        <!--</div>
+    </Transition>-->
     <TemoignageSection :temoignages="temoignages"/>
     <AvisSection />
     <ReseauxSociaux />

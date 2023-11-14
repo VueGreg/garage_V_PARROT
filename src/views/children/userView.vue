@@ -1,8 +1,9 @@
 <script setup>
 
     import axios from 'axios'
-    import { ref, watch } from 'vue'
+    import { ref, defineEmits } from 'vue'
     import { useCookies } from 'vue3-cookies';
+    import informationModal from '../../components/informationModal.vue';
 
     const { cookies } = useCookies()
 
@@ -22,6 +23,11 @@
     const password = ref("")
     const role = ref()
 
+    //-----Modal response
+    const isModal = ref(false)
+    const emit = defineEmits(['close'])
+    const messageModal = ref()
+
     const userAuthorized = () => {
         if (userPermissions != null) {
                 axios
@@ -40,17 +46,18 @@
         }
     }
 
-
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        utilisateurs: 'getUsers'
-    }).then (response => {
-        users.value = response.data.utilisateurs
-        listPermissions.value = response.data.list_permissions
-        countUsers.value = response.data.nombres
-    }).catch (e => {
-        console.error(e)
-    })
+    const getUsers = async() => {
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            utilisateurs: 'getUsers'
+        }).then (response => {
+            users.value = response.data.utilisateurs
+            listPermissions.value = response.data.list_permissions
+            countUsers.value = response.data.nombres
+        }).catch (e => {
+            console.error(e)
+        })
+    }
 
     const Mail_Valide = (mail) => {
         let valide_mail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -72,24 +79,32 @@
             })
             .then (response => {
                 if (response.data.success === true) {
+                    isModal.value = true
+                    messageModal.value = response.data.message
                     email.value=""
                     name.value=""
                     surname.value = ""
                     password.value = ""
                     role.value = ""
+                    getUsers()
                 }
             })
             .catch(e => {
                 console.error(e)
             })
-        }else console.log("Un champ est resté vide")
+        }else {
+            isModal.value = true
+            messageModal.value = "Tous les champs obligatoires n'ont pas été remplis"
+        }
     }
 
     userAuthorized()
+    getUsers()
 
 </script>
 
 <template>
+    <informationModal :messageModal="messageModal" @close="isModal = false" v-if="isModal" />
     <main class="row">
         <h1 class="col-10">{{ countUsers }}</h1>
         <h2 class="col-10" v-if="countUsers<=1">UTILISATEUR</h2>

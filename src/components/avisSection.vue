@@ -1,14 +1,19 @@
 <script setup>
     import axios from 'axios';
-    import { ref } from 'vue';
+    import { ref, defineEmits } from 'vue';
+    import informationModalVue from "./informationModal.vue"
 
     const name = ref("")
     const surname = ref("")
     const message = ref("")
-    const note = ref(0)
+    const note = ref(5)
+
+    //----Modal
+    const emit = defineEmits(['close'])
+    const isModal = ref(false)
+    const messageModal = ref()
 
     const errorMessage = ref("")
-    const stateForm = ref(false)
 
     const testCaracters = (inputName="nom") => {
         if(! name.value.match(/^([a-zA-Z ]+)$/)) {
@@ -17,11 +22,9 @@
         }else errorMessage.value = ""
     }
 
-    const sendCom = () => {
+    const sendCom = async() => {
         if (name.value!="" && surname.value!="" && message.value !="") {
-            stateForm.value = false
-
-            axios
+            await axios
             .post('http://localhost/src/api/postCom.php', {
                 date: new Date().toJSON().slice(0, 10),
                 name: name.value,
@@ -30,39 +33,48 @@
                 note: note.value
             })
             .then(response => {
-                console.log(response.data.message)
-                console.log(response.data)
+                if (response.data.success == true) {
+                    isModal.value = true
+                    messageModal.value = response.data.message
+
+                    name.value = ""
+                    surname.value = ""
+                    message.value = ""
+                }
             })
             .catch(e => {
                 console.error(e)
             })
 
-        }else stateForm.value = true
+        }else {
+            isModal.value = true
+            messageModal.value = "Tous les champs ne sont pas renseignés"
+        }
     }
 
 </script>
 
 <template>
-
+    <informationModalVue :messageModal="messageModal" :position="position" @close="isModal = false" v-if="isModal"/>
     <section class="section__form row">
-        <h2 class="col-10 col-sm-7 col-md-8">LAISSEZ NOUS UN AVIS</h2>
-        <form class="form col-10 col-sm-7 col-md-8 col-lg-6">
+        <h2 class="col-10 col-sm-7 col-md-8 col-lg-6">LAISSEZ NOUS UN AVIS</h2>
+        <form class="form col-10 col-sm-7 col-md-8 col-lg-6 col-xl-4">
             <div class="note">
                 <p>Notez nous</p>
                 <div class="rating__stars">
-                    <input type="radio" name="rating" id="rs1" value="1" v-model="note">
+                    <input type="radio" name="rs1" id="rs1" value="1" v-model="note">
                     <label class="rating__stars-star" for="rs1"></label>
 
-                    <input type="radio" name="rating" id="rs2" value="2" v-model="note">
+                    <input type="radio" name="rs2" id="rs2" value="2" v-model="note">
                     <label class="rating__stars-star" for="rs2"></label>
 
-                    <input type="radio" name="rating" id="rs3" value="3" v-model="note">
+                    <input type="radio" name="rs3" id="rs3" value="3" v-model="note">
                     <label class="rating__stars-star" for="rs3"></label>
 
-                    <input type="radio" name="rating" id="rs4" value="4" v-model="note">
+                    <input type="radio" name="rs4" id="rs4" value="4" v-model="note">
                     <label class="rating__stars-star" for="rs4"></label>
 
-                    <input type="radio" name="rating" id="rs5" value="5" v-model="note">
+                    <input type="radio" name="rs5" id="rs5" value="5" v-model="note">
                     <label class="rating__stars-star" for="rs5"></label>
                 </div>
             </div>
@@ -82,8 +94,7 @@
             </div>
         </form>
 
-        <button class="col-6 col-sm-4" @click="sendCom()">Envoyer mon avis</button>
-        <span class="form__input-alert" v-if="stateForm">Tous les champs ne sont pas renseigné</span>
+        <button class="col-6 col-sm-4 col-md-6 col-lg-4 col-xl-1" @click="sendCom()">Envoyer mon avis</button>
     </section>
 
 </template>
@@ -251,7 +262,7 @@
 
     }
 
-    @media screen and (min-width: 1000px) {
+    @media screen and (min-width: 750px) {
         
         .row {
             flex-direction: column;
