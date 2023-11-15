@@ -1,8 +1,9 @@
 <script setup>
 
     import axios from 'axios'
-    import { ref, reactive, watch } from 'vue'
-    import { useCookies } from 'vue3-cookies';
+    import { ref, reactive, defineEmits } from 'vue'
+    import { useCookies } from 'vue3-cookies'
+    import informationModal from '../../components/informationModal.vue'
 
     const { cookies } = useCookies()
 
@@ -13,6 +14,7 @@
     const isAction = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
+    const horairesChange = ref([])
 
     //-----v-models
     const models = reactive({
@@ -20,8 +22,15 @@
         postal: null,
         city: null,
         tel: null,
-        mail: null
+        mail: null,
+        categorie : null,
+        description : null
     })
+
+    //-----Modal response
+    const isModal = ref(false)
+    const emit = defineEmits(['close'])
+    const messageModal = ref()
 
     const userAuthorized = () => {
         if (userPermissions != null) {
@@ -41,28 +50,95 @@
         }
     }
 
-    axios
-    .get('http://localhost/src/api/vitrine.php')
-    .then (response => {
-        informations.value = response.data.informations
-        horaires.value = response.data.horaires
-        reparations.value = response.data.reparations
-        categories.value = response.data.categorie_reparations
-    })
-    .catch (e => {
-        console.error(e)
-    })
+    const getAll = async() => {
+        await axios
+        .get('http://localhost/src/api/vitrine.php')
+        .then (response => {
+            informations.value = response.data.informations
+            horaires.value = response.data.horaires
+            reparations.value = response.data.reparations
+            categories.value = response.data.categorie_reparations
+
+            models.adresse = informations.value[0].adresse
+            models.postal = informations.value[0].code_postal
+            models.city = informations.value[0].ville
+            models.tel = informations.value[0].num_telephone
+            models.mail = informations.value[0].mail
+        })
+        .catch (e => {
+            console.error(e)
+        })
+    }
 
     const changeBusinessSetting = async() => {
         await axios
-        .put()
+        .put('http://localhost/src/api/setting.php', {
+            adress: models.adresse,
+            postal: models.postal,
+            city: models.city,
+            tel: models.tel,
+            mail: models.mail
+        })
+        .then(response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
+    }
+
+    const sendRepair = async(e) => {
+        e.preventDefault()
+        await axios
+        .put('http://localhost/src/api/setting.php', {
+            category: models.categorie,
+            description: models.description
+        })
+        .then(response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+
+                models.categorie = null
+                models.description = null
+
+                getAll()
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
+    }
+
+    const deleteRepair = async(e, id_repair) => {
+        e.preventDefault()
+        await axios
+        .post('http://localhost/src/api/setting.php', {
+            id: id_repair
+        })
+        .then(response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+
+                getAll()
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
     }
 
     userAuthorized()
+    getAll()
 
 </script>
 
 <template>
+    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
     <main>
         <section class="row" v-for="information in informations">
             <h2>INFORMATIONS GENERALE</h2>
@@ -72,35 +148,35 @@
                     <p>GARAGE V.PARROT</p>
                 </div>
             </div>
-            <form class="form col-9">
+            <form class="form col-9 col-xl-6">
                 <div class="form__input">
-                    <input class="form__field" v-model="models.adresse" type="text" name="adresse" id="adresse" :placeholder="information.adresse">
-                    <label class="form__label" for="nom">{{ information.adresse }}</label>
+                    <input class="form__field" v-model="models.adresse" type="text" name="adresse" id="adresse" placeholder="Adresse">
+                    <label class="form__label" for="nom">Adresse:</label>
                 </div>
                 <div class="form__group">
                     <div class="form__input col-5">
-                        <input class="form__field" v-model="models.postal" type="text" name="postal_code" id="postal_code" :placeholder="information.code_postal">
-                        <label class="form__label" for="postal_code">{{ information.code_postal }}</label>
+                        <input class="form__field" v-model="models.postal" type="text" name="postal_code" id="postal_code" placeholder="Code postal">
+                        <label class="form__label" for="postal_code">Code postal:</label>
                     </div>
                     <div class="form__input col-5">
-                        <input class="form__field" v-model="models.city" type="text" name="city" id="city" :placeholder="information.ville">
-                        <label class="form__label" for="city">{{ information.ville }}</label>
+                        <input class="form__field" v-model="models.city" type="text" name="city" id="city" placeholder="Ville">
+                        <label class="form__label" for="city">Ville:</label>
                     </div>
                 </div>
                 <div class="form__input">
-                    <input class="form__field" v-model="models.tel" type="tel" name="tel" id="tel" :placeholder="information.num_telephone">
-                    <label class="form__label" for="tel">{{ information.num_telephone }}</label>
+                    <input class="form__field" v-model="models.tel" type="tel" name="tel" id="tel" placeholder="Numéro de téléphone">
+                    <label class="form__label" for="tel">Numéro de téléphone:</label>
                 </div>
                 <div class="form__input">
-                    <input class="form__field" v-model="models.mail" type="email" name="email" id="email" :placeholder="information.mail">
-                    <label class="form__label" for="email">{{ information.mail }}</label>
+                    <input class="form__field" v-model="models.mail" type="email" name="email" id="email" placeholder="E-mail">
+                    <label class="form__label" for="email">E-mail:</label>
                 </div>
                 <button type="button" @click="changeBusinessSetting()">Modifier les informations</button>
             </form>
         </section>
         <section class="row">
             <h2>HORAIRES D'OUVERTURE</h2>
-            <table class="col-9">
+            <table class="col-9 col-xl-6">
                 <tr v-for="horaire in horaires">
                     <td>{{ horaire.jour_semaine }}</td>
                     <td>
@@ -120,10 +196,12 @@
         </section>
         <section>
             <h2>REPARATIONS</h2>
-            <button class="col-6">
-                <i class="fa-solid fa-plus"></i>
-                <span>  AJOUTER</span>
-            </button>
+            <a href="#form">
+                <button class="col-6 col-xl-1">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>  AJOUTER</span>
+                </button>
+            </a>
             <div class="message col-9" v-for="reparation in reparations" :key="reparation.id" @click="isAction ? isAction=false : isAction=true">
                 <div class="message__element">
                     <p class="message__element-title">Catégorie:</p>
@@ -134,7 +212,7 @@
                     <p>{{ reparation.description }}</p>
                 </div>
                 <div class="message__element" v-if="isAction">
-                    <button>
+                    <button @click="deleteRepair($event, reparation.id)">
                         <i class="fa-solid fa-trash"></i>
                         <span>  Supprimer</span>
                     </button>
@@ -144,19 +222,19 @@
                     </button>
                 </div>
             </div>
-            <div class="message form col-9">
+            <div class="message form col-9" id="form">
                 <h6>Ajouter une prestation</h6>
                 <div class="form__input">
                     <label class="form__label" for="categorie">Catégorie</label>
-                    <select name="categorie" id="categorie">
-                        <option :value="categorie" v-for="categorie in categories">{{ categorie.categorie }}</option>
+                    <select name="categorie" id="categorie" v-model="models.categorie">
+                        <option :value="categorie.categorie" v-for="categorie in categories">{{ categorie.categorie }}</option>
                     </select>
                 </div>
                 <div class="form__input">
-                    <textarea class="form__field" name="description" id="description" placeholder="Description"></textarea>
+                    <textarea class="form__field" v-model="models.description" name="description" id="description" placeholder="Description"></textarea>
                     <label class="form__label" for="description">Description</label>
                 </div>
-                <button class="col-6">AJOUTER</button>
+                <button class="col-6 col-xl-2" @click="sendRepair($event)">AJOUTER</button>
             </div>
         </section>
     </main>
@@ -195,6 +273,10 @@
 
     button {
         @include btn-style($primary-color);
+    }
+
+    a {
+        text-decoration: none;
     }
 
     .title {

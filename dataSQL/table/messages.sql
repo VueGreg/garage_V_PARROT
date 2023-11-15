@@ -9,7 +9,7 @@ CREATE TABLE `messages` (
     `date`DATETIME NOT NULL ,
     `text` TEXT NOT NULL ,
     `status`BOOLEAN NOT NULL ,
-    `num_annonce` INT(11) NOT NULL
+    `num_annonce` INT(11) NULL
 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_general_ci; 
 
 ALTER TABLE `messages` 

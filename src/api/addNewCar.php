@@ -27,8 +27,8 @@ function addNewCar() {
             $finish = $_POST['finish'];
             $equipments = preg_split("/[\s,]+/", $_POST['equipments']);
 
-            $sql = "INSERT INTO annonces (`numero_annonce`, `id_vehicules`, `id_energies`, `prix`, `kilometrage`, `annee`, `puissance`, `boite_vitesse`, `motorisation`, `finition`)
-                    VALUES (NULL, :vehicle, :energy, :price, :kilometer, :year, :power, :speedbox, :motor, :finish)";
+            $sql = "INSERT INTO annonces (`numero_annonce`, `id_vehicules`, `id_energies`, `prix`, `kilometrage`, `annee`, `puissance`, `boite_vitesse`, `motorisation`, `finition`, `status`)
+                    VALUES (NULL, :vehicle, :energy, :price, :kilometer, :year, :power, :speedbox, :motor, :finish, 0)";
 
             global $data;
             $statement = $data->prepare($sql);

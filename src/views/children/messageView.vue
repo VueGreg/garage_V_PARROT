@@ -3,69 +3,143 @@
     import axios from 'axios';
     import { ref } from 'vue';
     import { useCookies } from 'vue3-cookies';
+    import informationModal from '../../components/informationModal.vue';
 
     const countMessages = ref()
     const messages = ref([])
     const isAction = ref(false)
-    
 
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        messages: 'getMessages'
-    }).then (response => {
-        messages.value = response.data.messages
-        countMessages.value = response.data.nombres
-    }).catch (e => {
-        console.error(e)
-    })
+    //-----Modal response
+    const isModal = ref(false)
+    const emit = defineEmits(['close'])
+    const messageModal = ref()
+
+    
+    //-----Function
+    const getMessages = async() => {
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            messages: 'getMessages'
+        }).then (response => {
+            console.log(response.data)
+            messages.value = []
+            response.data.messages.forEach(message => {
+                if (message.status == 0) {
+                    messages.value.push(message)
+                }
+            })
+            countMessages.value = messages.value.length
+        }).catch (e => {
+            console.error(e)
+        })
+    }
+
+    const messageCheck = async(e, id_message) => {
+        e.preventDefault()
+        await axios
+        .put('http://localhost/src/api/postMessage.php', {
+            validate: 'validate',
+            id: id_message
+        })
+        .then (response => {
+            isModal.value = true
+            messageModal.value = response.data.message
+            getMessages()
+        })
+        .catch (e => {
+            console.error(e)
+        })
+    }
+
+    getMessages()
 
 </script>
 
 <template>
-    <main class="row">
-        <h1 class="col-10">{{ countMessages }}</h1>
-        <h2 class="col-10" v-if="countMessages<=1">MESSAGE</h2>
-        <h2 class="col-10" v-else>MESSAGES</h2>
-        <div class="message col-9" v-for="message in messages" @click="isAction ? isAction=false : isAction=true">
-            <div class="message__element">
-                <p class="message__element-title">Nom/Prénom:</p>
-                <p>{{ message.nom }} {{ message.prenom }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">Date:</p>
-                <p>{{ message.date }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">E-mail:</p>
-                <p class="message__element-result">{{ message.mail }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">N°Annonce:</p>
-                <p class="message__element-result">{{ message.num_annonce }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">N°Téléphone:</p>
-                <p class="message__element-result">{{ message.num_telephone }}</p>
-            </div>
-            <div class="message__text">
-                <p class="message__element-title">Message:</p>
-                <p>{{ message.text }}</p>
-            </div>
-            <TransitionGroup>
-                <div class="message__option" v-if="isAction">
-                    <div class="message__option-btn">
-                        <i class="fa-solid fa-phone"></i>
-                    </div>
-                    <div class="message__option-btn">
-                        <i class="fa-solid fa-at"></i>
-                    </div>
-                    <div class="message__option-btn">
-                        <i class="fa-regular fa-circle-check"></i>
-                    </div>
+    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    <section class="mobile">
+        <main class="row">
+            <h1 class="col-10">{{ countMessages }}</h1>
+            <h2 class="col-10" v-if="countMessages<=1">MESSAGE</h2>
+            <h2 class="col-10" v-else>MESSAGES</h2>
+            <div class="message col-9" v-for="message in messages" :key="message.id" @click="isAction ? isAction=false : isAction=true">
+                <div class="message__element">
+                    <p class="message__element-title">Nom/Prénom:</p>
+                    <p>{{ message.nom }} {{ message.prenom }}</p>
                 </div>
-            </TransitionGroup>
+                <div class="message__element">
+                    <p class="message__element-title">Date:</p>
+                    <p>{{ message.date }}</p>
+                </div>
+                <div class="message__element">
+                    <p class="message__element-title">E-mail:</p>
+                    <p class="message__element-result">{{ message.mail }}</p>
+                </div>
+                <div class="message__element">
+                    <p class="message__element-title">N°Annonce:</p>
+                    <p class="message__element-result">{{ message.num_annonce }}</p>
+                </div>
+                <div class="message__element">
+                    <p class="message__element-title">N°Téléphone:</p>
+                    <p class="message__element-result">{{ message.num_telephone }}</p>
+                </div>
+                <div class="message__text">
+                    <p class="message__element-title">Message:</p>
+                    <p>{{ message.text }}</p>
+                </div>
+                <TransitionGroup>
+                    <div class="message__option" v-if="isAction">
+                        <div class="message__option-btn">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="message__option-btn">
+                            <i class="fa-solid fa-at"></i>
+                        </div>
+                        <div class="message__option-btn" @click="messageCheck($event, message.id)">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                    </div>
+                </TransitionGroup>
+            </div>
+        </main>
+    </section>
+    <section class="other">
+        <div class="table row">
+            <div class="table__header col-md-10 col-lg-8">
+                <div class="table__header-head">
+                    <h5>Messages clients</h5>
+                    <h6>{{ countMessages }}</h6>
+                </div>
+                <div class="table__header-cat">
+                    <span class="elem elem1">Nom/Prénom</span>
+                    <span class="elem elem2">Date</span>
+                    <span class="elem elem3">N°Annonce</span>
+                    <span class="elem elem4">Message</span>
+                </div>
+            </div>
+            <div class="table__body col-md-10 col-lg-8" :class="{'higer': isAction}" v-for="message in messages" :key="message.id" @click="isAction ? isAction=false : isAction=true">
+                <div class="table__body-elem">
+                    <span class="elem elem1">{{ message.nom }} {{ message.prenom }}</span>
+                    <span class="elem elem2">{{ message.date }}</span>
+                    <span class="elem elem3">{{ message.num_annonce }}</span>
+                    <span class="elem elem4">{{ message.text }}</span>
+                </div>
+                <TransitionGroup>
+                    <div class="message__option" v-if="isAction">
+                        <div class="message__option-btn">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="message__option-btn">
+                            <i class="fa-solid fa-at"></i>
+                        </div>
+                        <div class="message__option-btn" @click="messageCheck($event, message.id)">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                    </div>
+                </TransitionGroup>
+            </div>
         </div>
-    </main>
+    </section>
 </template>
 
 <style lang="scss" scoped>
@@ -142,6 +216,87 @@
         }
     }
 
+    .other {
+        display: none;
+    }
+
+    .table {
+        font-size: 0.8em;
+        margin: 2em auto;
+        margin-bottom: 5em;
+
+        h5,
+        h6 {
+            color: $primary-color;
+            margin-bottom: 2em;
+        }
+
+        &__header {
+            margin: 2em auto;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
+    
+            &-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &-cat {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        &__body {
+
+            margin: 0.2em auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
+            height: 5vh;
+            padding: 1em;
+
+            &-elem {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .higer {
+            height: 10vh;
+        }
+
+        .elem {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+        .elem1 {
+            width: 15%;
+        }
+
+        .elem2 {
+            width: 15%;
+            justify-content: center;
+        }
+
+        .elem3 {
+            width: 15%;
+            justify-content: center;
+        }
+
+        .elem4 {
+            width: 55%;
+        }
+    }
+
     .v-enter-active,
     .v-leave-active {
     transition: all 0.75s ease-out;
@@ -165,6 +320,16 @@
     .v-leave-from {
     height: auto;
     opacity: 1;
+    }
+
+    @media screen and (min-width: 768px) {
+        .other {
+            display: block;
+        }
+
+        .mobile {
+            display: none;
+        }
     }
 
 </style>

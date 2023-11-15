@@ -1,8 +1,9 @@
 <script setup>
 
     import axios from 'axios';
-    import { ref, watch } from 'vue'
+    import { ref, defineEmits } from 'vue'
     import FormData from 'form-data'
+    import informationModal from './informationModal.vue';
 
     const marques = ref([])
     const modeles = ref([])
@@ -25,6 +26,12 @@
     const finish = ref()
     const optionsDescription = ref([])
     const Form_Data = new FormData()
+
+    //----Modal
+    const emit = defineEmits(['close'])
+    const isModal = ref(false)
+    const messageModal = ref()
+
 
     const getCars = async() => {
         await axios
@@ -132,10 +139,6 @@
             Form_Data.append("finish", finish.value)
             Form_Data.append("equipments", options.value)
 
-            for(let [name, value] of Form_Data) {
-                console.log(`${name} = ${value}`); // key1 = value1, ensuite key2 = value2
-            }
-
             await axios
             .post ('http://localhost/src/api/addNewCar.php', Form_Data, {
 
@@ -165,12 +168,16 @@
                         }
                     })
 
-                    console.log(response.data)
-                }else console.log(response.data)
+                    isModal.value = true
+                    messageModal.value = response.data.message
+                }
             })
             .catch(e => {
                 console.error(e)
             })
+        } else {
+            isModal.value = true
+            messageModal.value = "Tous les champs non pas été renseignés"
         }
     }
 
@@ -182,7 +189,7 @@
 <template>
     <main class="row">
         <h2 class="col-10">AJOUTER UN VEHICULE</h2>
-        <form class="form col-10">
+        <form class="form col-10 col-xl-4">
             <h5>Caracteristiques du véhicule</h5>
             <div class="form__input">
                 <input class="form__field" type="file" name="image" id="image" placeholder="Photos" multiple @change="getAdresseFile($event)">
@@ -250,7 +257,8 @@
                     <p v-for="option in optionsDescription" @click="deleteOption(option)">{{ option }}</p>
                 </div>
         </form>
-        <button type="button" class="col-8" @click="sendNewCar()">Enregistrer le véhicule</button>
+        <button type="button" class="col-8 col-xl-2" @click="sendNewCar()">Enregistrer le véhicule</button>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
     </main>
 </template>
 
@@ -278,6 +286,7 @@
 
     h2 {
         @include h2-main;
+        margin: auto;
         margin-bottom: 1em;
     }
 
@@ -290,12 +299,11 @@
         flex-wrap: wrap;
         gap: 1em;
         margin-bottom: 2em;
-        padding: 0.5em;
-        box-shadow: 1px 1px 8px rgba($color: #000000, $alpha: 0.4);
 
          &-img {
             height: 10vh;
             width: auto;
+            box-shadow: 1px 1px 8px rgba($color: #000000, $alpha: 0.4);
          }
     }
 
@@ -356,7 +364,7 @@
             border: none;
             border-bottom: 2px solid $color-text-dark;
             background-color: white;
-            width: 80vw;
+            width: 100%;
             color: $color-text-dark;
             font-size: 0.8em;
         }
@@ -435,5 +443,31 @@
                 cursor: pointer;
             }
         }
+
+    @media screen and (min-width: 1400px) {
+
+        h2 {
+            margin-top: 1em;
+        }
+
+        .form {
+            font-size: 1.2em;
+        }
+        .form button {
+            width: 30%;
+        }
+
+        .offcanvas__selectdiv {
+
+            &:after {
+                content: '\2304';
+                font-size: 30px;
+                position: relative;
+                left: 95%;
+                top: -60%;
+                color: $color-text-dark;
+            }
+        }
+    }
 
 </style>

@@ -51,21 +51,21 @@
     </div>
 
         <div class="carousel-image carousel-img-1" v-else-if="path == '/reparations'">
-            <div class="carousel-caption d-md-block carousel__text">
+            <div class="carousel__text carousel__fix">
                 <h5 class="carousel__text-title">REPARATIONS</h5>
                 <p class="carousel__text-description">Prenez rendez-vous dans notre centre</p>
             </div>
         </div>
 
         <div class="carousel-image carousel-img-3" v-else-if="path == '/contact/0'">
-            <div class="carousel-caption d-md-block carousel__text">
+            <div class="carousel__text carousel__fix">
                 <h5 class="carousel__text-title">PRENDRE CONTACT</h5>
                 <p class="carousel__text-description">Prenez contact rapidement avec nous</p>
             </div>
         </div>
 
         <div class="carousel-image carousel-img-2" v-else-if="path == '/annonces'">
-            <div class="carousel-caption d-md-block carousel__text">
+            <div class="carousel__text carousel__fix">
                 <h5 class="carousel__text-title">VEHICULES D'OCCASION</h5>
                 <p class="carousel__text-description">Achetez votre véhicule d’occasion contrôlée & garantie</p>
             </div>
@@ -115,6 +115,7 @@
         }
     }
 
+
     @media screen and (min-width: 480px) {
         
         .carousel-image {
@@ -136,6 +137,12 @@
             & p {
                 font-size: 1em;
             }
+        }
+
+        .carousel__fix {
+            transform: translate(60%, 80%);
+            color: white;
+            text-align: center;
         }
     }
 

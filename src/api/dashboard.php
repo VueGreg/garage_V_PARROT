@@ -31,9 +31,15 @@ if ($request_method == 'POST') {
 
 function getMessages() {
     try {
-        $sql = "SELECT * FROM messages";
+        $sql = "SELECT id, nom, prenom, num_telephone, mail, DATE_FORMAT(date, '%d/%c/%Y') AS date, text, status, num_annonce  
+                FROM messages";
         $messages['messages'] = simple_fetch_data($sql);
-        $messages['nombres'] = count($messages['messages']);
+
+        foreach ($messages as $message) {
+            if ($message['status'] == 0) {
+                $messages['nombres'] +=1;
+            }
+        }
 
         return_json(true, "messages trouvés", $messages);
     } catch (PDOException $e) {

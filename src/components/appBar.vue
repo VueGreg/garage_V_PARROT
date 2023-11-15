@@ -188,6 +188,7 @@
         bottom: 0;
         z-index: 20;
         left: 8%;
+        height: 60px;
 
         &__btn {
             background-color: $primary-color;

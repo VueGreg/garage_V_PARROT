@@ -10,6 +10,7 @@
     .then (response => {
         informations.value = response.data.informations
         horaires.value = response.data.horaires
+        console.log(horaires.value)
     })
     .catch (e => {
         console.error(e)
@@ -58,7 +59,7 @@
                     <table class="footer__text-table">
                         <tr v-for="horaire in horaires" :key="horaire.id">
                             <td>{{ horaire.jour_semaine }}:</td>
-                            <td>{{ horaire.h_debut_matin }} / {{ horaire.h_fin_soir }}</td>
+                            <td>{{ horaire.h_debut }} / {{ horaire.h_fin }}</td>
                         </tr>
                     </table>
                 </div>

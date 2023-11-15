@@ -22,7 +22,7 @@ function getCars() {
 
                 global $data;
 
-                $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, 
+                $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, status,
                 energies.nom AS energie, vehicules.marque AS marque, vehicules.modele AS modele
                 FROM annonces
                 INNER JOIN energies ON annonces.id_energies = energies.id

@@ -1,14 +1,19 @@
 <script setup>
 
     import axios from "axios";
-    import { ref } from "vue";
+    import { ref, defineEmits } from "vue";
     import { useCookies } from "vue3-cookies";
+    import informationModal from "../components/informationModal.vue";
     
     const email = ref("")
     const password = ref("")
     const { cookies } = useCookies()
-    const connectError = ref(false)
     const mailValide = ref(false)
+
+    //-----Modal response
+    const isModal = ref(false)
+    const emit = defineEmits(['close'])
+    const messageModal = ref()
 
     const postConnect = () => {
         if (password.value!="" && email.value!="") {
@@ -20,25 +25,29 @@
             })
             .then(response => {
                 if (response.data.success === true) {
-                    connectError.value = false
                     document.cookie = `userName = ${response.data.name}`
                     document.cookie = `userSurname = ${response.data.surname}`
                     document.cookie = `userPermissions = ${response.data.permissions}`
                     document.location.href='http://localhost:5173/dashboard/messages'
                 }
                 else {
-                    connectError.value = true
+                    console.log(response.data)
                     cookies.remove('userName')
                     cookies.remove('userSurname')
                     cookies.remove('userPermissions')
                     email.value = ""
                     password.value = ""
+                    isModal.value = true
+                    messageModal.value = "Adresse mail ou mot de passe incorrect"
                 }
             })
             .catch(e => {
                 console.error(e)
             })
 
+        } else {
+            isModal.value = true
+            messageModal.value = "Tous les champs n'ont pas été renseignés"
         }
     }
 
@@ -53,7 +62,7 @@
 </script>
 
 <template>
-
+    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
     <main class="row">
         <form class="form col-8 col-sm-6 col-md-5 col-lg-3">
             <div class="form__input">
@@ -67,7 +76,6 @@
                 <span class="form__input-alert"></span>
             </div>
         </form>
-        <span v-if="connectError" class="error">Adresse mail ou mot de passe incorrect</span>
         <button class="form__btn col-6 col-sm-4 col-md-2 col-lg-1" @click="postConnect()">Connexion</button>
     </main>
 

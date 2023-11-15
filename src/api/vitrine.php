@@ -20,6 +20,21 @@ require_once './connection.php';
         $sql_horaires = "SELECT * FROM horaires";
         $horaires = simple_fetch_data($sql_horaires);
 
+        for ($i=0; $i < count($horaires); $i++) { 
+                foreach ($horaires[$i] as $key => $value) {
+                        if ($key == 'h_debut') {
+                                $arrayheure = explode(':', $value);
+                                $newheure = $arrayheure[0].'h'.$arrayheure[1];
+                                $horaires[$i]['h_debut'] = $newheure;
+                        }
+                        elseif ($key == 'h_fin') {
+                                $arrayheure = explode(':', $value);
+                                $newheure = $arrayheure[0].'h'.$arrayheure[1];
+                                $horaires[$i]['h_fin'] = $newheure;
+                        }
+                }
+        }
+
         //-----informations entreprise
         $sql_infos = "SELECT * FROM entreprise";
         $informations = simple_fetch_data($sql_infos);

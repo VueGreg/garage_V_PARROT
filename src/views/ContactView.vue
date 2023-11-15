@@ -1,8 +1,9 @@
 <script setup>
     import axios from "axios";
-    import { ref, watch } from "vue";
+    import { ref, defineEmits } from "vue";
     import { useRoute } from "vue-router";
     import carouselHome from "../components/carouselHome.vue";
+    import informationModal from "../components/informationModal.vue";
 
     const isVisible = ref(false)
     const name = ref("")
@@ -19,6 +20,11 @@
 
     const route = useRoute()
     const numAnnonce = parseInt(route.params.id)
+
+    //----Modal
+    const emit = defineEmits(['close'])
+    const isModal = ref(false)
+    const messageModal = ref()
 
     const testCaracters = () => {
         if(! name.value.match(/^([a-zA-Z ]+)$/) && name.value != "") {
@@ -41,7 +47,6 @@
         })
         .then (response => {
                 vehicules.value = response.data[0]
-            // else document.location.href="/erreur"; 
         })
         .catch (e => {
             console.error(e)
@@ -79,7 +84,14 @@
             })
             .then(response => {
                 if (response.data.success == true) {
-                    success.value = true
+                    isModal.value = true
+                    messageModal.value = response.data.message
+
+                    name.value = ""
+                    surname.value = ""
+                    message.value = ""
+                    tel.value = ""
+                    email.value = ""
                 }
                 
             })
@@ -87,18 +99,14 @@
                 console.error(e)
             })
 
+        } else {
+            isModal.value = true
+            messageModal.value = "Tous les champs obligatoire n'ont pas été remplis"
         }
     }
 
     const refreshForm = () => {
-        if (success.value === true) {
-            success.value = false
-            name.value = ""
-            surname.value = ""
-            message.value = ""
-            tel.value = ""
-            email.value = ""
-        }
+            
     }
 
     returnVisible()
@@ -108,6 +116,7 @@
 
 <template>
     <carouselHome/>
+    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
     <!-- Modal -->
     <div class="container__modal" v-if="success">
         <div class="container__modal-message">

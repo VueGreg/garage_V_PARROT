@@ -7,7 +7,11 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 
 if ($request_method == 'PUT') {
     changeBusinessSetting();
-}else return_json(false, "La methode POST est requise");
+}
+elseif ($request_method == 'POST') {
+    modifyRepair();
+}
+else return_json(false, "La methode POST est requise");
 
 
 function changeBusinessSetting() {
@@ -38,7 +42,46 @@ function changeBusinessSetting() {
                 return_json(true, 'informations modifiés');
             }
         }
+        elseif (isset($_PUT['category']) && isset($_PUT['description'])) {
 
+            $category = $_PUT['category'];
+            $description = $_PUT['description'];
+
+            $sql = "INSERT INTO reparations (`id`, `categorie`, `description`)
+                    VALUES (NULL, :category, :description) ";
+
+            global $data;
+            $statement = $data->prepare($sql);
+            $statement->bindParam(':category', $category);
+            $statement->bindParam(':description', $description);
+
+            if ($statement->execute()) {
+                return_json(true, 'Nouvelle prestation ajouté');
+            }
+        }
+
+
+    }catch (Exception $e){ return_json(false, $e->getMessage());}
+}
+
+function modifyRepair () {
+    try {
+        $_POST = json_decode(file_get_contents('php://input'), true);
+
+        if (isset($_POST['id'])) {
+
+            $id = $_POST['id'];
+            
+            $sql = "DELETE FROM reparations WHERE id = :id";
+
+            global $data;
+            $statement = $data->prepare($sql);
+            $statement->bindParam(':id', $id);
+
+            if ($statement->execute()) {
+                return_json(true, 'Prestation supprimé');
+            }
+        }
 
     }catch (Exception $e){ return_json(false, $e->getMessage());}
 }

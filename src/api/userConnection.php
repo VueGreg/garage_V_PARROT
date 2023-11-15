@@ -49,7 +49,7 @@ function postConnection()
 
         if ($user != []) {
             return_json(true, "Connexion reussi", $result);
-        }else return_json(false, "Connexion imossible");
+        }else return_json(false, "Connexion impossible");
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
 }

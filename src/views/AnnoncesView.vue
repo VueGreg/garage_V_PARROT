@@ -14,7 +14,6 @@
 
     const annonces = ref([])
     const countAnnonces = ref()
-    const messages = ref([])
 
     const marques = ref([])
     const modeles = ref([])
@@ -63,8 +62,12 @@
         axios
         .post('http://localhost/src/api/vehicle.php')
         .then (response => {
-            annonces.value = response.data
-            countAnnonces.value = response.data.length
+            response.data.forEach(element => {
+                if (element.status == 0) {
+                    annonces.value.push(element)
+                }
+            })
+            countAnnonces.value = annonces.value.length
         })
         .catch (e => {
             console.error(e)
@@ -192,7 +195,7 @@
 <template>
     <carouselHome/>
     <main class="row">
-        <newCar v-if="isConnect && isClick"/>
+        <newCar v-if="isConnect && isClick" style="z-index:50;"/>
         <h1 class="col-10 col-sm-8 col-md-6" v-if="isConnect">{{ countAnnonces }}</h1>
         <h2 class="col-10 col-sm-8 col-md-6" v-if="isConnect">VEHICULES EN VENTE</h2>
         <appBar v-if="isConnect"/>
@@ -387,6 +390,10 @@
         color: $dark-grey;
     }
 
+    .overflow-hidden {
+        overflow-y: hidden;
+    }
+
     p {
         font-size: 0.7em;
     }
@@ -423,7 +430,7 @@
     h1 {
         margin: auto;
         text-align: center;
-        margin-top: 2em;
+        margin-top: 5em;
         font-size: 2em;
     }
 
@@ -457,7 +464,7 @@
         right: 0;
         bottom: 20vh;
         box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
-        z-index: 20;
+        z-index: 100;
         transition: all 0.5s ease-in;
     }
 
@@ -794,6 +801,10 @@
     @media screen and (min-width: 940px) {
         .container__cards .cards {
             width: 35vw;
+        }
+
+        h2 {
+            margin-top: 1em;
         }
     }
 
