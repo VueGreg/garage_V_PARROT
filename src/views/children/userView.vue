@@ -15,6 +15,8 @@
     const mailValide = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
+    const roleModify = ref(false)
+    const memoryId = ref()
 
     //Form variables
     const name = ref("")
@@ -51,6 +53,7 @@
         .post('http://localhost/src/api/dashboard.php', {
             utilisateurs: 'getUsers'
         }).then (response => {
+            console.log(response.data)
             users.value = response.data.utilisateurs
             listPermissions.value = response.data.list_permissions
             countUsers.value = response.data.nombres
@@ -87,6 +90,7 @@
                     password.value = ""
                     role.value = ""
                     getUsers()
+                    isAction.value = false
                 }
             })
             .catch(e => {
@@ -98,6 +102,66 @@
         }
     }
 
+    const deleteUser = async(id) => {
+        await axios
+        .post('http://localhost/src/api/postUser.php', {
+            id, id
+        })
+        .then (response => {
+            if (response.data.success === true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getUsers()
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
+        
+    }
+
+    const clickRole = (id) => {
+        users.value.forEach(user => {
+            if (user.id == id) {
+                name.value = user.nom
+                surname.value = user.prenom
+                email.value = user.mail
+                listPermissions.value.forEach(permission => {
+                    if (permission.type == user.nom_permissions) {
+                        role.value = permission.id
+                    }
+                })
+                isAction.value = true
+                roleModify.value = true
+                memoryId.value = id
+            }
+        })
+    }
+
+    const modifyUser = async(id) => {
+        await axios
+        .put('http://localhost/src/api/postUser.php', {
+            id: id,
+            name: name.value,
+            surname: surname.value,
+            mail: email.value,
+            role: role.value
+        })
+        .then (response => {
+            if (response.data.success === true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getUsers()
+                roleModify.value = false
+                isAction.value = false
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
+
+    }
+
     userAuthorized()
     getUsers()
 
@@ -106,61 +170,107 @@
 <template>
     <informationModal :messageModal="messageModal" @close="isModal = false" v-if="isModal" />
     <main class="row">
-        <h1 class="col-10">{{ countUsers }}</h1>
-        <h2 class="col-10" v-if="countUsers<=1">UTILISATEUR</h2>
-        <h2 class="col-10" v-else>UTILISATEURS</h2>
-        <div class="message col-9" v-for="user in users" :key="user.id">
-            <div class="message__element">
-                <p class="message__element-title">Nom/Prénom:</p>
-                <p>{{ user.nom }} {{ user.prenom }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">E-mail:</p>
-                <p class="message__element-result">{{ user.mail }}</p>
-            </div>
-            <div class="message__element" @click="changePermission ? changePermission=false : changePermission=true">
-                <p class="message__element-title">Rôle:</p>
-                <p>{{ user.nom_permissions }}</p>
-            </div>
-            <div class="message__element" v-if="changePermission">
-                <p class="message__element-title">Changer le rôle:</p>
-                <select name="permissions" id="permissions">
-                        <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
-                </select>
-                <button><i class="fa-regular fa-circle-check" style="color: #f36639;"></i></button>
-            </div>
-        </div>
-        <div class="message col-9">
-            <div class="message__element">
-                <h6>Ajouter un utilisateur</h6>
-            </div>
-            <form class="form col-10">
-                <div class="form__input">
-                    <input class="form__field" v-model="name" type="text" name="name" id="name" placeholder="Nom">
-                    <label class="form__label" for="name">Nom</label>
+        <section class="mobile">
+            <h1 class="col-10">{{ countUsers }}</h1>
+            <h2 class="col-10" v-if="countUsers<=1">UTILISATEUR</h2>
+            <h2 class="col-10" v-else>UTILISATEURS</h2>
+            <div class="message col-9" v-for="user in users" :key="user.id">
+                <div class="message__element">
+                    <p class="message__element-title">Nom/Prénom:</p>
+                    <p>{{ user.nom }} {{ user.prenom }}</p>
                 </div>
-                <div class="form__input">
-                    <input class="form__field" v-model="surname" type="text" name="surname" id="surname" placeholder="Prenom">
-                    <label class="form__label" for="surname">Prenom</label>
+                <div class="message__element">
+                    <p class="message__element-title">E-mail:</p>
+                    <p class="message__element-result">{{ user.mail }}</p>
                 </div>
-                <div class="form__input">
-                    <input class="form__field" @focusout="Mail_Valide(email)" v-model="email" type="email" name="email" id="email" placeholder="Adresse mail">
-                    <label class="form__label" for="email">Adresse mail</label>
-                    <span class="form__input-alert" v-if="mailValide">*Adresse invalide</span>
+                <div class="message__element" @click="changePermission ? changePermission=false : changePermission=true">
+                    <p class="message__element-title">Rôle:</p>
+                    <p>{{ user.nom_permissions }}</p>
                 </div>
-                <div class="form__input">
-                    <input class="form__field" v-model="password" type="password" name="password" id="password" placeholder="Mot de pass">
-                    <label class="form__label" for="email">Mot de passe</label>
-                </div>
-                <div class="form__input">
-                    <label class="form__label" for="permissions">Role</label>
-                    <select name="permission" id="permission" v-model="role">
-                        <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
+                <div class="message__element" v-if="changePermission">
+                    <p class="message__element-title">Changer le rôle:</p>
+                    <select name="permissions" id="permissions">
+                            <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
                     </select>
+                    <button><i class="fa-regular fa-circle-check" style="color: #f36639;"></i></button>
                 </div>
-                <button type="button" @click="postNewUser()">Créer un utilisateur</button>
-            </form>
+            </div>
+        </section>
+        <section class="other">
+        <div class="table row">
+            <div class="table__header col-md-10 col-lg-8">
+                <div class="table__header-head">
+                    <h5>UTILISATEURS</h5>
+                    <h6>{{ countUsers }}</h6>
+                </div>
+                <div class="table__header-cat">
+                    <h6 class="elem elem1">Nom</h6>
+                    <h6 class="elem elem2">Prenom</h6>
+                    <h6 class="elem elem3">E-mail</h6>
+                    <h6 class="elem elem4">Rôle</h6>
+                    <h6 class="elem elem5">Actions</h6>
+                </div>
+            </div>
+
+            <div class="table__btn col-md-10 col-lg-8" @click="isAction ? isAction = false : isAction = true">
+                <a href="#addUser" class="table__btn-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Ajouter un utilisateur
+                </a>
+            </div>
+
+            <div class="table__body col-md-10 col-lg-8" v-for="user in users" :key="user.id">
+                <div class="table__body-elem">
+                    <span class="elem elem1">{{ user.nom }}</span>
+                    <span class="elem elem2">{{ user.prenom }}</span>
+                    <span class="elem elem3">{{ user.mail }}</span>
+                    <span class="elem elem4">{{ user.nom_permissions }}</span>
+                    <span class="elem elem5">
+                        <div class="elem__btn" v-if="user.id != 1" @click="deleteUser(user.id)">
+                            <i class="fa-solid fa-user-slash"></i>
+                            <p>Employé sortie de l'entreprise</p>
+                        </div>
+                        <div class="elem__btn" v-if="user.id != 1" @click="clickRole(user.id)">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <p>Changer le rôle</p>
+                        </div>
+                    </span>
+                </div>
+            </div>
         </div>
+    </section>
+    <div class="message none col-9 col-md-10 col-lg-8" id="addUser" :class="{ active: isAction }">
+                <div class="message__element">
+                    <h6>Ajouter un utilisateur</h6>
+                </div>
+                <form class="form col-10">
+                    <div class="form__input">
+                        <input class="form__field" v-model="name" type="text" name="name" id="name" placeholder="Nom">
+                        <label class="form__label" for="name">Nom</label>
+                    </div>
+                    <div class="form__input">
+                        <input class="form__field" v-model="surname" type="text" name="surname" id="surname" placeholder="Prenom">
+                        <label class="form__label" for="surname">Prenom</label>
+                    </div>
+                    <div class="form__input">
+                        <input class="form__field" @focusout="Mail_Valide(email)" v-model="email" type="email" name="email" id="email" placeholder="Adresse mail">
+                        <label class="form__label" for="email">Adresse mail</label>
+                        <span class="form__input-alert" v-if="mailValide">*Adresse invalide</span>
+                    </div>
+                    <div class="form__input" v-if="!roleModify">
+                        <input class="form__field" v-model="password" type="password" name="password" id="password" placeholder="Mot de pass">
+                        <label class="form__label" for="email">Mot de passe</label>
+                    </div>
+                    <div class="form__input">
+                        <label class="form__label" for="permissions">Role</label>
+                        <select name="permission" id="permission" v-model="role">
+                            <option :value="permission.id" v-for="permission in listPermissions" :key="permission.id">{{ permission.type }}</option>
+                        </select>
+                    </div>
+                    <button type="button" @click="postNewUser()" v-if="!roleModify">Créer un utilisateur</button>
+                    <button type="button" @click="modifyUser(memoryId)" v-else>Modifier l'utilisateur</button>
+                </form>
+            </div>
     </main>
 </template>
 
@@ -356,6 +466,146 @@
     &:required,&:invalid { box-shadow:none; }
     }
 
+    .other {
+        display: none;
+    }
+
+    .table {
+        font-size: 0.8em;
+        margin: 2em auto;
+        margin-bottom: 5em;
+
+        h5,
+        h6 {
+            color: $primary-color;
+            margin-bottom: 2em;
+        }
+
+        &__header {
+            margin: 2em auto;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+
+            & h6 {
+                font-size: 1.2em;
+                margin: 0;
+                margin-top: 2em;
+                margin-bottom: 0.5em;
+            }
+    
+            &-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &-cat {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        &__btn {
+            display: flex;
+            justify-content: end;
+            margin: auto;
+
+            &-btn {
+                @include btn-style($primary-color);
+                margin: 0;
+                padding: 0.5em;
+                font-size: 1.2em;
+                text-decoration: none;
+
+                & i {
+                    color: $primary-color;
+                    background: none;
+                }
+
+                &:hover i {
+                    color: white;
+                }
+            }
+        }
+
+        &__body {
+
+            margin: 0.2em auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            height: 100%;
+            padding: 1em;
+
+            &-elem {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .elem {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            color: $color-text-dark;
+
+            &__btn {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                margin: 1em;
+                color: $primary-color;
+                cursor: pointer;
+
+                & p {
+                    font-size: 0.8em;
+                }
+
+                & i {
+                    font-size: 1.3em;
+                }
+            }
+        }
+        .elem1 {
+            width: 8%;
+        }
+
+        .elem2 {
+            width: 8%;
+        }
+
+        .elem3 {
+            width: 20%;
+        }
+
+        .elem4 {
+            width: 15%;
+        }
+
+        .elem5 {
+            width: 55%;
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+
+    .none {
+        display: none;
+        opacity: 0;
+    }
+
+    .active {
+        display: block;
+        opacity: 1;
+    }
+
 
     .v-enter-active,
     .v-leave-active {
@@ -380,6 +630,20 @@
     .v-leave-from {
     height: auto;
     opacity: 1;
+    }
+
+    @media screen and (min-width: 1400px) {
+        .mobile {
+            display: none;
+        }
+
+        .other {
+            display: block;
+        }
+
+        .form {
+            width: 50%;
+        }
     }
 
 </style>

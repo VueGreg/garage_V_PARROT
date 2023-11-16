@@ -14,6 +14,7 @@
     const isAction = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
+    const activeItem = ref(false)
 
     //-----v-models
     const models = reactive({
@@ -181,6 +182,13 @@
         })
     }
 
+    const showOptions = (index) => {
+        if (activeItem.value === index) {
+            activeItem.value = 0
+        }else
+        activeItem.value = index
+    }
+
     userAuthorized()
     getAll()
 
@@ -258,7 +266,7 @@
                     <span>  AJOUTER</span>
                 </button>
             </a>
-            <div class="message col-9 col-xl-4" v-for="reparation in reparations" :key="reparation.id" @click="isAction ? isAction=false : isAction=true">
+            <div class="message col-9 col-xl-4" v-for="reparation in reparations" :key="reparation.id" @click="showOptions(reparation.id)">
                 <div class="message__element">
                     <p class="message__element-title">Catégorie:</p>
                     <p class="message__element-result">{{ reparation.categorie }}</p>
@@ -267,7 +275,7 @@
                     <p class="message__element-title">Description:</p>
                     <p>{{ reparation.description }}</p>
                 </div>
-                <div class="message__element" v-if="isAction">
+                <div class="message__element none" :class="{ active: reparation.id === activeItem }">
                     <button @click="deleteRepair($event, reparation.id)">
                         <i class="fa-solid fa-trash"></i>
                         <span>  Supprimer</span>
@@ -587,6 +595,18 @@
     /* reset input */
     .form__field{
     &:required,&:invalid { box-shadow:none; }
+    }
+
+    .none {
+        display: none;
+        opacity: 0;
+        transition: all 0.4s ease-in-out;
+    }
+
+    .active {
+        display: flex;
+        opacity: 1;
+        transition: all 0.4s ease-in-out;
     }
 
     @media screen and (min-width: 1400px) {
