@@ -8,6 +8,7 @@
     const countMessages = ref()
     const messages = ref([])
     const isAction = ref(false)
+    const activeItem = ref(0)
 
     //-----Modal response
     const isModal = ref(false)
@@ -51,6 +52,22 @@
         })
     }
 
+    const showOptions = (index) => {
+        if (activeItem.value === index) {
+            activeItem.value = 0
+        }else
+        activeItem.value = index
+    }
+
+    const call = (id) => {
+        messages.value.forEach(message => {
+            if (message.id == id) {
+                messageModal.value = message.num_telephone
+                isModal.value = true
+            }
+        })
+    }
+
     getMessages()
 
 </script>
@@ -62,7 +79,7 @@
             <h1 class="col-10">{{ countMessages }}</h1>
             <h2 class="col-10" v-if="countMessages<=1">MESSAGE</h2>
             <h2 class="col-10" v-else>MESSAGES</h2>
-            <div class="message col-9" v-for="message in messages" :key="message.id" @click="isAction ? isAction=false : isAction=true">
+            <div class="message col-9" v-for="message in messages" :key="message.id" @click="showOptions(message.id)">
                 <div class="message__element">
                     <p class="message__element-title">Nom/Prénom:</p>
                     <p>{{ message.nom }} {{ message.prenom }}</p>
@@ -87,8 +104,7 @@
                     <p class="message__element-title">Message:</p>
                     <p>{{ message.text }}</p>
                 </div>
-                <TransitionGroup>
-                    <div class="message__option" v-if="isAction">
+                    <div class="message__option" :class="{ active: message.id === activeItem }">
                         <div class="message__option-btn">
                             <i class="fa-solid fa-phone"></i>
                         </div>
@@ -99,7 +115,6 @@
                             <i class="fa-regular fa-circle-check"></i>
                         </div>
                     </div>
-                </TransitionGroup>
             </div>
         </main>
     </section>
@@ -117,26 +132,27 @@
                     <span class="elem elem4">Message</span>
                 </div>
             </div>
-            <div class="table__body col-md-10 col-lg-8" :class="{'higer': isAction}" v-for="message in messages" :key="message.id" @click="isAction ? isAction=false : isAction=true">
+            <div class="table__body col-md-10 col-lg-8" v-for="message in messages" :key="message.id" @click="showOptions(message.id)">
                 <div class="table__body-elem">
                     <span class="elem elem1">{{ message.nom }} {{ message.prenom }}</span>
                     <span class="elem elem2">{{ message.date }}</span>
                     <span class="elem elem3">{{ message.num_annonce }}</span>
                     <span class="elem elem4">{{ message.text }}</span>
                 </div>
-                <TransitionGroup>
-                    <div class="message__option" v-if="isAction">
-                        <div class="message__option-btn">
+                    <div class="message__option" :class="{ active: message.id === activeItem }">
+                        <div class="message__option-btn" @click="call(message.id)">
                             <i class="fa-solid fa-phone"></i>
+                            <span>Appeler</span>
                         </div>
                         <div class="message__option-btn">
                             <i class="fa-solid fa-at"></i>
+                            <span>Envoyer un mail</span>
                         </div>
                         <div class="message__option-btn" @click="messageCheck($event, message.id)">
                             <i class="fa-regular fa-circle-check"></i>
+                            <span>Message traité</span>
                         </div>
                     </div>
-                </TransitionGroup>
             </div>
         </div>
     </section>
@@ -190,7 +206,7 @@
         }
 
         &__option {
-            display: flex;
+            display: none;
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid rgba($color: #000000, $alpha: 0.8);
@@ -198,6 +214,8 @@
 
             &-btn {
                 border: 2px solid $primary-color;
+                opacity: 0;
+                transition: all 0.4s ease-in-out;
 
                 & i {
                     color: $primary-color;
@@ -235,7 +253,7 @@
             margin: 2em auto;
             padding: 1em;
             border-radius: 5px;
-            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
     
             &-head {
                 display: flex;
@@ -255,8 +273,8 @@
             display: flex;
             flex-direction: column;
             border-radius: 5px;
-            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.4);
-            height: 5vh;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            height: 100%;
             padding: 1em;
 
             &-elem {
@@ -297,6 +315,15 @@
         }
     }
 
+    .active {
+        display: flex;
+
+        & .message__option-btn{
+            opacity: 1;
+            transition: all 0.4s ease-in-out;
+        }
+    }
+
     .v-enter-active,
     .v-leave-active {
     transition: all 0.75s ease-out;
@@ -329,6 +356,24 @@
 
         .mobile {
             display: none;
+        }
+
+        .active {
+            border: none;
+
+            & .message__option-btn {
+                display: flex;
+                align-items: center;
+                color: $orange-formular;
+                padding: 0.2em;
+                padding-right: 1em;
+                box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+                border-radius: 5px;
+
+                &:hover {
+                    color: white;
+                }
+            }
         }
     }
 

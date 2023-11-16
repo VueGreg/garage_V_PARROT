@@ -14,7 +14,7 @@
     const isAction = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
-    const horairesChange = ref([])
+    const arrayhoraires = ref([])
 
     //-----v-models
     const models = reactive({
@@ -24,8 +24,11 @@
         tel: null,
         mail: null,
         categorie : null,
-        description : null
+        description : null,
+        horaire : null
     })
+
+
 
     //-----Modal response
     const isModal = ref(false)
@@ -132,8 +135,25 @@
         })
     }
 
+    const generateHourTable = () => {
+        for (let j = 1; j < 7; j++) {
+            for (let i = 1; i < 24; i++) {
+                arrayhoraires.value[j] = i + 'h00'
+                arrayhoraires.value[j] = i + 'h30'
+            }
+        }
+        console.log(arrayhoraires.value)
+    }
+
+    const changeFormatTime = (hour) => {
+        let change = hour.replace('h', ':')
+        let goodHour = change + ':00'
+        console.log(goodHour)
+    }
+
     userAuthorized()
     getAll()
+    generateHourTable()
 
 </script>
 
@@ -176,19 +196,23 @@
         </section>
         <section class="row">
             <h2>HORAIRES D'OUVERTURE</h2>
-            <table class="col-9 col-xl-6">
-                <tr v-for="horaire in horaires">
+            <table class="col-9 col-xl-4">
+                <tr v-for="horaire in horaires" :key="horaire.id">
                     <td>{{ horaire.jour_semaine }}</td>
                     <td>
                         <div class="form__input">
-                            <input class="form__field" type="text" name="h_debut_matin" id="h_debut_matin" :placeholder="horaire.h_debut_matin">
-                            <label class="form__label" for="h_debut_matin">{{ horaire.h_debut_matin }}</label>
+                            <label class="form__label" :for="horaire.id">Début</label>
+                            <select :name="horaire.id" :id="horaire.id" v-model="models.horaire">
+                                <option>{{ arrayhoraires[horaire.id] }}</option>
+                            </select>
                         </div>
                     </td>
                     <td>
                         <div class="form__input">
-                            <input class="form__field" type="text" name="h_fin_soir" id="h_fin_soir" :placeholder="horaire.h_fin_soir">
-                            <label class="form__label" for="h_fin_soir">{{ horaire.h_fin_soir }}</label>
+                            <label class="form__label" :for="horaire.jour_semaine + 'Fin'">Fin</label>
+                            <select :name="horaire.jour_semaine + 'Fin'" :id="horaire.jour_semaine + 'Fin'" v-model="models.horaire">
+                                <option v-for="arrayhoraire in arrayhoraires[horaire.id]">{{ arrayhoraire }}</option>
+                            </select>
                         </div>
                     </td>
                 </tr>
@@ -202,7 +226,7 @@
                     <span>  AJOUTER</span>
                 </button>
             </a>
-            <div class="message col-9" v-for="reparation in reparations" :key="reparation.id" @click="isAction ? isAction=false : isAction=true">
+            <div class="message col-9 col-xl-4" v-for="reparation in reparations" :key="reparation.id" @click="isAction ? isAction=false : isAction=true">
                 <div class="message__element">
                     <p class="message__element-title">Catégorie:</p>
                     <p class="message__element-result">{{ reparation.categorie }}</p>
@@ -222,7 +246,7 @@
                     </button>
                 </div>
             </div>
-            <div class="message form col-9" id="form">
+            <div class="message form col-9 col-xl-4" id="form">
                 <h6>Ajouter une prestation</h6>
                 <div class="form__input">
                     <label class="form__label" for="categorie">Catégorie</label>
@@ -251,6 +275,10 @@
 
     table {
         margin: auto;
+
+        & tr {
+            vertical-align: bottom;
+        }
         
         & td {
             padding: 0.5em
