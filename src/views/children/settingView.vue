@@ -1,7 +1,7 @@
 <script setup>
 
     import axios from 'axios'
-    import { ref, reactive, defineEmits } from 'vue'
+    import { ref, reactive, defineEmits, watch } from 'vue'
     import { useCookies } from 'vue3-cookies'
     import informationModal from '../../components/informationModal.vue'
 
@@ -14,7 +14,6 @@
     const isAction = ref(false)
     const userPermissions = cookies.get('userPermissions')
     const rank = ref()
-    const arrayhoraires = ref([])
 
     //-----v-models
     const models = reactive({
@@ -24,11 +23,19 @@
         tel: null,
         mail: null,
         categorie : null,
-        description : null,
-        horaire : null
+        description : null
     })
 
-
+    const horaireChange = ref(
+        {
+            1: {debut: null, fin : null},
+            2: {debut: null, fin : null},
+            3: {debut: null, fin : null},
+            4: {debut: null, fin : null},
+            5: {debut: null, fin : null},
+            6: {debut: null, fin : null}
+        }
+    )
 
     //-----Modal response
     const isModal = ref(false)
@@ -67,6 +74,11 @@
             models.city = informations.value[0].ville
             models.tel = informations.value[0].num_telephone
             models.mail = informations.value[0].mail
+
+            for (let i = 1; i < 7; i++) {
+                horaireChange.value[i].debut = response.data.horaires[i-1].h_debut
+                horaireChange.value[i].fin = response.data.horaires[i-1].h_fin
+            }
         })
         .catch (e => {
             console.error(e)
@@ -135,25 +147,42 @@
         })
     }
 
-    const generateHourTable = () => {
-        for (let j = 1; j < 7; j++) {
-            for (let i = 1; i < 24; i++) {
-                arrayhoraires.value[j] = i + 'h00'
-                arrayhoraires.value[j] = i + 'h30'
-            }
+    const changeFormatTime = (arr) => {
+        for (let i = 1; i < 7; i++) {
+
+            let changeDebut = arr[i].debut.replace('h', ':')
+            let goodHourDebut = changeDebut + ':00'
+            arr[i].debut = goodHourDebut
+
+            let changeFin = arr[i].fin.replace('h', ':')
+            let goodHourFin = changeFin + ':00'
+            arr[i].fin = goodHourFin
         }
-        console.log(arrayhoraires.value)
+        return arr
     }
 
-    const changeFormatTime = (hour) => {
-        let change = hour.replace('h', ':')
-        let goodHour = change + ':00'
-        console.log(goodHour)
+    const sendHoraires = async() => {
+        let change = changeFormatTime(horaireChange.value)
+        console.log(change)
+        await axios
+        .put('http://localhost/src/api/setting.php', {
+            arr: change
+        })
+        .then(response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+
+                getAll()
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })
     }
 
     userAuthorized()
     getAll()
-    generateHourTable()
 
 </script>
 
@@ -201,22 +230,25 @@
                     <td>{{ horaire.jour_semaine }}</td>
                     <td>
                         <div class="form__input">
-                            <label class="form__label" :for="horaire.id">Début</label>
-                            <select :name="horaire.id" :id="horaire.id" v-model="models.horaire">
-                                <option>{{ arrayhoraires[horaire.id] }}</option>
+                            <label class="form__label" :for="horaire.jour_semaine + 'Debut'">Début</label>
+                            <select :name="horaire.jour_semaine + 'Debut'" :id="horaire.jour_semaine + 'Debut'" v-model="horaireChange[horaire.id].debut">
+                                <option>{{ horaireChange[horaire.id].debut }}</option>
+                                <option v-for="heure in horaire.list" :key="heure.id">{{ heure }}</option>
                             </select>
                         </div>
                     </td>
                     <td>
                         <div class="form__input">
                             <label class="form__label" :for="horaire.jour_semaine + 'Fin'">Fin</label>
-                            <select :name="horaire.jour_semaine + 'Fin'" :id="horaire.jour_semaine + 'Fin'" v-model="models.horaire">
-                                <option v-for="arrayhoraire in arrayhoraires[horaire.id]">{{ arrayhoraire }}</option>
+                            <select :name="horaire.jour_semaine + 'Fin'" :id="horaire.jour_semaine + 'Fin'" v-model="horaireChange[horaire.id].fin">
+                                <option>{{ horaireChange[horaire.id].fin }}</option>
+                                <option v-for="heure in horaire.list" :key="heure.id">{{ heure }}</option>
                             </select>
                         </div>
                     </td>
                 </tr>
             </table>
+            <button type="button" class="col-xl-2" @click="sendHoraires()">Envoyer les modifications</button>
         </section>
         <section>
             <h2>REPARATIONS</h2>
@@ -555,6 +587,12 @@
     /* reset input */
     .form__field{
     &:required,&:invalid { box-shadow:none; }
+    }
+
+    @media screen and (min-width: 1400px) {
+        .row {
+            flex-direction: column;
+        }
     }
 
 </style>

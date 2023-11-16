@@ -68,6 +68,7 @@
                 }
             })
             countAnnonces.value = annonces.value.length
+            console.log(annonces.value)
         })
         .catch (e => {
             console.error(e)
@@ -330,7 +331,7 @@
                 </div>
         </form>
 
-        <div class="container__cards col-9 col-sm-6 col-lg-8">
+        <div class="container__cards col-9 col-sm-6 col-lg-8" :class="{ show: isConnect == false }">
             <div class="cards" v-for="annonce in annonces" :key="annonce.numero_annonce">
                 <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`" v-if="isConnect">
                     <div class="cards__image">
@@ -375,6 +376,56 @@
                         </div>
                     </div>
                 </RouterLink>
+            </div>
+        </div>
+        <div class="table row" v-if="isConnect">
+            <div class="table__header col-md-10 col-lg-8">
+                <div class="table__header-head">
+                    <h5>Vehicule en vente</h5>
+                    <h6>{{ countAnnonces }}</h6>
+                </div>
+                <div class="table__header-cat">
+                    <span class="elem elem1">Images:</span>
+                    <span class="elem elem2">Véhicule:</span>
+                    <span class="elem elem3">N°Annonce:</span>
+                    <span class="elem elem4">Prix:</span>
+                    <span class="elem elem5">Messages:</span>
+                    <span class="elem elem6">Actions:</span>
+                </div>
+            </div>
+
+            <div class="table__btn col-md-10 col-lg-8">
+                <a href="#newCar" class="table__btn-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Ajouter un véhicule
+                </a>
+            </div>
+
+            <div class="table__body col-md-10 col-lg-8" v-for="annonce in annonces" :key="annonce.numero_annonce">
+                <div class="table__body-elem">
+                    <span class="elem elem1">
+                        <img :src="annonce.photo" alt="">
+                    </span>
+                    <span class="elem elem2">{{ annonce.marque }} {{ annonce.motorisation }}</span>
+                    <span class="elem elem3">{{ annonce.numero_annonce }}</span>
+                    <span class="elem elem4">{{ annonce.prix }} €</span>
+                    <span class="elem elem5">{{ annonce.messages }}</span>
+                    <span class="elem elem6">
+                        <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`">
+                            <div class="elem-btn">
+                                <i class="fa-solid fa-eye"></i>
+                                <p>Visualiser et modifier</p>
+                            </div>
+                        </RouterLink>
+                        <div class="elem-btn">
+                            <i class="fa-solid fa-square-check"></i>
+                            <p>Véhicule vendu</p>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <div class="table__body col-md-10 col-lg-8" id="newCar">
+                <newCar style="position: inherit; box-shadow: none;"/>
             </div>
         </div>
     </main>
@@ -735,6 +786,134 @@
         background: rgb(195, 195, 195);
     }
 
+    .table {
+        display: none;
+        font-size: 0.8em;
+        margin: 2em auto;
+        margin-bottom: 5em;
+
+        h5,
+        h6 {
+            color: $primary-color;
+            margin-bottom: 2em;
+        }
+
+        &__header {
+            margin: 1em auto;
+            margin-top: 3em;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
+    
+            &-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &-cat {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        &__btn {
+            display: flex;
+            justify-content: end;
+            margin: auto;
+
+            &-btn {
+                @include btn-style($primary-color);
+                margin: 0;
+                padding: 0.5em;
+                font-size: 1.2em;
+                text-decoration: none;
+
+                & i {
+                    color: $primary-color;
+                    background: none;
+                }
+
+                &:hover i {
+                    color: white;
+                }
+            }
+        }
+
+        &__body {
+
+            margin: 0.4em auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            height: 100%;
+            padding: 1em;
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
+
+            &-elem {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .elem {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+
+            &-btn {
+                @include flex-center;
+                flex-direction: column;
+                color: $primary-color;
+                cursor: pointer;
+            }
+        }
+        .elem1 {
+            width: 15%;
+
+            & img {
+                    height: auto;
+                    width: 100%;
+                }
+        }
+
+        .elem2 {
+            width: 15%;
+            justify-content: center;
+            text-align: center;
+            padding: 0.5em;
+        }
+
+        .elem3 {
+            width: 15%;
+            justify-content: center;
+        }
+
+        .elem4 {
+            width: 15%;
+        }
+
+        .elem5 {
+            width: 15%;
+        }
+
+        .elem6 {
+            width: 25%;
+            display: flex;
+            justify-content: space-around;
+
+            & i {
+                font-size: 1.8em;
+            }
+        }
+    }
+
 
     @media screen and (min-width: 560px) {
 
@@ -756,13 +935,22 @@
 
     @media screen and (min-width: 720px) {
 
+        .table {
+            display: block;
+        }
+
         form {
             width: 70vw;
             margin: auto;
             display: block;
         }
-        .container__cards .cards {
-            width: 40vw;
+        .container__cards,
+        .addbtn {
+            display: none;
+        }
+
+        .show {
+            display:flex;
         }
 
         .offcanvas,

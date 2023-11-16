@@ -152,13 +152,13 @@
             <button class="btn" type="button"><i class="fa-solid fa-check"></i><span>Mettre le vehicule en "VENDU"</span></button>
         </div>
 
-        <div class="photos col-8" v-for="vehicule in vehicules">
+        <div class="photos col-8 col-xl-4" v-for="vehicule in vehicules">
             <div class="images" v-for="image in vehicule.images" :key="image.id">
                 <img :src="image.photo" alt="">
             </div>
         </div>
         
-        <div class="informations col-8">
+        <div class="informations col-8 col-xl-4">
 
             <div class="informations__title">
                         <button @click="showStats=false" :class="{active: !showStats}">Caractéristiques</button>
@@ -222,12 +222,16 @@
                             <option v-for="option in listOptions" :value="option.id">{{ option.description }}</option>
                         </select>
                     </div>
-                    <button class="btn" @click="addOption(equipement)" v-if="showStats"><i class="fa-solid fa-plus"></i>Ajouter un équipement</button>
-                        <div class="informations__equipement-module" v-if="showStats" v-for="equipement in equipements" :key="equipement.id"
+                    <div class="information__equipement-btn">
+                        <button class="btn" @click="addOption(equipement)" v-if="showStats"><i class="fa-solid fa-plus"></i>Ajouter un équipement</button>
+                    </div>
+                    <div class="information__equipement-option">
+                        <div class="module" v-if="showStats" v-for="equipement in equipements" :key="equipement.id"
                                 @click="deleteOption(equipement.id)">
                             <p>{{ equipement.equipement }}</p>
                             <span><i class="fa-solid fa-xmark"></i></span>
                         </div>
+                    </div>
                     <button class="btn" type="button" v-if="asChange && !showStats" @click="sendModify($event)">Envoyer les modification</button>
                 </div>
         </div>
@@ -273,44 +277,27 @@
 
         &__equipement {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: space-around;
             align-items: center;
             margin: 2em auto;
             margin-bottom: 3em;
+            width: 100%;
 
-            & button {
-                padding: 0.8em;
+            &-btn {
                 width: 100%;
-                margin-top: 0;
+
+                & button {
+                    padding: 0.8em;
+                    width: 100%;
+                    margin-top: 0;
+                }
             }
 
-            &-module {
-                border: 1px solid $dark-grey;
-                margin-top: 1em;
-                font-size: 0.8em;
-                font-weight: 600;
-                color: $dark-grey;
-                padding: 0.5em 1.5em;
-                border-radius: 5px;
-                @include flex-center;
-
-                & p {
-                    padding: 0;
-                    margin: 0;
-                    cursor: pointer;
-                }
-
-                & span {
-                    border: 2px solid $primary-color;
-                    border-radius: 50%;
-                    position: relative;
-                    transform: translate(2.3em, -1.3em);
-                    background-color: white;
-                    height: 1.2em;
-                    width: 1.2em;
-                    text-align: center;
-                }
+            &-option {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
             }
         }
 
@@ -319,6 +306,34 @@
             justify-content: flex-start;
             align-items: center;
             margin: auto;
+        }
+    }
+
+    .module {
+        border: 1px solid $dark-grey;
+        margin-top: 1em;
+        font-size: 0.8em;
+        font-weight: 600;
+        color: $dark-grey;
+        padding: 0.5em 1.5em;
+        border-radius: 5px;
+        @include flex-center;
+
+        & p {
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        & span {
+            border: 2px solid $primary-color;
+            border-radius: 50%;
+            position: relative;
+            transform: translate(2.3em, -1.3em);
+            background-color: white;
+            height: 1.2em;
+            width: 1.2em;
+            text-align: center;
         }
     }
 
@@ -495,8 +510,8 @@
             content: '\2304';
             font-size: 30px;
             position: relative;
-            left: 58vw;
-            top: -7vh;
+            left: 95%;
+            top: -60%;
             color: $color-text-dark;
         }
     }
@@ -507,10 +522,28 @@
         border: none;
         border-bottom: 2px solid $color-text-dark;
         background-color: white;
-        width: 60vw;
+        width: 100%;
         color: $color-text-dark;
         font-size: 0.9em;
         height: 2em;
+    }
+
+    @media screen and (min-width: 1400px) {
+
+        h5 {
+            width: 15%;
+        }
+        .row {
+            flex-direction: column;
+        }
+
+        .informations__equipement button {
+            width: 30%;
+        }
+
+        .title button {
+            width: 20%;
+        }
     }
 
 </style>

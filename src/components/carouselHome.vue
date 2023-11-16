@@ -5,6 +5,7 @@
     const route = useRoute()
     const path = route.path
 
+
     console.log(path)
 
 </script>
@@ -70,6 +71,11 @@
                 <p class="carousel__text-description">Achetez votre véhicule d’occasion contrôlée & garantie</p>
             </div>
         </div>
+
+        <div class="carousel-image carousel-img-2" v-else>
+            <div class="carousel__text carousel__fix">
+            </div>
+        </div>        
 </template>
 
 <style lang="scss" scoped>
@@ -84,6 +90,10 @@
 
     .carousel-img-3 {
         background: url("http://gregory-wolff.com/images/212596211_l_normal_none.jpg");
+    }
+
+    .carousel-img-4 {
+        background: url('http://gregory-wolff.com/images/198647702_l_normal_none.jpg');
     }
 
     .carousel-image {

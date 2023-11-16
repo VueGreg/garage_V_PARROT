@@ -18,7 +18,7 @@ function changeBusinessSetting() {
     try{
         $_PUT = json_decode(file_get_contents('php://input'), true);
 
-        if (isset($_PUT['adress']) && isset($_PUT['postal']) && isset($_PUT['city']) && isset($_PUT['tel']) && isset($_PUT['mail'])) {
+        if (isset($_PUT['adress']) && isset($_PUT['postal']) && isset($_PUT['city']) && isset($_PUT['tel']) && isset($_PUT['mail']) && empty($_PUT['arr'])) {
 
             $adress = $_PUT['adress'];
             $postal = $_PUT['postal'];
@@ -42,7 +42,7 @@ function changeBusinessSetting() {
                 return_json(true, 'informations modifiés');
             }
         }
-        elseif (isset($_PUT['category']) && isset($_PUT['description'])) {
+        elseif (isset($_PUT['category']) && isset($_PUT['description']) && empty($_PUT['arr'])) {
 
             $category = $_PUT['category'];
             $description = $_PUT['description'];
@@ -57,6 +57,37 @@ function changeBusinessSetting() {
 
             if ($statement->execute()) {
                 return_json(true, 'Nouvelle prestation ajouté');
+            }
+        }
+        elseif(isset($_PUT['arr'])) {
+
+            $arr = $_PUT['arr'];
+
+            global $data;
+
+            for ( $i=1 ; $i < count($arr)+1 ; $i++) { 
+
+                foreach ($arr[$i] as $key => $value) {
+                    if ($key == 'debut') {
+                        $debut = $value;
+                    }
+                    elseif ($key == 'fin') {
+                        $fin = $value;
+                    }
+                }
+
+                $sql = "UPDATE horaires SET h_debut = :debut, h_fin = :fin WHERE id = $i";
+                $statement = $data->prepare($sql);
+                $statement->bindParam(':debut', $debut);
+                $statement->bindParam(':fin', $fin);
+
+                if (!$statement->execute()) {
+                    return_json(false, 'Modifications non réussies');
+                    $i = count($arr) + 1;
+                }
+                elseif ($i == count($arr)) {
+                    return_json(true, 'Modifications réussies');
+                }
             }
         }
 

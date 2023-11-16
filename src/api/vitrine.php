@@ -33,7 +33,14 @@ require_once './connection.php';
                                 $horaires[$i]['h_fin'] = $newheure;
                         }
                 }
+                $horaires[$i]['list'] = array();
+                for ($j=1; $j < 24; $j++) { 
+                        array_push($horaires[$i]['list'], $j.'h00');
+                        array_push($horaires[$i]['list'], $j.'h30');
+                }
+                
         }
+
 
         //-----informations entreprise
         $sql_infos = "SELECT * FROM entreprise";

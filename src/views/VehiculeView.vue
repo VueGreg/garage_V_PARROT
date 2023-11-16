@@ -3,6 +3,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { ref } from 'vue';
+    import carouselHome from '../components/carouselHome.vue';
 
     const route = useRoute()
     const vehicules = ref ([])
@@ -26,6 +27,7 @@
 </script>
 
 <template>
+    <carouselHome />
     <main class="row">
         <div class="title col-8" v-for="vehicule in vehicules">
             <h2>{{ vehicule.marque }} {{ vehicule.modele }}</h2>
@@ -231,6 +233,10 @@
     }
 
     @media screen and (min-width: 1000px) {
+
+        main {
+            margin-top: 8em;
+        }
         
         .row {
             flex-direction: column;

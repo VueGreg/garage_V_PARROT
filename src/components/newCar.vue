@@ -450,11 +450,15 @@
             margin-top: 1em;
         }
 
+        button  {
+            font-size: 1.4em;
+        }
+
         .form {
-            font-size: 1.2em;
+            font-size: 1.4em;
         }
         .form button {
-            width: 30%;
+            width: 40%;
         }
 
         .offcanvas__selectdiv {
