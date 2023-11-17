@@ -257,12 +257,12 @@
                     </td>
                 </tr>
             </table>
-            <button type="button" class="col-xl-1" @click="sendHoraires()">Envoyer les modifications</button>
+            <button type="button" class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1" @click="sendHoraires()">Envoyer les modifications</button>
         </section>
         <section>
             <h2>REPARATIONS</h2>
             <a href="#form">
-                <button class="col-6 col-xl-1">
+                <button class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
                     <i class="fa-solid fa-plus"></i>
                     <span>  AJOUTER</span>
                 </button>
@@ -299,7 +299,7 @@
                     <textarea class="form__field" v-model="models.description" name="description" id="description" placeholder="Description"></textarea>
                     <label class="form__label" for="description">Description</label>
                 </div>
-                <button class="col-6 col-xl-2" @click="sendRepair($event)">AJOUTER</button>
+                <button class="col-6 col-sm-4 col-md-3 col-lg-2" @click="sendRepair($event)">AJOUTER</button>
             </div>
         </section>
         <button class="top-page">
@@ -661,7 +661,7 @@
     }
 
 
-    @media screen and (min-width: 1400px) {
+    @media screen and (min-width: 992px) {
         .row {
             flex-direction: column;
         }

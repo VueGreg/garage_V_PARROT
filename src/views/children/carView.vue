@@ -225,7 +225,7 @@
                     <div class="information__equipement-btn">
                         <button class="btn" @click="addOption(equipement)" v-if="showStats"><i class="fa-solid fa-plus"></i>Ajouter un équipement</button>
                     </div>
-                    <div class="information__equipement-option">
+                    <div class="information__equipement-option" style="width: 100%;display: flex;flex-wrap: wrap;justify-content: center;gap: 1em;">
                         <div class="module" v-if="showStats" v-for="equipement in equipements" :key="equipement.id"
                                 @click="deleteOption(equipement.id)">
                             <p>{{ equipement.equipement }}</p>
@@ -537,8 +537,8 @@
             flex-direction: column;
         }
 
-        .informations__equipement button {
-            width: 30%;
+        .informations__equipement-option {
+            width: 80vw;
         }
 
         .title button {

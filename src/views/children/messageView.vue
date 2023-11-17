@@ -2,7 +2,7 @@
 
     import axios from 'axios';
     import { ref } from 'vue';
-    import { useCookies } from 'vue3-cookies';
+    import { RouterLink } from 'vue-router';
     import informationModal from '../../components/informationModal.vue';
 
     const countMessages = ref()
@@ -128,18 +128,22 @@
                     <h6>{{ countMessages }}</h6>
                 </div>
                 <div class="table__header-cat">
-                    <span class="elem elem1">Nom/Prénom</span>
-                    <span class="elem elem2">Date</span>
-                    <span class="elem elem3">N°Annonce</span>
-                    <span class="elem elem4">Message</span>
+                    <h6 class="elem elem1">Nom</h6>
+                    <h6 class="elem elem2">Prénom</h6>
+                    <h6 class="elem elem3">Date</h6>
+                    <h6 class="elem elem4">N°Annonce</h6>
+                    <h6 class="elem elem5">Message</h6>
                 </div>
             </div>
             <div class="table__body col-md-10 col-lg-8" v-for="message in messages" :key="message.id" @click="showOptions(message.id)">
                 <div class="table__body-elem">
-                    <span class="elem elem1">{{ message.nom }} {{ message.prenom }}</span>
-                    <span class="elem elem2">{{ message.date }}</span>
-                    <span class="elem elem3">{{ message.num_annonce }}</span>
-                    <span class="elem elem4">{{ message.text }}</span>
+                    <span class="elem elem1">{{ message.nom }}</span>
+                    <span class="elem elem2">{{ message.prenom }}</span>
+                    <span class="elem elem3">{{ message.date }}</span>
+                    <RouterLink :to="`vehicule/${message.num_annonce}`" class="elem elem4">
+                        <span>{{ message.num_annonce }}</span>
+                    </RouterLink>
+                    <span class="elem elem5">{{ message.text }}</span>
                 </div>
                     <div class="message__option" :class="{ active: message.id === activeItem }">
                         <div class="message__option-btn" @click="call(message.id)">
@@ -245,10 +249,15 @@
         margin: 2em auto;
         margin-bottom: 5em;
 
-        h5,
-        h6 {
+        h5{
             color: $primary-color;
             margin-bottom: 2em;
+        }
+
+        h6 {
+            margin: 0;
+            font-size: 1.2em;
+            color: $color-text-dark;
         }
 
         &__header {
@@ -299,23 +308,37 @@
             display: flex;
             align-items: center;
             padding: 0;
+            color: $color-text-dark;
         }
         .elem1 {
-            width: 15%;
+            width: 8%;
         }
 
         .elem2 {
-            width: 15%;
-            justify-content: center;
+            width: 8%;
         }
 
         .elem3 {
-            width: 15%;
-            justify-content: center;
+            width: 10%;
         }
 
         .elem4 {
-            width: 55%;
+            width: 10%;
+            text-decoration: none;
+        
+            & span {
+                background-color: $primary-color;
+                border-radius: 50%;
+                width: 2em;
+                height: 2em;
+                @include flex-center;
+                color: white;
+                font-weight: 600;
+            }
+        }
+
+        .elem5 {
+            width: 64%;
         }
     }
 

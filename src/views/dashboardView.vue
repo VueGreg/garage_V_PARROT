@@ -5,9 +5,30 @@
 
     const { cookies } = useCookies();
 
+    const userPermissions = cookies.get('userPermissions')
     const name = cookies.get('userName')
-    const upperName = name.toUpperCase()
     const surname = cookies.get('userSurname')
+
+
+    const userAuthorized = () => {
+        if (userPermissions != null || name != null || surname != null) {
+                axios
+                .post('http://localhost/src/api/authorize.php', {
+                    permissions: userPermissions
+                }).then (response => {
+                    if (response.data.success == false) {
+                        document.location.href='http://localhost:5173/erreur'
+                    }
+                }).catch (e => {
+                    document.location.href='http://localhost:5173/erreur'
+                    
+                })
+        }else document.location.href='http://localhost:5173/erreur'
+    }
+
+    userAuthorized()
+    
+    const upperName = name.toUpperCase()
     const upperSurname = surname.toUpperCase()
 
 </script>

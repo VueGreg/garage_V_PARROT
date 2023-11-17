@@ -86,5 +86,21 @@ function commentaryAccept() {
                 
             } catch (Exception $e){ return_json(false, $e->getMessage());}
         }
-    }else return_json(false, 'des paramètres sont manquant');
+
+    }elseif (isset($_PUT['withdraw']) && isset($_PUT['id']) && empty($_PUT['accept'])) {
+        try {
+
+            $id = $_PUT['id'];
+            
+            global $data;
+            $statement = $data->prepare("UPDATE temoignages SET etat = '0' WHERE id = :id");
+            $statement->bindParam(':id', $id);
+            
+            if ($statement-> execute()) {
+                return_json(true, 'Témoignage retiré du site');
+            }
+            
+        } catch (Exception $e){ return_json(false, $e->getMessage());}
+
+    } else return_json(false, 'des paramètres sont manquant');
 }

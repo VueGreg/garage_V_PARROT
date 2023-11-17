@@ -11,6 +11,7 @@
     const showAwaitTestimonys = ref([])
     const rank = ref()
     const activeItem = ref(false)
+    const activeTestimony = ref([])
 
     const { cookies } = useCookies()
     const userPermissions = cookies.get('userPermissions')
@@ -49,10 +50,14 @@
             temoignages.value = response.data.temoignages
             countMessages.value = response.data.nombres
             showAwaitTestimonys.value = []
+            activeTestimony.value = []
             
             temoignages.value.forEach(temoignage => {
                 if (temoignage.etat == 0) {
                     showAwaitTestimonys.value.push(temoignage)
+                }
+                else if (temoignage.etat == 1) {
+                    activeTestimony.value.push(temoignage)
                 }
             })
 
@@ -83,6 +88,23 @@
         .put('http://localhost/src/api/postCom.php', {
             id: id,
             accept: 'no'
+        })
+        .then(response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getTestimony()
+            }
+        }).catch (e => {
+            console.error(e)
+        })
+    }
+
+    const goWithdraw = async(id) => {
+        await axios
+        .put('http://localhost/src/api/postCom.php', {
+            id: id,
+            withdraw: 'yes'
         })
         .then(response => {
             if (response.data.success == true) {
@@ -147,10 +169,63 @@
         </section>
 
         <section class="other">
+            <h2 class="col-10 col-sm-7 col-md-10">TEMOIGNAGE PUBLIE</h2>
+            <div class="testimony">
+            <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in activeTestimony" :key="temoignage.id" @click="goWithdraw(temoignage.id)">
+            <div class="testimony__card-person">
+                <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
+                <div class="delete-item">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                    <span>Retirer du site</span>
+                </div>
+            </div>
+            <div class="testimony__card-stars" v-if="temoignage.note === 1">
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+            </div>
+            <div class="testimony__card-stars" v-if="temoignage.note === 2">
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+            </div>
+            <div class="testimony__card-stars" v-if="temoignage.note === 3">
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+            </div>
+            <div class="testimony__card-stars" v-if="temoignage.note === 4">
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-regular fa-star" style="color: #f36639;"></i>
+            </div>
+            <div class="testimony__card-stars" v-if="temoignage.note === 5">
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                <i class="fa-solid fa-star" style="color: #f36639;"></i>
+            </div>
+            <div class="testimony__card-text">
+                <p>{{ temoignage.commentaire }}</p>
+            </div>
+            <div class="testimony__card-name">
+                <p>{{ temoignage.prenom }} {{ temoignage.nom }}</p>
+            </div>
+        </div>
+    </div>
             <div class="table row">
                 <div class="table__header col-md-10 col-lg-8">
                     <div class="table__header-head">
-                        <h5>Témoignages clients</h5>
+                        <h5>Nouveau témoignages clients</h5>
                         <h5>{{ countMessages }}</h5>
                     </div>
                     <div class="table__header-cat">
@@ -208,6 +283,55 @@
         margin: auto;
         text-align: center;
         margin-top: 3em;
+    }
+
+    .testimony {
+        width: 75vw;
+        margin: auto;
+    }
+
+    .testimony__card{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 3em auto;
+        cursor: pointer;
+
+        &-person img{
+            width: 25vw;
+            height: 25vw;
+            @include flex-center;
+            box-shadow: 3px 3px 6px rgba($color: #000000, $alpha: 0.3);
+            border-radius: 50%;
+            margin: 1em auto;
+        }
+
+        .delete-item {
+            position: absolute;
+            transform: translate(4vw, -10vh);
+            font-size: 1.2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+
+            & span {
+                font-size: 0.8em;
+            }
+        }
+
+        &-stars{
+            margin: 1em auto;
+        }
+
+        &-text{
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        &-name{
+            font-weight: 600;
+        }
     }
 
     .message{
@@ -416,6 +540,61 @@
 
         .mobile {
             display: none;
+        }
+
+        .testimony {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .testimony__card{
+
+            &-person img{
+                width: 8vw;
+                height: 8vw;
+            }
+
+            &-person .delete-item {
+                transform: translate(9vw, -10vh);
+            }
+
+            &-text {
+                width: 50%;
+            }
+        }
+    }
+
+    @media screen and (min-width: 960px) {
+        .testimony__card{
+
+            &-person img{
+                width: 8vw;
+                height: 8vw;
+            }
+
+            &-text {
+                font-size: 0.8em;
+            }
+        }
+    }
+
+    @media screen and (min-width: 1260px) {
+
+        .testimony__card{
+
+            &-person img{
+                width: 3vw;
+                height: 3vw;
+            }
+
+            .delete-item {
+            position: absolute;
+            transform: translate(4vw, -12vh);
+            font-size: 1.2em;
+        }
+
+            &-text {
+                font-size: 0.9em;
+            }
         }
     }
 

@@ -11,6 +11,7 @@
     const userPermissions = cookies.get('userPermissions')
     const isConnect = ref(false)
     const isClick = ref(false)
+    const isActive = ref(false)
 
     const annonces = ref([])
     const countAnnonces = ref()
@@ -265,8 +266,8 @@
                 </div>
 
                 <div class="offcanvas__btn">
-                    <button @click="initialize()">Reinitialiser</button>
-                    <button data-bs-dismiss="offcanvas" @click="searchCars()">Rechercher</button>
+                    <button @click="initialize($event)">Reinitialiser</button>
+                    <button data-bs-dismiss="offcanvas" @click="searchCars($event)">Rechercher</button>
                 </div>
             </div>
         </div>
@@ -395,7 +396,7 @@
             </div>
 
             <div class="table__btn col-md-10 col-lg-8">
-                <a href="#newCar" class="table__btn-btn">
+                <a href="#newCar" class="table__btn-btn" @click="isActive ? isActive = false : isActive = true">
                     <i class="fa-solid fa-plus"></i>
                     Ajouter un véhicule
                 </a>
@@ -424,15 +425,13 @@
                     </span>
                 </div>
             </div>
-            <div class="table__body col-md-10 col-lg-8" id="newCar">
-                <newCar style="position: inherit; box-shadow: none;"/>
+            <div class="table__body col-md-10 col-lg-8" id="newCar" v-if="isActive">
+                <newCar style="position: inherit; box-shadow: none;" />
             </div>
-        </div>
-        <button class="top-page">
-            <a href="#top">
+            <a href="#top" class="top-page">
                 <i class="fa-solid fa-arrow-up"></i>
             </a>
-        </button>
+        </div>
     </main>
 </template>
 
@@ -505,7 +504,7 @@
 
     h2{
         @include h2-main;
-        margin-top: 0.5em;
+        margin-top: 2em;
     }
 
     .addbtn {
@@ -529,7 +528,7 @@
     }
 
     .container__cards {
-        margin: 5em auto;
+        margin: auto;
     }
 
     .cards{
@@ -922,26 +921,30 @@
     .top-page {
         @include btn-style($primary-color);
         position: relative;
-        left: 95vh;
+        left: 35%;
         border-radius: 50%;
-        width: 3vh;
-        height: 3vh;
-        font-size: 1.5em;
+        width: 4vh;
+        height: 4vh;
+        font-size: 2em;
         padding: 0.5em;
         background-color: $primary-color;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
 
             &:hover {
                 transform: scale(1.3);
-            }
-
-            & a {
-                text-decoration: none;
-                color: white;
             }
     }
 
 
     @media screen and (min-width: 560px) {
+
+        h2 {
+            margin-top: 5em;
+        }
 
         .row {
             flex-direction: column;
@@ -1008,7 +1011,7 @@
 
         .offcanvas__selectdiv::after {
             left: 90%;
-            top: -3.5vh;
+            top: -5vh;
         }
     }
 

@@ -44,8 +44,9 @@
                     }else document.location.href='http://localhost:5173/erreur'
                 }).catch (e => {
                     console.error(e)
+                    
                 })
-        }
+        }document.location.href='http://localhost:5173/erreur'
     }
 
     const getUsers = async() => {

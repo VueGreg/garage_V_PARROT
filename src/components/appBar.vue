@@ -84,7 +84,7 @@
 </script>
 
 <template>
-    <nav class="row" v-if="isConnect && path != '/connexion'">
+    <nav class="row" v-if="isConnect && path != '/connexion' && path != '/erreur'">
         <div class="bar col-10 col-sm-8 m-auto">
             <RouterLink class="link" to="/dashboard/utilisateurs" v-if="rank<2">
                 <div class="bar__btn" :class="{'active': path == '/dashboard/utilisateurs'}">
@@ -130,7 +130,7 @@
             </RouterLink>
         </div>
     </nav>
-    <nav class="row" v-else-if="path != '/connexion'">
+    <nav class="row" v-else-if="path != '/connexion' && path != '/erreur'">
         <div class="bar  col-10 col-sm-8 m-auto">
             <RouterLink class="link" to="/reparations">
                 <div class="bar__btn">
@@ -177,6 +177,10 @@
 
     @import '@/assets/scss/variable.scss';
     @import '@/assets/scss/mixins.scss';
+
+    nav {
+        display: none;
+    }
 
     .link {
         text-decoration: none;
@@ -236,6 +240,10 @@
     }
 
     @media screen and (min-width: 576px) {
+
+        nav {
+            display: block;
+        }
         .bar {
             display: flex;
             flex-wrap: nowrap;

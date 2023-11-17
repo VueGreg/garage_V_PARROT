@@ -118,7 +118,7 @@
         &__btn {
             @include btn-style($orange-formular);
             margin: 1em auto;
-            margin-bottom: 3em;
+            margin-bottom: 5.5em;
         }
     }
 
