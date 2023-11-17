@@ -135,6 +135,7 @@
 
     .navigate-link {
         text-decoration: none;
+        cursor: pointer;
     }
 
     @media screen and (min-width: 580px) {

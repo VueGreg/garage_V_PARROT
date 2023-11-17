@@ -195,7 +195,7 @@
 
 <template>
     <carouselHome/>
-    <main class="row">
+    <main class="row" id="top">
         <newCar v-if="isConnect && isClick" style="z-index:50;"/>
         <h1 class="col-10 col-sm-8 col-md-6" v-if="isConnect">{{ countAnnonces }}</h1>
         <h2 class="col-10 col-sm-8 col-md-6" v-if="isConnect">VEHICULES EN VENTE</h2>
@@ -428,6 +428,11 @@
                 <newCar style="position: inherit; box-shadow: none;"/>
             </div>
         </div>
+        <button class="top-page">
+            <a href="#top">
+                <i class="fa-solid fa-arrow-up"></i>
+            </a>
+        </button>
     </main>
 </template>
 
@@ -912,6 +917,27 @@
                 font-size: 1.8em;
             }
         }
+    }
+
+    .top-page {
+        @include btn-style($primary-color);
+        position: relative;
+        left: 95vh;
+        border-radius: 50%;
+        width: 3vh;
+        height: 3vh;
+        font-size: 1.5em;
+        padding: 0.5em;
+        background-color: $primary-color;
+
+            &:hover {
+                transform: scale(1.3);
+            }
+
+            & a {
+                text-decoration: none;
+                color: white;
+            }
     }
 
 

@@ -151,9 +151,16 @@
             if (response.data.success === true) {
                 isModal.value = true
                 messageModal.value = response.data.message
+
+                name.value = ""
+                surname.value = ""
+                email.value = ""
+                role.value = ""
+
                 getUsers()
                 roleModify.value = false
                 isAction.value = false
+                memoryId.value = ""
             }
         })
         .catch(e => {
@@ -168,7 +175,9 @@
 </script>
 
 <template>
-    <informationModal :messageModal="messageModal" @close="isModal = false" v-if="isModal" />
+    <Transition name="fade">
+        <informationModal :messageModal="messageModal" @close="isModal = false" v-if="isModal" />
+    </Transition>
     <main class="row">
         <section class="mobile">
             <h1 class="col-10">{{ countUsers }}</h1>
@@ -198,7 +207,7 @@
         </section>
         <section class="other">
         <div class="table row">
-            <div class="table__header col-md-10 col-lg-8">
+            <div class="table__header col-md-10 col-xl-8">
                 <div class="table__header-head">
                     <h5>UTILISATEURS</h5>
                     <h6>{{ countUsers }}</h6>
@@ -218,28 +227,30 @@
                     Ajouter un utilisateur
                 </a>
             </div>
-
-            <div class="table__body col-md-10 col-lg-8" v-for="user in users" :key="user.id">
-                <div class="table__body-elem">
-                    <span class="elem elem1">{{ user.nom }}</span>
-                    <span class="elem elem2">{{ user.prenom }}</span>
-                    <span class="elem elem3">{{ user.mail }}</span>
-                    <span class="elem elem4">{{ user.nom_permissions }}</span>
-                    <span class="elem elem5">
-                        <div class="elem__btn" v-if="user.id != 1" @click="deleteUser(user.id)">
-                            <i class="fa-solid fa-user-slash"></i>
-                            <p>Employé sortie de l'entreprise</p>
-                        </div>
-                        <div class="elem__btn" v-if="user.id != 1" @click="clickRole(user.id)">
-                            <i class="fa-solid fa-user-gear"></i>
-                            <p>Changer le rôle</p>
-                        </div>
-                    </span>
+            <TransitionGroup>
+                <div class="table__body col-md-10 col-xl-8" v-for="user in users" :key="user.id">
+                    <div class="table__body-elem">
+                        <span class="elem elem1">{{ user.nom }}</span>
+                        <span class="elem elem2">{{ user.prenom }}</span>
+                        <span class="elem elem3">{{ user.mail }}</span>
+                        <span class="elem elem4">{{ user.nom_permissions }}</span>
+                        <span class="elem elem5">
+                            <div class="elem__btn" v-if="user.id != 1" @click="deleteUser(user.id)">
+                                <i class="fa-solid fa-user-slash"></i>
+                                <p>Employé sortie de l'entreprise</p>
+                            </div>
+                            <div class="elem__btn" v-if="user.id != 1" @click="clickRole(user.id)">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <p>Changer le rôle</p>
+                            </div>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </TransitionGroup>
         </div>
     </section>
-    <div class="message none col-9 col-md-10 col-lg-8" id="addUser" :class="{ active: isAction }">
+    <Transition>
+        <div class="message none col-9 col-md-10 col-lg-8" id="addUser" :class="{ active: isAction }">
                 <div class="message__element">
                     <h6>Ajouter un utilisateur</h6>
                 </div>
@@ -271,6 +282,7 @@
                     <button type="button" @click="modifyUser(memoryId)" v-else>Modifier l'utilisateur</button>
                 </form>
             </div>
+        </Transition>
     </main>
 </template>
 
@@ -606,33 +618,17 @@
         opacity: 1;
     }
 
-
-    .v-enter-active,
-    .v-leave-active {
-    transition: all 0.75s ease-out;
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s ease;
     }
 
-    .v-enter-to {
-    height: auto;
-    opacity: 1;
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
     }
 
-    .v-enter-from {
-    height: 0;
-    opacity: 0;
-    }
-
-    .v-leave-to {
-    height: auto;
-    opacity: 0;
-    }
-
-    .v-leave-from {
-    height: auto;
-    opacity: 1;
-    }
-
-    @media screen and (min-width: 1400px) {
+    @media screen and (min-width: 768px) {
         .mobile {
             display: none;
         }

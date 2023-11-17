@@ -9,6 +9,11 @@
     const temoignages = ref([])
     const isAction = ref(false)
     const showAwaitTestimonys = ref([])
+    const rank = ref()
+    const activeItem = ref(false)
+
+    const { cookies } = useCookies()
+    const userPermissions = cookies.get('userPermissions')
 
     //-----Modal response
     const isModal = ref(false)
@@ -17,6 +22,25 @@
 
 
     //-----Functions
+    const userAuthorized = () => {
+        if (userPermissions != null) {
+                axios
+                .post('http://localhost/src/api/authorize.php', {
+                    permissions: userPermissions
+                }).then (response => {
+                    if (response.data.success == true) {
+                        rank.value = response.data.rang
+                        if (rank.value > 2) {
+                            document.location.href='http://localhost:5173/erreur'
+                        }
+                    }else document.location.href='http://localhost:5173/erreur'
+                }).catch (e => {
+                    console.error(e)
+                })
+        }
+    }
+
+
     const getTestimony = async() => {
         await axios
         .post('http://localhost/src/api/dashboard.php', {
@@ -24,13 +48,14 @@
         }).then (response => {
             temoignages.value = response.data.temoignages
             countMessages.value = response.data.nombres
+            showAwaitTestimonys.value = []
             
             temoignages.value.forEach(temoignage => {
-                showAwaitTestimonys.value = []
                 if (temoignage.etat == 0) {
                     showAwaitTestimonys.value.push(temoignage)
                 }
             })
+
         }).catch (e => {
             console.error(e)
         })
@@ -70,44 +95,97 @@
         })
     }
 
+    const showOptions = (index) => {
+        if (activeItem.value === index) {
+            activeItem.value = 0
+        }else
+        activeItem.value = index
+    }
+
+    userAuthorized()
     getTestimony()
 
 </script>
 
 <template>
-    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
+    </Transition>
     <main class="row">
-        <h1 class="col-9">{{ countMessages }}</h1>
-        <h2 class="col-9" v-if="countMessages<=1">TEMOIGNAGE NON TRAITE</h2>
-        <h2 class="col-9" v-else>TEMOIGNAGES NON TRAITES</h2>
-        <div class="message col-9" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="isAction ? isAction=false : isAction=true">
-            <div class="message__element">
-                <p class="message__element-title">Nom/Prénom:</p>
-                <p>{{ showAwaitTestimony.nom }} {{ showAwaitTestimony.prenom }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">Date:</p>
-                <p>{{ showAwaitTestimony.date }}</p>
-            </div>
-            <div class="message__element">
-                <p class="message__element-title">Note:</p>
-                <p class="message__element-result">{{ showAwaitTestimony.note }}</p>
-            </div>
-            <div class="message__text">
-                <p class="message__element-title">Commentaire:</p>
-                <p>{{ showAwaitTestimony.commentaire }}</p>
-            </div>
-            <TransitionGroup>
-                <div class="message__option" v-if="isAction">
-                    <div class="message__option-btn" @click="goAccept(showAwaitTestimony.id)">
-                        <i class="fa-regular fa-circle-check"></i>
+        <section class="mobile">
+            <h1 class="col-9">{{ countMessages }}</h1>
+            <h2 class="col-9" v-if="countMessages<=1">TEMOIGNAGE NON TRAITE</h2>
+            <h2 class="col-9" v-else>TEMOIGNAGES NON TRAITES</h2>
+            <div class="message col-9" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="isAction ? isAction=false : isAction=true">
+                <div class="message__element">
+                    <p class="message__element-title">Nom/Prénom:</p>
+                    <p>{{ showAwaitTestimony.nom }} {{ showAwaitTestimony.prenom }}</p>
+                </div>
+                <div class="message__element">
+                    <p class="message__element-title">Date:</p>
+                    <p>{{ showAwaitTestimony.date }}</p>
+                </div>
+                <div class="message__element">
+                    <p class="message__element-title">Note:</p>
+                    <p class="message__element-result">{{ showAwaitTestimony.note }}</p>
+                </div>
+                <div class="message__text">
+                    <p class="message__element-title">Commentaire:</p>
+                    <p>{{ showAwaitTestimony.commentaire }}</p>
+                </div>
+                <TransitionGroup>
+                    <div class="message__option" v-if="isAction">
+                        <div class="message__option-btn" @click="goAccept(showAwaitTestimony.id)">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                        <div class="message__option-btn" @click="goRefuse(showAwaitTestimony.id)">
+                            <i class="fa-regular fa-circle-xmark"></i>
+                        </div>
                     </div>
-                    <div class="message__option-btn" @click="goRefuse(showAwaitTestimony.id)">
-                        <i class="fa-regular fa-circle-xmark"></i>
+                </TransitionGroup>
+            </div>
+        </section>
+
+        <section class="other">
+            <div class="table row">
+                <div class="table__header col-md-10 col-lg-8">
+                    <div class="table__header-head">
+                        <h5>Témoignages clients</h5>
+                        <h5>{{ countMessages }}</h5>
+                    </div>
+                    <div class="table__header-cat">
+                        <h6 class="elem elem1">Nom</h6>
+                        <h6 class="elem elem2">Prénom</h6>
+                        <h6 class="elem elem3">Date</h6>
+                        <h6 class="elem elem4">Note</h6>
+                        <h6 class="elem elem5">Message</h6>
+                        <h6 class="elem elem6">Actions</h6>
                     </div>
                 </div>
-            </TransitionGroup>
-        </div>
+                <div class="table__body col-md-10 col-lg-8" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="showOptions(showAwaitTestimony.id)">
+                    <div class="table__body-elem">
+                        <span class="elem elem1">{{ showAwaitTestimony.nom }}</span>
+                        <span class="elem elem2">{{ showAwaitTestimony.prenom }}</span>
+                        <span class="elem elem3">{{ showAwaitTestimony.date }}</span>
+                        <span class="elem elem4">
+                            <i class="fa-solid fa-star" v-for="note in showAwaitTestimony.note"></i>
+                        </span>
+                        <span class="elem elem5">{{ showAwaitTestimony.commentaire }}</span>
+                    
+                        <span class="elem elem6">
+                            <div class="elem-btn" @click="goAccept(showAwaitTestimony.id)">
+                                <i class="fa-regular fa-circle-check"></i>
+                                <p>Publier sur le site</p>
+                            </div>
+                            <div class="elem-btn" @click="goRefuse(showAwaitTestimony.id)">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                                <p>Supprimer</p>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </template>
 
@@ -184,6 +262,127 @@
             }
         }
     }
+    .table {
+        font-size: 0.8em;
+        margin: 2em auto;
+        margin-bottom: 5em;
+
+        h5,
+        h6 {
+            color: $primary-color;
+            margin-bottom: 2em;
+        }
+
+        &__header {
+            margin: 2em auto;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
+    
+            &-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &-cat {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            & h6 {
+                color: $color-text-dark;
+                margin: 0;
+                margin-bottom: 0.5em;
+                margin-top: 2em;
+                font-size: 1.2em;
+            }
+        }
+
+        &__body {
+
+            margin: 0.2em auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            height: 100%;
+            padding: 1em;
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
+
+            &-elem {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .higer {
+            height: 10vh;
+        }
+
+        .elem {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            color: $color-text-dark;
+
+            &-btn {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                color: $primary-color;
+                cursor: pointer;
+
+                & i {
+                    font-size: 1.4em;
+                }
+            }
+        }
+        .elem1 {
+            width: 8%;
+        }
+
+        .elem2 {
+            width: 8%;
+        }
+
+        .elem3 {
+            width: 10%;
+        }
+
+        .elem4 {
+            width: 10%;
+        }
+
+        .elem5 {
+            width: 46%;
+        }
+
+        .elem6 {
+            width: 30%;
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+
+    .message__option-2 {
+        display: none;
+        border: none;
+    }
+
+    .other {
+        display: none;
+    }
+
+    .active {
+        display: flex;
+    }
 
     .v-enter-active,
     .v-leave-active {
@@ -208,6 +407,16 @@
     .v-leave-from {
     height: auto;
     opacity: 1;
+    }
+
+    @media screen and (min-width: 768px) {
+        .other {
+            display: block;
+        }
+
+        .mobile {
+            display: none;
+        }
     }
 
 </style>

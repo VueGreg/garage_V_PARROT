@@ -23,7 +23,7 @@
 
     .dashboard__header {
         background-image: url('http://gregory-wolff.com/images/198647702_l_normal_none.jpg');
-        height: 40vh;
+        height: 35vh;
         width: auto;
         background-repeat: no-repeat;
         background-size: cover;
@@ -42,32 +42,32 @@
         }
     }
 
-    @media screen and (min-width: 600px) {
+    @media screen and (min-width: 576px) {
         h1 {
             width: 80vw;
         }
     }
 
-    @media screen and (min-width: 960px) {
+    @media screen and (min-width: 768px) {
 
         .dashboard__header {
-            height: 60vh;
+            height: 40vh;
             margin-bottom: 10em;
         }
+    }
+
+    @media screen and (min-width: 992px) {
+
+        .dashboard__header {
+            height: 50vh;
+        }
+
     }
 
     @media screen and (min-width: 1200px) {
 
         .dashboard__header {
             height: 75vh;
-        }
-
-    }
-
-    @media screen and (min-width: 1700px) {
-
-        .dashboard__header {
-            height: 90vh;
         }
 
     }

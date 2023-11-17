@@ -103,6 +103,10 @@
         height: 35vh;
     }
     .carousel__text{
+        color: white;
+        text-align: center;
+        transform: translate(0%, -80%);
+
         &-title{
             font-size: 1.6em;
             text-shadow: 2px 2px 4px rgba($color: #000000, $alpha: 0.5);
@@ -125,16 +129,14 @@
         }
     }
 
+    .carousel__fix {
+        transform: translate(0, 200%);
+    }
 
-    @media screen and (min-width: 480px) {
-        
-        .carousel-image {
-            height: 40vh;
-        }
+
+    @media screen and (min-width: 576px) {
 
         .carousel__text {
-            position: absolute;
-            transform: translate(25%, -80%);
 
             &-title {
                 font-size: 2.5em;
@@ -148,23 +150,19 @@
                 font-size: 1em;
             }
         }
-
-        .carousel__fix {
-            transform: translate(60%, 80%);
-            color: white;
-            text-align: center;
-        }
     }
 
-    @media screen and (min-width: 960px) {
+    @media screen and (min-width: 768px) {
 
         .carousel-image {
-            height: 60vh;
+            height: 40vh;
+        }
+
+        .carousel-img-1{
+            background-position: top center;
         }
 
         .carousel__text {
-
-            transform: translate(25%, -120%);
 
         &-title {
                 font-size: 3.5em;
@@ -180,6 +178,14 @@
         }
     }
 
+    @media screen and (min-width: 992px) {
+
+        .carousel-image {
+            height: 50vh;
+        }
+
+    }
+
     @media screen and (min-width: 1200px) {
 
         .carousel-image {
@@ -188,11 +194,7 @@
 
     }
 
-    @media screen and (min-width: 1700px) {
-
-        .carousel-image {
-            height: 90vh;
-        }
+    @media screen and (min-width: 1400px) {
 
     }
 

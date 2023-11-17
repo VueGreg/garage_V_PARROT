@@ -73,7 +73,9 @@
 </script>
 
 <template>
-    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    </Transition>
     <section class="mobile">
         <main class="row">
             <h1 class="col-10">{{ countMessages }}</h1>
@@ -211,11 +213,11 @@
             align-items: center;
             border-top: 1px solid rgba($color: #000000, $alpha: 0.8);
             padding-top: 1.5em;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
 
             &-btn {
                 border: 2px solid $primary-color;
-                opacity: 0;
-                transition: all 0.4s ease-in-out;
 
                 & i {
                     color: $primary-color;
@@ -254,6 +256,7 @@
             padding: 1em;
             border-radius: 5px;
             box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
     
             &-head {
                 display: flex;
@@ -276,6 +279,7 @@
             box-shadow: 3px 3px 8px rgba($color: #000000, $alpha: 0.25);
             height: 100%;
             padding: 1em;
+            border: 1px solid rgba($color: #000000, $alpha: 0.1);
 
             &-elem {
                 display: flex;
@@ -317,11 +321,8 @@
 
     .active {
         display: flex;
-
-        & .message__option-btn{
-            opacity: 1;
-            transition: all 0.4s ease-in-out;
-        }
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
     }
 
     .v-enter-active,

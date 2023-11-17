@@ -20,36 +20,36 @@ function postConnection()
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $sql = "SELECT *, permissions.rang AS permissions_lvl, permissions.type AS permissions_name
-                FROM utilisateurs 
-                INNER JOIN permissions ON permissions.id = id_permissions
-                WHERE mail LIKE :email AND mdp LIKE :password";
+        $sql = "SELECT * FROM utilisateurs 
+                WHERE mail = :email AND mdp = :password";
 
         $statement = $data->prepare($sql);
         $statement-> bindParam(':email', $email);
         $statement-> bindParam(':password', $password);
-        $statement->execute();
 
-        $user = $statement->fetch(PDO::FETCH_ASSOC);
-        $id = $user['id'];
+        if ($statement->execute()) {
 
-        //Création du token pour la permissions
-        $token = bin2hex(openssl_random_pseudo_bytes(64));
+            $user = $statement->fetch(PDO::FETCH_ASSOC);
+            $id = $user['id'];
 
-        $sql_token = "UPDATE `utilisateurs` SET `token` = :token WHERE `utilisateurs`.`id` = :id";
+            //Création du token pour la permissions
+            $token = bin2hex(openssl_random_pseudo_bytes(64));
 
-        $statement = $data->prepare($sql_token);
-        $statement-> bindParam(':token', $token);
-        $statement-> bindParam(':id', $id);
-        $statement->execute();
+            $sql_token = "UPDATE utilisateurs SET utilisateurs.token = :token WHERE utilisateurs.id = $id";
 
-        $result['permissions'] = $token;
-        $result['name'] = $user['nom'];
-        $result['surname'] = $user['prenom'];
+            $stmt = $data->prepare($sql_token);
+            $stmt->bindParam(':token', $token);
 
-        if ($user != []) {
-            return_json(true, "Connexion reussi", $result);
+            if ($stmt->execute()) {
+
+                $result['permissions'] = $token;
+                $result['name'] = $user['nom'];
+                $result['surname'] = $user['prenom'];
+
+                return_json(true, "Connexion reussi", $result);
+
+            } else return_json(false, "token non récupéré");
         }else return_json(false, "Connexion impossible");
 
-    } catch (Exception $e){ return_json(false, $e->getMessage());}
+    } catch (Exception $e){ return_json(false, $e->getMessage().'id:'.$id);}
 }

@@ -71,7 +71,7 @@ function getUsers() {
 
 function getTestimony() {
     try {
-        $sql = "SELECT * FROM temoignages";
+        $sql = "SELECT *, DATE_FORMAT(date, '%d/%c/%Y') AS date FROM temoignages";
         $temoignages['temoignages'] = simple_fetch_data($sql);
         $temoignages['nombres'] = 0;
 

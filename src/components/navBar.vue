@@ -56,6 +56,11 @@
         padding: 0;
     }
 
+    .navbar-nav {
+        background-color: $primary-color;
+        padding-left: 2em;
+    }
+
     .active {
 
         color: $dark-grey;

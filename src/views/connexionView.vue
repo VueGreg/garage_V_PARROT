@@ -24,6 +24,7 @@
                 password: password.value
             })
             .then(response => {
+                console.log(response.data)
                 if (response.data.success === true) {
                     document.cookie = `userName = ${response.data.name}`
                     document.cookie = `userSurname = ${response.data.surname}`

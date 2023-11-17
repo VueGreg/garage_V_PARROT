@@ -22,42 +22,44 @@
     })
 
     //------HTTP REQUEST
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        messages: 'getMessages'
-    }).then (response => {
-        countMessages.value = response.data.nombres
-    }).catch (e => {
-        console.error(e)
-    })
+    const countAll = async() => {
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            messages: 'getMessages'
+        }).then (response => {
+            countMessages.value = response.data.nombres
+        }).catch (e => {
+            console.error(e)
+        })
 
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        utilisateurs: 'getUsers'
-    }).then (response => {
-        countUsers.value = response.data.nombres
-    }).catch (e => {
-        console.error(e)
-    })
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            utilisateurs: 'getUsers'
+        }).then (response => {
+            countUsers.value = response.data.nombres
+        }).catch (e => {
+            console.error(e)
+        })
 
-    axios
-    .get('http://localhost/src/api/vitrine.php')
-    .then (response => {
-        countVehicles.value = response.data.nombre_vehicules
-    })
-    .catch (e => {
-        console.error(e)
-    })
+        await axios
+        .get('http://localhost/src/api/vitrine.php')
+        .then (response => {
+            countVehicles.value = response.data.nombre_vehicules
+        })
+        .catch (e => {
+            console.error(e)
+        })
 
-    axios
-    .post('http://localhost/src/api/dashboard.php', {
-        temoignages: 'getTestimony'
-    }).then (response => {
-        countTestimony.value = response.data.nombres
-    }).catch (e => {
-        console.error(e)
-    })
-
+        await axios
+        .post('http://localhost/src/api/dashboard.php', {
+            temoignages: 'getTestimony'
+        }).then (response => {
+            countTestimony.value = response.data.nombres
+        }).catch (e => {
+            console.error(e)
+        })
+    }
+    
 
     //------MOUNTED EXEC
     const userAuthorized = () => {
@@ -77,11 +79,12 @@
     }
 
     userAuthorized()
+    countAll()
 
 </script>
 
 <template>
-    <nav class="row" v-if="isConnect">
+    <nav class="row" v-if="isConnect && path != '/connexion'">
         <div class="bar col-10 col-sm-8 m-auto">
             <RouterLink class="link" to="/dashboard/utilisateurs" v-if="rank<2">
                 <div class="bar__btn" :class="{'active': path == '/dashboard/utilisateurs'}">
@@ -116,7 +119,7 @@
                     <h5 v-if="isConnect">PARC AUTOMOBILE</h5>
                 </div>
             </RouterLink>
-            <RouterLink class="link" to="/dashboard/temoignage">
+            <RouterLink class="link" to="/dashboard/temoignage" v-if="rank<3">
                 <div class="bar__btn" :class="{'active': path =='/dashboard/temoignage'}"> 
                     <i class="fa-regular fa-comment-dots"></i>
                     <div class="bar__btn-indicator">
@@ -127,8 +130,8 @@
             </RouterLink>
         </div>
     </nav>
-    <nav class="row" v-else>
-        <div class="bar col-10 col-sm-7 col-md-4 col-lg-10 col-xl-6">
+    <nav class="row" v-else-if="path != '/connexion'">
+        <div class="bar  col-10 col-sm-8 m-auto">
             <RouterLink class="link" to="/reparations">
                 <div class="bar__btn">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
@@ -181,7 +184,7 @@
 
     .bar {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         margin: auto;
         position: fixed;
@@ -239,7 +242,7 @@
             gap: 1em;
             position: absolute;
             left: 16vw;
-            top: 25vh;
+            top: 14vh;
 
             &__btn {
                 height: 90px;
@@ -273,7 +276,7 @@
 
     @media screen and (min-width: 992px) {
         .bar {
-            top: 48vh;
+            top: 28vh;
 
             &__btn {
                 height: 120px;
@@ -348,8 +351,6 @@
 
     @media screen and (min-width: 1700px) {
         .bar {
-            top: 104vh;
-
             &__btn {
                 height: 200px;
                 width: 200px;

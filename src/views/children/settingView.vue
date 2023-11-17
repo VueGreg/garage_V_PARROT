@@ -164,7 +164,6 @@
 
     const sendHoraires = async() => {
         let change = changeFormatTime(horaireChange.value)
-        console.log(change)
         await axios
         .put('http://localhost/src/api/setting.php', {
             arr: change
@@ -195,8 +194,10 @@
 </script>
 
 <template>
-    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
-    <main>
+    <TransitionGroup>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    </TransitionGroup>
+    <main id="top">
         <section class="row" v-for="information in informations">
             <h2>INFORMATIONS GENERALE</h2>
             <div class="title">
@@ -256,7 +257,7 @@
                     </td>
                 </tr>
             </table>
-            <button type="button" class="col-xl-2" @click="sendHoraires()">Envoyer les modifications</button>
+            <button type="button" class="col-xl-1" @click="sendHoraires()">Envoyer les modifications</button>
         </section>
         <section>
             <h2>REPARATIONS</h2>
@@ -301,6 +302,11 @@
                 <button class="col-6 col-xl-2" @click="sendRepair($event)">AJOUTER</button>
             </div>
         </section>
+        <button class="top-page">
+            <a href="#top">
+                <i class="fa-solid fa-arrow-up"></i>
+            </a>
+        </button>
     </main>
 </template>
 
@@ -597,6 +603,26 @@
     &:required,&:invalid { box-shadow:none; }
     }
 
+    .top-page {
+        position: relative;
+        left: 95vh;
+        border-radius: 50%;
+        width: 3vh;
+        height: 3vh;
+        font-size: 1.5em;
+        padding: 0.5em;
+        background-color: $primary-color;
+
+            &:hover {
+                transform: scale(1.3);
+            }
+
+            & a {
+                text-decoration: none;
+                color: white;
+            }
+    }
+
     .none {
         display: none;
         opacity: 0;
@@ -608,6 +634,32 @@
         opacity: 1;
         transition: all 0.4s ease-in-out;
     }
+
+    .v-enter-active,
+    .v-leave-active {
+    transition: all 0.75s ease-out;
+    }
+
+    .v-enter-to {
+    height: auto;
+    opacity: 1;
+    }
+
+    .v-enter-from {
+    height: 0;
+    opacity: 0;
+    }
+
+    .v-leave-to {
+    height: auto;
+    opacity: 0;
+    }
+
+    .v-leave-from {
+    height: auto;
+    opacity: 1;
+    }
+
 
     @media screen and (min-width: 1400px) {
         .row {

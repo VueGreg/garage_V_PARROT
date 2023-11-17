@@ -10,7 +10,6 @@
     .then (response => {
         informations.value = response.data.informations
         horaires.value = response.data.horaires
-        console.log(horaires.value)
     })
     .catch (e => {
         console.error(e)
