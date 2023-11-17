@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from 'axios';
+    import api from '../../baseURL/urlAPI';
     import { ref, defineEmits } from 'vue';
     import { useCookies } from 'vue3-cookies';
     import informationModal from '../../components/informationModal.vue';
@@ -25,8 +25,7 @@
     //-----Functions
     const userAuthorized = () => {
         if (userPermissions != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {
@@ -43,8 +42,7 @@
 
 
     const getTestimony = async() => {
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api.post('/dashboard.php', {
             temoignages: 'getTestimony'
         }).then (response => {
             temoignages.value = response.data.temoignages
@@ -67,8 +65,7 @@
     }
 
     const goAccept = async(id) => {
-        await axios
-        .put('http://localhost/src/api/postCom.php', {
+        await api.put('/postCom.php', {
             id: id,
             accept: 'yes'
         })
@@ -84,8 +81,7 @@
     }
 
     const goRefuse = async(id) => {
-        await axios
-        .put('http://localhost/src/api/postCom.php', {
+        await api.put('/postCom.php', {
             id: id,
             accept: 'no'
         })
@@ -101,8 +97,7 @@
     }
 
     const goWithdraw = async(id) => {
-        await axios
-        .put('http://localhost/src/api/postCom.php', {
+        await api.put('/postCom.php', {
             id: id,
             withdraw: 'yes'
         })

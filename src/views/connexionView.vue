@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from "axios";
+    import api from '../baseURL/urlAPI';
     import { ref, defineEmits } from "vue";
     import { useCookies } from "vue3-cookies";
     import informationModal from "../components/informationModal.vue";
@@ -18,8 +18,7 @@
     const postConnect = () => {
         if (password.value!="" && email.value!="") {
 
-            axios
-            .post('http://localhost/src/api/userConnection.php', {
+            api.post('/userConnection.php', {
                 email: email.value,
                 password: password.value
             })

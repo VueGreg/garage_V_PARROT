@@ -1,5 +1,5 @@
 <script setup>
-    import axios from 'axios'
+    import api from '../baseURL/urlAPI';
     import { ref, watch } from 'vue';
     import { useCookies } from 'vue3-cookies';
     import appBar from '../components/appBar.vue';
@@ -41,8 +41,7 @@
 
     //HTTP REQUEST-------------------------------------------------
 
-    axios
-    .get('http://localhost/src/api/filter.php')
+    api.get('/filter.php')
     .then (response => {
         marques.value = response.data.marque
         modeles.value = response.data.modele
@@ -60,8 +59,7 @@
 
 
     if (annonces.value.length == 0) {
-        axios
-        .post('http://localhost/src/api/vehicle.php')
+        api.post('/vehicle.php')
         .then (response => {
             response.data.forEach(element => {
                 if (element.status == 0) {
@@ -79,8 +77,7 @@
     //WATCHER-------------------------------------------------
 
     watch(() => marque.value, () => {
-        axios
-        .get(`http://localhost/src/api/filter.php?mark=${marque.value}`)
+        api.get(`/filter.php?mark=${marque.value}`)
         .then (response => {
             modeles.value = []
             energies.value = []
@@ -94,8 +91,7 @@
     })
 
     watch(() => modele.value, () => {
-        axios
-        .get(`http://localhost/src/api/filter.php?model=${modele.value}`)
+        api.get(`/filter.php?model=${modele.value}`)
         .then (response => {
             energies.value = []
             energies.value = response.data.energie
@@ -151,8 +147,7 @@
 
     const searchCars = async(e) => {
         e.preventDefault()
-        await axios
-        .post('http://localhost/src/api/vehicle.php', {
+        await api.post('/vehicle.php', {
             mark: marque.value,
             model: modele.value,
             energy: energie.value,
@@ -175,8 +170,7 @@
      //------MOUNTED EXEC
      const userAuthorized = () => {
         if (userPermissions != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {

@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from 'axios'
+    import api from '../../baseURL/urlAPI';
     import { ref, reactive, defineEmits, watch } from 'vue'
     import { useCookies } from 'vue3-cookies'
     import informationModal from '../../components/informationModal.vue'
@@ -45,8 +45,8 @@
 
     const userAuthorized = () => {
         if (userPermissions != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api
+                .post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {
@@ -62,8 +62,8 @@
     }
 
     const getAll = async() => {
-        await axios
-        .get('http://localhost/src/api/vitrine.php')
+        await api
+        .get('/vitrine.php')
         .then (response => {
             informations.value = response.data.informations
             horaires.value = response.data.horaires
@@ -87,8 +87,8 @@
     }
 
     const changeBusinessSetting = async() => {
-        await axios
-        .put('http://localhost/src/api/setting.php', {
+        await api
+        .put('/setting.php', {
             adress: models.adresse,
             postal: models.postal,
             city: models.city,
@@ -108,8 +108,8 @@
 
     const sendRepair = async(e) => {
         e.preventDefault()
-        await axios
-        .put('http://localhost/src/api/setting.php', {
+        await api
+        .put('/setting.php', {
             category: models.categorie,
             description: models.description
         })
@@ -131,8 +131,8 @@
 
     const deleteRepair = async(e, id_repair) => {
         e.preventDefault()
-        await axios
-        .post('http://localhost/src/api/setting.php', {
+        await api
+        .post('/setting.php', {
             id: id_repair
         })
         .then(response => {
@@ -164,8 +164,8 @@
 
     const sendHoraires = async() => {
         let change = changeFormatTime(horaireChange.value)
-        await axios
-        .put('http://localhost/src/api/setting.php', {
+        await api
+        .put('/setting.php', {
             arr: change
         })
         .then(response => {

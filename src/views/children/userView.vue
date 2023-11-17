@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from 'axios'
+    import api from '../../baseURL/urlAPI';
     import { ref, defineEmits } from 'vue'
     import { useCookies } from 'vue3-cookies';
     import informationModal from '../../components/informationModal.vue';
@@ -32,8 +32,7 @@
 
     const userAuthorized = () => {
         if (userPermissions != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {
@@ -50,8 +49,7 @@
     }
 
     const getUsers = async() => {
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api.post('/dashboard.php', {
             utilisateurs: 'getUsers'
         }).then (response => {
             console.log(response.data)
@@ -73,8 +71,7 @@
 
     const postNewUser = async() => {
         if (name.value!="" && surname.value!="" && email.value!="" && password.value!="" && role.value!="") {
-            await axios
-            .post('http://localhost/src/api/postUser.php', {
+            await api.post('/postUser.php', {
                 email: email.value,
                 name: name.value,
                 surname: surname.value,
@@ -104,8 +101,7 @@
     }
 
     const deleteUser = async(id) => {
-        await axios
-        .post('http://localhost/src/api/postUser.php', {
+        await api.post('/postUser.php', {
             id, id
         })
         .then (response => {
@@ -140,8 +136,7 @@
     }
 
     const modifyUser = async(id) => {
-        await axios
-        .put('http://localhost/src/api/postUser.php', {
+        await api.put('/postUser.php', {
             id: id,
             name: name.value,
             surname: surname.value,

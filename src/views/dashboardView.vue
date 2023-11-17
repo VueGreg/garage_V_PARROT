@@ -2,6 +2,7 @@
 
     import { useCookies } from 'vue3-cookies';
     import { RouterView } from "vue-router";
+    import api from '../baseURL/urlAPI';
 
     const { cookies } = useCookies();
 
@@ -12,8 +13,7 @@
 
     const userAuthorized = () => {
         if (userPermissions != null || name != null || surname != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == false) {

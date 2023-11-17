@@ -2,7 +2,7 @@
 
     import { RouterLink, useRoute } from 'vue-router';
     import { ref , watch } from "vue";
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { useCookies } from 'vue3-cookies';
 
     const route = useRoute()
@@ -23,8 +23,7 @@
 
     //------HTTP REQUEST
     const countAll = async() => {
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api.post('/dashboard.php', {
             messages: 'getMessages'
         }).then (response => {
             countMessages.value = response.data.nombres
@@ -32,8 +31,7 @@
             console.error(e)
         })
 
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api.post('/dashboard.php', {
             utilisateurs: 'getUsers'
         }).then (response => {
             countUsers.value = response.data.nombres
@@ -41,8 +39,7 @@
             console.error(e)
         })
 
-        await axios
-        .get('http://localhost/src/api/vitrine.php')
+        await api.get('/vitrine.php')
         .then (response => {
             countVehicles.value = response.data.nombre_vehicules
         })
@@ -50,8 +47,7 @@
             console.error(e)
         })
 
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api.post('/dashboard.php', {
             temoignages: 'getTestimony'
         }).then (response => {
             countTestimony.value = response.data.nombres
@@ -64,8 +60,7 @@
     //------MOUNTED EXEC
     const userAuthorized = () => {
         if (userPermissions != null) {
-                axios
-                .post('http://localhost/src/api/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {

@@ -1,13 +1,12 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { ref } from 'vue';
     import { RouterLink } from 'vue-router';
 
     const annonces = ref([])
     const lastAnnonces = ref([])
     
-    axios
-    .post('http://localhost/src/api/vehicle.php')
+    api.post('/vehicle.php')
     .then (response => {
         annonces.value = response.data
         lastAnnonces.value = annonces.value.slice(-3)

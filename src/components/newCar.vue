@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { ref, defineEmits } from 'vue'
     import FormData from 'form-data'
     import informationModal from './informationModal.vue';
@@ -34,8 +34,7 @@
 
 
     const getCars = async() => {
-        await axios
-        .post('http://localhost/src/api/addCars.php')
+        await api.post('/addCars.php')
         .then(response => {
             if (response.data.success === true) {
                 marques.value = response.data.marques
@@ -51,8 +50,7 @@
 
     const getModel = async() => {
         modeles.value = []
-        await axios
-        .post('http://localhost/src/api/addCars.php', {
+        await api.post('/addCars.php', {
             mark: marque.value
         })
         .then(response => {
@@ -139,8 +137,7 @@
             Form_Data.append("finish", finish.value)
             Form_Data.append("equipments", options.value)
 
-            await axios
-            .post ('http://localhost/src/api/addNewCar.php', Form_Data, {
+            await api.post ('/addNewCar.php', Form_Data, {
 
                 header: {
                     'Content-Type': 'multipart/form-data'

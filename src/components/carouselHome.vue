@@ -191,12 +191,6 @@
         .carousel-image {
             height: 75vh;
         }
-
     }
-
-    @media screen and (min-width: 1400px) {
-
-    }
-
 
 </style>

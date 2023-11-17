@@ -1,24 +1,21 @@
 <script setup>
 
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { useRoute } from 'vue-router';
     import { ref } from 'vue';
     import carouselHome from '../components/carouselHome.vue';
 
     const route = useRoute()
     const vehicules = ref ([])
-    //const informations = ref ([])
     const showStats = ref(false)
 
     const carId = parseInt(route.params.annonce)
 
-    axios
-    .post('http://localhost/src/api/vehicle.php', {
+    api.post('/vehicle.php', {
         annonce: carId
     })
     .then (response => {
-            vehicules.value = response.data
-        // else document.location.href="/erreur"; 
+        vehicules.value = response.data
     })
     .catch (e => {
         console.error(e)

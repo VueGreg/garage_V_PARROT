@@ -5,27 +5,13 @@
     import LastVehicule from '../components/lastVehicule.vue';
     import ReseauxSociaux from '../components/reseauxSociaux.vue';
     import TemoignageSection from '../components/temoignageSection.vue'
-    import axios from 'axios'
-    import { ref, watch } from 'vue';
+    import api from '../baseURL/urlAPI';
+    import { ref } from 'vue';
 
-    const annonces = ref([])
     const temoignages = ref([])
-    const animate = ref(false)
-    const position = ref()
-
-    /*window.addEventListener('scroll', () => {
-        position.value = window.scrollY
-    })
-
-    watch(() => position.value, () => {
-        if (position.value >= 1400) {
-            animate.value = true
-        }
-    })*/
 
     const getTemoignages = async() => {
-        await axios
-        .get('http://localhost/src/api/vitrine.php')
+        await api.get('/vitrine.php')
         .then (response => {
             response.data.temoignages.forEach(temoignage => {
                 if (temoignage.etat == 1) {
@@ -38,10 +24,6 @@
         })
     }
 
-    /*const getScroll = (e) => {
-        console.log(e)
-    }*/
-
     getTemoignages()
 
 
@@ -50,11 +32,7 @@
 <template>
     <CarouselHome/>
     <LastVehicule/>
-    <!--<Transition>
-        <div class="scroll__test" v-if="animate">-->
-            <ExpertiseSite/>
-        <!--</div>
-    </Transition>-->
+    <ExpertiseSite/>
     <TemoignageSection :temoignages="temoignages"/>
     <AvisSection />
     <ReseauxSociaux />

@@ -1,13 +1,12 @@
 <script setup>
 
-    import axios from 'axios';
     import { ref } from 'vue';
     import { RouterLink } from 'vue-router';
     import informationModal from '../../components/informationModal.vue';
+    import api from '../../baseURL/urlAPI';
 
     const countMessages = ref()
     const messages = ref([])
-    const isAction = ref(false)
     const activeItem = ref(0)
 
     //-----Modal response
@@ -18,11 +17,10 @@
     
     //-----Function
     const getMessages = async() => {
-        await axios
-        .post('http://localhost/src/api/dashboard.php', {
+        await api
+        .post('/dashboard.php', {
             messages: 'getMessages'
         }).then (response => {
-            console.log(response.data)
             messages.value = []
             response.data.messages.forEach(message => {
                 if (message.status == 0) {
@@ -37,8 +35,8 @@
 
     const messageCheck = async(e, id_message) => {
         e.preventDefault()
-        await axios
-        .put('http://localhost/src/api/postMessage.php', {
+        await api
+        .put('/postMessage.php', {
             validate: 'validate',
             id: id_message
         })

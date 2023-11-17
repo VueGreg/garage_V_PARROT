@@ -1,5 +1,5 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { RouterLink } from 'vue-router';
     import { useCookies } from 'vue3-cookies';
     import { ref, watch } from "vue";
@@ -12,8 +12,7 @@
 
     watch(() => route.path, () => {
         if (userPermissions != null) {
-            axios
-            .post('http://localhost/src/api/authorize.php', {
+            api.post('/authorize.php', {
                 permissions: userPermissions
             }).then (response => {
                 if (response.data.success == true) {
@@ -39,10 +38,12 @@
 
 <template>
     <header>
+        <RouterLink to="/" style="text-decoration: none;">
         <div class="logo">
             <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
             <p class="logo__text">GARAGE V.PARROT</p>
         </div>
+        </RouterLink>
 
         <div class="button">
             <!--Call btn-->

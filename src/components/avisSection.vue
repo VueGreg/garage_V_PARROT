@@ -1,5 +1,5 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { ref, defineEmits } from 'vue';
     import informationModalVue from "./informationModal.vue"
 
@@ -24,8 +24,7 @@
 
     const sendCom = async() => {
         if (name.value!="" && surname.value!="" && message.value !="") {
-            await axios
-            .post('http://localhost/src/api/postCom.php', {
+            await api.post('/postCom.php', {
                 date: new Date().toJSON().slice(0, 10),
                 name: name.value,
                 surname: surname.value,

@@ -1,5 +1,5 @@
 <script setup>
-    import axios from "axios";
+    import api from '../baseURL/urlAPI';
     import { ref, defineEmits } from "vue";
     import { useRoute } from "vue-router";
     import carouselHome from "../components/carouselHome.vue";
@@ -41,8 +41,7 @@
     }
 
     const getVehicleInformations = () => {
-        axios
-        .post('http://localhost/src/api/vehicle.php', {
+        api.post('/vehicle.php', {
             annonce: numAnnonce
         })
         .then (response => {
@@ -72,8 +71,7 @@
     const sendMessage = () => {
         if (name.value!="" && surname.value!="" && message.value !="" && tel.value != "" && email.value != "") {
 
-            axios
-            .post('http://localhost/src/api/postMessage.php', {
+            api.post('/postMessage.php', {
                 date: new Date().toJSON().slice(0, 10),
                 name: name.value,
                 surname: surname.value,

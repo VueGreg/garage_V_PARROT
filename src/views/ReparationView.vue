@@ -1,5 +1,5 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import ReseauxSociaux from '../components/reseauxSociaux.vue';
     import carouselHome from '../components/carouselHome.vue';
     import { ref } from "vue";
@@ -7,8 +7,7 @@
     const prestations = ref([])
     const categories = ref ([])
 
-    axios
-    .get('http://localhost/src/api/vitrine.php')
+    api.get('/vitrine.php')
     .then(response => {
         prestations.value = response.data.reparations
         categories.value = response.data.categorie_reparations

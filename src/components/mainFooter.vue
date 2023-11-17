@@ -1,12 +1,11 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { ref } from 'vue';
 
     const informations = ref([])
     const horaires = ref([])
 
-    axios
-    .get('http://localhost/src/api/vitrine.php')
+    api.get('/vitrine.php')
     .then (response => {
         informations.value = response.data.informations
         horaires.value = response.data.horaires

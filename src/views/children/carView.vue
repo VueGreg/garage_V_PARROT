@@ -1,6 +1,6 @@
 <script setup>
 
-    import axios from 'axios';
+    import api from '../../baseURL/urlAPI';
     import { useRoute } from 'vue-router';
     import { ref, watch } from 'vue';
 
@@ -27,8 +27,8 @@
     const price = ref()
 
 
-    axios
-    .post('http://localhost/src/api/vehicle.php', {
+    api
+    .post('/vehicle.php', {
         annonce: carId
     })
     .then (response => {
@@ -47,8 +47,8 @@
         console.error(e)
     })
 
-    axios
-    .post('http://localhost/src/api/addCars.php')
+    api
+    .post('/addCars.php')
     .then (response => {
         listOptions.value = response.data.equipements
     })
@@ -57,8 +57,8 @@
     })
 
     const getEnergy = async() => {
-        await axios
-        .post('http://localhost/src/api/addCars.php')
+        await api
+        .post('/addCars.php')
         .then(response => {
             if (response.data.success === true) {
                 energies.value = response.data.energies
@@ -76,8 +76,8 @@
     }
 
     const deleteOption = async(option) => {
-        await axios
-        .put('http://localhost/src/api/vehicle.php', {
+        await api
+        .put('/vehicle.php', {
             option: option,
             annonce: carId
         })
@@ -91,8 +91,8 @@
     }
 
     const addOption = async(option) => {
-        await axios
-        .put('http://localhost/src/api/vehicle.php', {
+        await api
+        .put('/vehicle.php', {
             addOption: option,
             annonce: carId
         })
@@ -107,8 +107,8 @@
 
     const sendModify = async(e) => {
         e.preventDefault()
-        await axios
-        .put('http://localhost/src/api/vehicle.php', {
+        await api
+        .put('/vehicle.php', {
             annonce: carId,
             year: year.value,
             kilometer: kilometer.value,

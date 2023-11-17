@@ -1,11 +1,10 @@
 <script setup>
-    import axios from 'axios';
+    import api from '../baseURL/urlAPI';
     import { ref } from 'vue';
 
     const socialNetworks = ref([])
 
-    axios
-    .get('http://localhost/src/api/vitrine.php')
+    api.get('/vitrine.php')
     .then (response => {
         socialNetworks.value = response.data.informations[0]
     })
