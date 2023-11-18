@@ -54,7 +54,9 @@
 </script>
 
 <template>
-    <informationModalVue :messageModal="messageModal" :position="position" @close="isModal = false" v-if="isModal"/>
+    <Transition>
+        <informationModalVue :messageModal="messageModal" :position="position" @close="isModal = false" v-if="isModal"/>
+    </Transition>
     <section class="section__form row">
         <h2 class="col-10 col-sm-7 col-md-8 col-lg-6">LAISSEZ NOUS UN AVIS</h2>
         <form class="form col-10 col-sm-7 col-md-8 col-lg-6 col-xl-4">

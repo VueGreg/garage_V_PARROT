@@ -92,7 +92,7 @@ function addNewCar() {
                                         $st->bindParam(':id', $id);
         
                                         if ($st->execute()) {
-                                            return_json(true, 'insertion complete');
+                                            return_json(true, 'Véhicule ajouté');
                                         }
         
                                     } else return_json(false, 'image non enregistre dans la BDD');

@@ -10,10 +10,22 @@
   <mainHeader/>
   <NavBar />
   <appBar/>
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <Transition name="fade">
+      <component :is="Component" />
+    </Transition>
+  </RouterView>
   <MainFooter />
 </template>
 
-<style scoped>
+<style>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
 
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+}
 </style>

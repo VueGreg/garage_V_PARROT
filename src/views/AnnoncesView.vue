@@ -1,10 +1,11 @@
 <script setup>
     import api from '../baseURL/urlAPI';
-    import { ref, watch } from 'vue';
+    import { ref, watch, defineEmits } from 'vue';
     import { useCookies } from 'vue3-cookies';
     import appBar from '../components/appBar.vue';
     import newCar from "../components/newCar.vue";
     import carouselHome from '../components/carouselHome.vue';
+    import informationModal from '../components/informationModal.vue';
 
     //Cookies
     const { cookies } = useCookies()
@@ -24,12 +25,12 @@
     const marque = ref("")
     const modele = ref("")
     const energie = ref("")
-    const prixMin = ref(9790)
-    const prixMax = ref(31099)
-    const kilometerMin = ref(8600)
-    const kilometerMax = ref(152900)
-    const yearMin = ref(2010)
-    const yearMax = ref(2021)
+    const prixMin = ref()
+    const prixMax = ref()
+    const kilometerMin = ref()
+    const kilometerMax = ref()
+    const yearMin = ref()
+    const yearMax = ref()
 
     const yearMaxRequest = ref()
     const yearMinRequest = ref()
@@ -37,42 +38,64 @@
     const kilometerMinRequest = ref()
     const prixMaxRequest = ref()
     const prixMinRequest = ref()
+    const ecartAnnee = ref()
+    const ecartKilometer = ref()
+    const ecartPrix = ref()
+
+    //----Modal
+    const emit = defineEmits(['close', 'add'])
+    const isModal = ref(false)
+    const messageModal = ref()
+
+    //----Response to modify cars
+
+    
 
 
     //HTTP REQUEST-------------------------------------------------
-
-    api.get('/filter.php')
-    .then (response => {
-        marques.value = response.data.marque
-        modeles.value = response.data.modele
-        energies.value = response.data.energie
-        yearMinRequest.value = response.data.annee_min
-        yearMaxRequest.value = response.data.annee_max
-        kilometerMinRequest.value = response.data.kilometre_min
-        kilometerMaxRequest.value = response.data.kilometre_max
-        prixMinRequest.value = response.data.prix_min
-        prixMaxRequest.value = response.data.prix_max
-    })
-    .catch (e => {
-        console.error(e)
-    })
-
-
-    if (annonces.value.length == 0) {
-        api.post('/vehicle.php')
+    const getFilter = async() => {
+        await api.get('/filter.php')
         .then (response => {
-            response.data.forEach(element => {
-                if (element.status == 0) {
-                    annonces.value.push(element)
-                }
-            })
-            countAnnonces.value = annonces.value.length
-            console.log(annonces.value)
+            marques.value = response.data.marque
+            modeles.value = response.data.modele
+            energies.value = response.data.energie
+            yearMinRequest.value = response.data.annee_min
+            yearMaxRequest.value = response.data.annee_max
+            kilometerMinRequest.value = response.data.kilometre_min
+            kilometerMaxRequest.value = response.data.kilometre_max
+            prixMinRequest.value = response.data.prix_min
+            prixMaxRequest.value = response.data.prix_max
+
+            ecartAnnee.value = yearMaxRequest.value-yearMinRequest.value
+            ecartKilometer.value = kilometerMaxRequest.value - kilometerMinRequest.value
+            ecartPrix.value = prixMaxRequest.value - prixMinRequest.value
+
+            yearMin.value = response.data.annee_min
+            yearMax.value = response.data.annee_max
+            kilometerMin.value = response.data.kilometre_min
+            kilometerMax.value = response.data.kilometre_max
+            prixMin.value = response.data.prix_min
+            prixMax.value = response.data.prix_max
+
+            if (response.data.success == true) {
+                api.post('/vehicle.php')
+                .then (response => {
+                    annonces.value = response.data
+                    countAnnonces.value = annonces.value.length
+                    console.log(annonces.value)
+                })
+                .catch (e => {
+                    console.error(e)
+                })
+    }
         })
         .catch (e => {
             console.error(e)
         })
     }
+
+    getFilter()
+
 
     //WATCHER-------------------------------------------------
 
@@ -103,35 +126,51 @@
 
 
     watch(() => prixMin.value, () => {
-        document.querySelector('.outputPriceMini').style.left = prixMin.value / 167 + 'px'
+        document.querySelector('.outputPriceMini').style.left = (prixMin.value - prixMinRequest.value)*(100 / (ecartPrix.value)) + '%'
+        if (prixMin.value >= prixMax.value) {
+            prixMax.value = prixMaxRequest.value
+        }
     })
 
     watch(() => prixMax.value, () => {
-        document.querySelector('.outputPriceMaxi').style.left = prixMax.value / 167 + 'px'
+        document.querySelector('.outputPriceMaxi').style.left =  (prixMax.value - prixMinRequest.value)*(100 / (ecartPrix.value)) + '%'
+        if (prixMax.value <= prixMin.value) {
+            prixMin.value = prixMinRequest.value
+        }
     })
 
-    watch(() => kilometerMin.value, (event) => {
-        document.querySelector('.outputKilometerMin').style.left = kilometerMin.value / 700 + 'px'
+    watch(() => kilometerMin.value, () => {
+        document.querySelector('.outputKilometerMin').style.left = (kilometerMin.value - kilometerMinRequest.value)*(100 / (ecartKilometer.value)) + '%'
+        if (kilometerMin.value >= kilometerMax.value) {
+            kilometerMax.value = kilometerMaxRequest.value
+        }
     })
 
-    watch(() => kilometerMax.value, (event) => {
-        document.querySelector('.outputKilometerMax').style.left = kilometerMax.value / 700 + 'px'
+    watch(() => kilometerMax.value, () => {
+        document.querySelector('.outputKilometerMax').style.left = (kilometerMax.value - kilometerMinRequest.value)*(100 / (ecartKilometer.value)) + '%'
+        if (kilometerMax.value <= kilometerMin.value) {
+            kilometerMin.value = kilometerMinRequest.value
+        }
     })
 
     watch(() => yearMin.value, () => {
-        document.querySelector('.outputYearMin').style.left = (yearMin.value-yearMinRequest.value) * 20 + 'px'
+        document.querySelector('.outputYearMin').style.left = (yearMin.value - yearMinRequest.value)*(100 / (ecartAnnee.value)) + '%'
+        if (yearMin.value >= yearMax.value) {
+            yearMax.value = yearMaxRequest.value
+        }
     })
 
     watch(() => yearMax.value, () => {
-        document.querySelector('.outputYearMax').style.left = (yearMax.value-yearMinRequest.value) * 20 + 'px'
+        document.querySelector('.outputYearMax').style.left = (yearMax.value - yearMinRequest.value)*(100 / (ecartAnnee.value)) + '%'
+        if (yearMax.value <= yearMin.value) {
+            yearMin.value = yearMinRequest.value
+        }
     })
 
 
     //FUNCTIONS-------------------------------------------------
 
-    const initialize = (e) => {
-        e.preventDefault()
-
+    const initialize = () => {
         marque.value = ""
         modele.value = ""
         energie.value = ""
@@ -139,14 +178,13 @@
         prixMax.value = prixMaxRequest.value
         kilometerMin.value = kilometerMinRequest.value
         kilometerMax.value = kilometerMaxRequest.value
-        yearMin.value = 2010
-        yearMax.value = 2021
+        yearMin.value = 1900
+        yearMax.value = 2023
 
-        searchCars(e)
+        searchCars()
     }
 
-    const searchCars = async(e) => {
-        e.preventDefault()
+    const searchCars = async() => {
         await api.post('/vehicle.php', {
             mark: marque.value,
             model: modele.value,
@@ -161,6 +199,24 @@
         .then(response => {
             annonces.value = []
             annonces.value = response.data
+            countAnnonces.value = annonces.value.length
+        })
+        .catch(e => {
+            console.error(e)
+        })
+    }
+
+    const carSell = async(id) => {
+        await api.put('vehicle.php', {
+            id: id
+        })
+        .then (response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+                getFilter()
+                searchCars()
+            }
         })
         .catch(e => {
             console.error(e)
@@ -182,6 +238,17 @@
         }
     }
 
+    const resultEmit = (val) => {
+        isModal.value = true
+        messageModal.value = val
+        getFilter()
+        searchCars()
+
+        if (val == 'Véhicule ajouté') {
+            isAction.value = false
+        }
+    }
+
     userAuthorized()
 
 
@@ -190,8 +257,11 @@
 
 <template>
     <carouselHome/>
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
+    </Transition>
     <main class="row" id="top">
-        <newCar v-if="isConnect && isClick" style="z-index:50;"/>
+        <newCar @add="resultEmit" v-if="isConnect && isClick" style="z-index:50;"/>
         <h1 class="col-10 col-sm-8 col-md-6" v-if="isConnect">{{ countAnnonces }}</h1>
         <h2 class="col-10 col-sm-8 col-md-6" v-if="isConnect">VEHICULES EN VENTE</h2>
         <appBar v-if="isConnect"/>
@@ -260,8 +330,8 @@
                 </div>
 
                 <div class="offcanvas__btn">
-                    <button @click="initialize($event)">Reinitialiser</button>
-                    <button data-bs-dismiss="offcanvas" @click="searchCars($event)">Rechercher</button>
+                    <button @click.prevent="initialize()">Reinitialiser</button>
+                    <button data-bs-dismiss="offcanvas" @click.prevent="searchCars()">Rechercher</button>
                 </div>
             </div>
         </div>
@@ -321,8 +391,8 @@
                     </section>
                 </div>
                 <div class="offcanvas__btn">
-                    <button @click="initialize($event)">Reinitialiser</button>
-                    <button data-bs-dismiss="offcanvas" @click="searchCars($event)">Rechercher</button>
+                    <button @click.prevent="initialize()">Reinitialiser</button>
+                    <button data-bs-dismiss="offcanvas" @click.prevent="searchCars()">Rechercher</button>
                 </div>
         </form>
 
@@ -376,7 +446,7 @@
         <div class="table row" v-if="isConnect">
             <div class="table__header col-md-10 col-lg-8">
                 <div class="table__header-head">
-                    <h5>Vehicule en vente</h5>
+                    <h5>Vehicules filtrés</h5>
                     <h6>{{ countAnnonces }}</h6>
                 </div>
                 <div class="table__header-cat">
@@ -395,32 +465,33 @@
                     Ajouter un véhicule
                 </a>
             </div>
-
-            <div class="table__body col-md-10 col-lg-8" v-for="annonce in annonces" :key="annonce.numero_annonce">
-                <div class="table__body-elem">
-                    <span class="elem elem1">
-                        <img :src="annonce.photo" alt="">
-                    </span>
-                    <span class="elem elem2">{{ annonce.marque }} {{ annonce.motorisation }}</span>
-                    <span class="elem elem3">{{ annonce.numero_annonce }}</span>
-                    <span class="elem elem4">{{ annonce.prix }} €</span>
-                    <span class="elem elem5">{{ annonce.messages }}</span>
-                    <span class="elem elem6">
-                        <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`">
-                            <div class="elem-btn">
-                                <i class="fa-solid fa-eye"></i>
-                                <p>Visualiser et modifier</p>
+            <TransitionGroup name="slide-fade">
+                <div class="table__body col-md-10 col-lg-8" v-for="annonce in annonces" :key="annonce.numero_annonce">
+                    <div class="table__body-elem">
+                        <span class="elem elem1">
+                            <img :src="annonce.photo" alt="">
+                        </span>
+                        <span class="elem elem2">{{ annonce.marque }} {{ annonce.motorisation }}</span>
+                        <span class="elem elem3">{{ annonce.numero_annonce }}</span>
+                        <span class="elem elem4">{{ annonce.prix }} €</span>
+                        <span class="elem elem5">{{ annonce.messages }}</span>
+                        <span class="elem elem6">
+                            <RouterLink class="link" active-class="active" :to="`/dashboard/vehicule/${annonce.numero_annonce}`">
+                                <div class="elem-btn">
+                                    <i class="fa-solid fa-eye"></i>
+                                    <p>Visualiser et modifier</p>
+                                </div>
+                            </RouterLink>
+                            <div class="elem-btn" @click="carSell(annonce.numero_annonce, $event)">
+                                <i class="fa-solid fa-square-check"></i>
+                                <p>Véhicule vendu</p>
                             </div>
-                        </RouterLink>
-                        <div class="elem-btn">
-                            <i class="fa-solid fa-square-check"></i>
-                            <p>Véhicule vendu</p>
-                        </div>
-                    </span>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </TransitionGroup>
             <div class="table__body col-md-10 col-lg-8" id="newCar" v-if="isActive">
-                <newCar style="position: inherit; box-shadow: none;" />
+                <newCar @add="resultEmit" style="position: inherit; box-shadow: none;" />
             </div>
             <a href="#top" class="top-page">
                 <i class="fa-solid fa-arrow-up"></i>

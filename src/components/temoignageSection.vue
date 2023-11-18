@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <section class="row">
+    <section class="row" id="temoignage">
         <h2 class="col-10 col-sm-7 col-md-10">NOS CLIENTS TEMOIGNES</h2>
         <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in temoignages" :key="temoignage.id">
             <div class="testimony__card-person">

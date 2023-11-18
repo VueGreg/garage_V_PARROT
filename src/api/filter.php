@@ -6,22 +6,25 @@ require_once './connection.php';
 if (empty($_GET)) {
         $sql_marques = "SELECT DISTINCT vehicules.marque AS marque 
         FROM annonces
-        INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id";
+        INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
+        WHERE annonces.status = '0'";
 
         $sql_modeles = "SELECT DISTINCT vehicules.modele AS modele
                 FROM annonces
-                INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id";
+                INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
+                WHERE annonces.status = '0'";
 
         $sql_energies = "SELECT DISTINCT energies.nom AS energie
                 FROM annonces
-                INNER JOIN energies ON annonces.id_energies = energies.id";
+                INNER JOIN energies ON annonces.id_energies = energies.id
+                WHERE annonces.status = '0'";
 
-        $sql_annees_min =   "SELECT DISTINCT MIN(annee) FROM annonces";
-        $sql_annees_max =   "SELECT DISTINCT MAX(annee) FROM annonces";
-        $sql_kilometre_min =   "SELECT DISTINCT MIN(kilometrage) FROM annonces";
-        $sql_kilometre_max =   "SELECT DISTINCT MAX(kilometrage) FROM annonces";
-        $sql_prix_min =   "SELECT DISTINCT MIN(prix) FROM annonces";
-        $sql_prix_max =   "SELECT DISTINCT MAX(prix) FROM annonces";
+        $sql_annees_min =   "SELECT DISTINCT MIN(annee) FROM annonces WHERE annonces.status = '0'";
+        $sql_annees_max =   "SELECT DISTINCT MAX(annee) FROM annonces WHERE annonces.status = '0'";
+        $sql_kilometre_min =   "SELECT DISTINCT MIN(kilometrage) FROM annonces WHERE annonces.status = '0'";
+        $sql_kilometre_max =   "SELECT DISTINCT MAX(kilometrage) FROM annonces WHERE annonces.status = '0'";
+        $sql_prix_min =   "SELECT DISTINCT MIN(prix) FROM annonces WHERE annonces.status = '0'";
+        $sql_prix_max =   "SELECT DISTINCT MAX(prix) FROM annonces WHERE annonces.status = '0'";
 
 
         global $data;
@@ -70,7 +73,7 @@ if (empty($_GET)) {
                         FROM annonces
                         INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
                         INNER JOIN energies ON annonces.id_energies = energies.id
-                        WHERE vehicules.marque LIKE :mark";
+                        WHERE vehicules.marque LIKE :mark AND annonces.status = '0'";
 
         global $data;
 
@@ -87,7 +90,7 @@ if (empty($_GET)) {
                         FROM annonces
                         INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
                         INNER JOIN energies ON annonces.id_energies = energies.id
-                        WHERE vehicules.modele LIKE :model";
+                        WHERE vehicules.modele LIKE :model AND annonces.status = '0'";
 
         global $data;
 

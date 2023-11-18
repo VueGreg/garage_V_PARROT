@@ -28,6 +28,7 @@ function getCars() {
                 INNER JOIN energies ON annonces.id_energies = energies.id
                 INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
                 INNER JOIN galeries ON galeries.id_annonces = numero_annonce
+                WHERE status = '0'
                 GROUP BY numero_annonce";
 
                 $annonces = simple_fetch_data($sql_annonces);
@@ -80,12 +81,12 @@ function getCars() {
                         $minPrice = $_GET['minprice'];
                         $maxPrice = $_GET['maxprice'];
                 
-                        $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, 
+                        $sql_annonces = "SELECT numero_annonce, prix, kilometrage, annee, puissance, boite_vitesse, motorisation, finition, status,
                         energies.nom AS energie, vehicules.marque AS marque, vehicules.modele AS modele
                         FROM annonces
                         INNER JOIN energies ON annonces.id_energies = energies.id
                         INNER JOIN vehicules ON annonces.id_vehicules = vehicules.id
-                        WHERE numero_annonce LIKE :annonce 
+                        WHERE numero_annonce LIKE :annonce AND status = 0
                         OR (
                                 annee BETWEEN :minyear AND :maxyear
                                 AND kilometrage BETWEEN :minkilometer AND :maxkilometer
@@ -93,6 +94,7 @@ function getCars() {
                                 AND modele LIKE :model
                                 AND energies.nom LIKE :energy
                                 AND prix BETWEEN :minprice AND :maxprice
+                                AND status = 0
                         )";
 
                         //Remplacer les valeurs vide par une valeur traitable par BETWEEN
@@ -306,5 +308,17 @@ function modifyCars(){
                         }else return_json(false, 'l\'annonce n\'a pu être chargé');
 
                 }else return_json(false, 'Les modifications n\'ont pas été pris en compte');
+
+        }elseif (isset($_PUT['id'])) {
+
+                $id = $_PUT['id'];
+                
+                global $data;
+
+                $statement = $data->prepare("UPDATE annonces SET status = '1' WHERE numero_annonce = $id");
+                
+                if ($statement->execute()) {
+                        return_json(true, 'Le véhicule à été vendu');
+                }
         }
 }

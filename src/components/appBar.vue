@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </RouterLink>
-            <RouterLink class="link" to="/reparations">
+            <RouterLink class="link" to="/">
                 <div class="bar__btn">
                     <i class="fa-solid fa-book"></i>
                     <div class="bar__btn-text">

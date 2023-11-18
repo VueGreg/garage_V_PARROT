@@ -62,7 +62,7 @@ function postMessage()
                 "annonce" => $numAnnonce
             );
 
-            return_json(true, "Insertion reussi", $result);
+            return_json(true, "Votre message à été envoyé", $result);
 
     } catch (Exception $e){ return_json(false, $e->getMessage());}
 }

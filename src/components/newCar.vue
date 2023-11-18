@@ -3,7 +3,6 @@
     import api from '../baseURL/urlAPI';
     import { ref, defineEmits } from 'vue'
     import FormData from 'form-data'
-    import informationModal from './informationModal.vue';
 
     const marques = ref([])
     const modeles = ref([])
@@ -27,10 +26,8 @@
     const optionsDescription = ref([])
     const Form_Data = new FormData()
 
-    //----Modal
-    const emit = defineEmits(['close'])
-    const isModal = ref(false)
-    const messageModal = ref()
+    const emit = defineEmits(['add'])
+    const messageModal = ref("")
 
 
     const getCars = async() => {
@@ -123,8 +120,8 @@
     }
 
     const sendNewCar = async() => {
-        if (modele.value != "Modèle" && energie.value != "Energie" && motor.value != "" && year.value != 0 && kilometer.value != 0 && power.value != 0
-        && price.value != 0 && box.value != "" && finish.value != "" && options.value.length != 0 && fileImages.value.length !=  0) {
+            if (modele.value != "Modèle" && energie.value != "Energie" && motor.value != "" && year.value != 0 && kilometer.value != 0 && power.value != 0
+            && price.value != 0 && box.value != "" && finish.value != "" && options.value.length != 0 && fileImages.value.length !=  0) {
 
             Form_Data.append("vehicle", modele.value)
             Form_Data.append("energy", energie.value)
@@ -157,6 +154,7 @@
                     finish.value = ""
                     options.value = []
                     optionsDescription.value =[]
+                    fileImages.value = []
 
                     let p = document.querySelectorAll('p')
                     p.forEach(element => {
@@ -165,21 +163,21 @@
                         }
                     })
 
-                    isModal.value = true
                     messageModal.value = response.data.message
                 }
             })
             .catch(e => {
                 console.error(e)
             })
-        } else {
-            isModal.value = true
-            messageModal.value = "Tous les champs non pas été renseignés"
-        }
+        }else messageModal.value = 'Tous les champs doivent être remplis'
+    }
+
+    const sendEmit = async() => {
+        await sendNewCar()
+        emit('add', messageModal.value)
     }
 
     getCars()
-
 
 </script>
 
@@ -254,7 +252,7 @@
                     <p v-for="option in optionsDescription" @click="deleteOption(option)">{{ option }}</p>
                 </div>
         </form>
-        <button type="button" class="col-8 col-xl-2" @click="sendNewCar()">Enregistrer le véhicule</button>
+        <button type="button" class="col-8 col-xl-2" @click="sendEmit()">Enregistrer le véhicule</button>
         <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false"/>
     </main>
 </template>

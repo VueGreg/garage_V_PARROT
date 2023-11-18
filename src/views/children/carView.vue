@@ -2,7 +2,8 @@
 
     import api from '../../baseURL/urlAPI';
     import { useRoute } from 'vue-router';
-    import { ref, watch } from 'vue';
+    import { ref } from 'vue';
+    import informationModal from '../../components/informationModal.vue';
 
     const route = useRoute()
     const vehicules = ref ([])
@@ -26,9 +27,13 @@
     const equipement = ref([])
     const price = ref()
 
+    //----Modal
+    const emit = defineEmits(['close'])
+    const isModal = ref(false)
+    const messageModal = ref()
 
-    api
-    .post('/vehicle.php', {
+
+    api.post('/vehicle.php', {
         annonce: carId
     })
     .then (response => {
@@ -47,8 +52,7 @@
         console.error(e)
     })
 
-    api
-    .post('/addCars.php')
+    api.post('/addCars.php')
     .then (response => {
         listOptions.value = response.data.equipements
     })
@@ -107,8 +111,7 @@
 
     const sendModify = async(e) => {
         e.preventDefault()
-        await api
-        .put('/vehicle.php', {
+        await api.put('/vehicle.php', {
             annonce: carId,
             year: year.value,
             kilometer: kilometer.value,
@@ -120,19 +123,27 @@
             price : parseInt(price.value)
         })
         .then(response => {
-            /*if (response.data.success == true) {
-                vehicules.value = response.data
-                year.value = response.data[0].annee
-                kilometer.value = response.data[0].kilometrage
-                energy.value = response.data[0].energie
-                power.value = response.data[0].puissance
-                motor.value = response.data[0].motorisation
-                box.value = response.data[0].boite_vitesse
-                finish.value = response.data[0].finition
-                price.value = response.data[0].prix
-            }*/
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+            }
         })
         .catch (e => {
+            console.error(e)
+        })
+    }
+
+    const carSell = async(id) => {
+        await api.put('vehicle.php', {
+            id: id
+        })
+        .then (response => {
+            if (response.data.success == true) {
+                isModal.value = true
+                messageModal.value = response.data.message
+            }
+        })
+        .catch(e => {
             console.error(e)
         })
     }
@@ -142,6 +153,9 @@
 </script>
 
 <template>
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    </Transition>
     <main class="row">
         <div class="title col-8" v-for="vehicule in vehicules">
             <h2>ANNONCE N° {{ carId }} <br/> {{ vehicule.marque }} {{ vehicule.modele }}</h2>
@@ -149,7 +163,7 @@
             <h5><input v-model="price" type="text" name="price" id="price" :placeholder="vehicule.prix"> €
                 <span><i class="fa-solid fa-pencil"></i></span>
             </h5>
-            <button class="btn" type="button"><i class="fa-solid fa-check"></i><span>Mettre le vehicule en "VENDU"</span></button>
+            <button class="btn" type="button"><i class="fa-solid fa-check" @click="carSell(vehicule.numero_annonce)"></i><span>Mettre le vehicule en "VENDU"</span></button>
         </div>
 
         <div class="photos col-8 col-xl-4" v-for="vehicule in vehicules">

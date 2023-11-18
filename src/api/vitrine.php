@@ -51,7 +51,7 @@ require_once './connection.php';
         $temoignages = simple_fetch_data($sql_temoignages);
 
         //-----Nombres de véhicules
-        $sql_annonces = "SELECT * FROM annonces";
+        $sql_annonces = "SELECT * FROM annonces WHERE status = '0'";
         $annonces = simple_fetch_data($sql_annonces);
         $countAnnonces = count($annonces);
 

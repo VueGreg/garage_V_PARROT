@@ -57,27 +57,30 @@ const router = createRouter({
       children: [
         {
           path: 'messages',
-          component: MessagesView,
+          component: MessagesView
         },
         {
           path: 'utilisateurs',
-          component: UserView,
+          component: UserView
         },
         {
           path: 'parametre',
-          component: SettingView,
+          component: SettingView
         },
         {
           path: 'vehicule/:id',
-          component: carView,
+          component: carView
         },
         {
           path: 'temoignage',
-          component: testimonyView,
+          component: testimonyView
         },
       ]
     }
   ],
+  scrollBehavior() {
+    return {x: 0, y: 0}
+}
 })
 
 export default router

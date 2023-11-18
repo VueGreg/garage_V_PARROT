@@ -62,7 +62,9 @@
 </script>
 
 <template>
-    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    </Transition>
     <main class="row">
         <form class="form col-8 col-sm-6 col-md-5 col-lg-3">
             <div class="form__input">

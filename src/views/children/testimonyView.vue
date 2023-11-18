@@ -133,6 +133,8 @@
             <h1 class="col-9">{{ countMessages }}</h1>
             <h2 class="col-9" v-if="countMessages<=1">TEMOIGNAGE NON TRAITE</h2>
             <h2 class="col-9" v-else>TEMOIGNAGES NON TRAITES</h2>
+
+            <TransitionGroup name="slide-fade">
             <div class="message col-9" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="isAction ? isAction=false : isAction=true">
                 <div class="message__element">
                     <p class="message__element-title">Nom/Prénom:</p>
@@ -150,7 +152,7 @@
                     <p class="message__element-title">Commentaire:</p>
                     <p>{{ showAwaitTestimony.commentaire }}</p>
                 </div>
-                <TransitionGroup>
+
                     <div class="message__option" v-if="isAction">
                         <div class="message__option-btn" @click="goAccept(showAwaitTestimony.id)">
                             <i class="fa-regular fa-circle-check"></i>
@@ -159,102 +161,107 @@
                             <i class="fa-regular fa-circle-xmark"></i>
                         </div>
                     </div>
-                </TransitionGroup>
             </div>
+            </TransitionGroup>
         </section>
 
         <section class="other">
             <h2 class="col-10 col-sm-7 col-md-10">TEMOIGNAGE PUBLIE</h2>
             <div class="testimony">
-            <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in activeTestimony" :key="temoignage.id" @click="goWithdraw(temoignage.id)">
-            <div class="testimony__card-person">
-                <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
-                <div class="delete-item">
-                    <i class="fa-regular fa-circle-xmark"></i>
-                    <span>Retirer du site</span>
-                </div>
-            </div>
-            <div class="testimony__card-stars" v-if="temoignage.note === 1">
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-            </div>
-            <div class="testimony__card-stars" v-if="temoignage.note === 2">
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-            </div>
-            <div class="testimony__card-stars" v-if="temoignage.note === 3">
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-            </div>
-            <div class="testimony__card-stars" v-if="temoignage.note === 4">
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-regular fa-star" style="color: #f36639;"></i>
-            </div>
-            <div class="testimony__card-stars" v-if="temoignage.note === 5">
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-                <i class="fa-solid fa-star" style="color: #f36639;"></i>
-            </div>
-            <div class="testimony__card-text">
-                <p>{{ temoignage.commentaire }}</p>
-            </div>
-            <div class="testimony__card-name">
-                <p>{{ temoignage.prenom }} {{ temoignage.nom }}</p>
-            </div>
-        </div>
-    </div>
-            <div class="table row">
-                <div class="table__header col-md-10 col-lg-8">
-                    <div class="table__header-head">
-                        <h5>Nouveau témoignages clients</h5>
-                        <h5>{{ countMessages }}</h5>
-                    </div>
-                    <div class="table__header-cat">
-                        <h6 class="elem elem1">Nom</h6>
-                        <h6 class="elem elem2">Prénom</h6>
-                        <h6 class="elem elem3">Date</h6>
-                        <h6 class="elem elem4">Note</h6>
-                        <h6 class="elem elem5">Message</h6>
-                        <h6 class="elem elem6">Actions</h6>
-                    </div>
-                </div>
-                <div class="table__body col-md-10 col-lg-8" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="showOptions(showAwaitTestimony.id)">
-                    <div class="table__body-elem">
-                        <span class="elem elem1">{{ showAwaitTestimony.nom }}</span>
-                        <span class="elem elem2">{{ showAwaitTestimony.prenom }}</span>
-                        <span class="elem elem3">{{ showAwaitTestimony.date }}</span>
-                        <span class="elem elem4">
-                            <i class="fa-solid fa-star" v-for="note in showAwaitTestimony.note"></i>
-                        </span>
-                        <span class="elem elem5">{{ showAwaitTestimony.commentaire }}</span>
-                    
-                        <span class="elem elem6">
-                            <div class="elem-btn" @click="goAccept(showAwaitTestimony.id)">
-                                <i class="fa-regular fa-circle-check"></i>
-                                <p>Publier sur le site</p>
-                            </div>
-                            <div class="elem-btn" @click="goRefuse(showAwaitTestimony.id)">
+                <TransitionGroup name="slide-fade">
+                    <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in activeTestimony" :key="temoignage.id" @click="goWithdraw(temoignage.id)">
+                        <div class="testimony__card-person">
+                            <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
+                            <div class="delete-item">
                                 <i class="fa-regular fa-circle-xmark"></i>
-                                <p>Supprimer</p>
+                                <span>Retirer du site</span>
                             </div>
-                        </span>
+                        </div>
+                        <div class="testimony__card-stars" v-if="temoignage.note === 1">
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                        </div>
+                        <div class="testimony__card-stars" v-if="temoignage.note === 2">
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                        </div>
+                        <div class="testimony__card-stars" v-if="temoignage.note === 3">
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                        </div>
+                        <div class="testimony__card-stars" v-if="temoignage.note === 4">
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-regular fa-star" style="color: #f36639;"></i>
+                        </div>
+                        <div class="testimony__card-stars" v-if="temoignage.note === 5">
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                            <i class="fa-solid fa-star" style="color: #f36639;"></i>
+                        </div>
+                        <div class="testimony__card-text">
+                            <p>{{ temoignage.commentaire }}</p>
+                        </div>
+                        <div class="testimony__card-name">
+                            <p>{{ temoignage.prenom }} {{ temoignage.nom }}</p>
+                        </div>
                     </div>
-                </div>
+                </TransitionGroup>
             </div>
+            
+                <div class="table row">
+                    <div class="table__header col-md-10 col-lg-8">
+                        <div class="table__header-head">
+                            <h5>Nouveau témoignages clients</h5>
+                            <h5>{{ countMessages }}</h5>
+                        </div>
+                        <div class="table__header-cat">
+                            <h6 class="elem elem1">Nom</h6>
+                            <h6 class="elem elem2">Prénom</h6>
+                            <h6 class="elem elem3">Date</h6>
+                            <h6 class="elem elem4">Note</h6>
+                            <h6 class="elem elem5">Message</h6>
+                            <h6 class="elem elem6">Actions</h6>
+                        </div>
+                    </div>
+                    <TransitionGroup name="slide-fade">
+                    <div class="table__body col-md-10 col-lg-8" v-for="showAwaitTestimony in showAwaitTestimonys" :key="showAwaitTestimony.id" @click="showOptions(showAwaitTestimony.id)">
+                        <div class="table__body-elem">
+                            <span class="elem elem1">{{ showAwaitTestimony.nom }}</span>
+                            <span class="elem elem2">{{ showAwaitTestimony.prenom }}</span>
+                            <span class="elem elem3">{{ showAwaitTestimony.date }}</span>
+                            <span class="elem elem4">
+                                <i class="fa-solid fa-star" v-for="note in showAwaitTestimony.note"></i>
+                            </span>
+                            <span class="elem elem5">{{ showAwaitTestimony.commentaire }}</span>
+                        
+                            <span class="elem elem6">
+                                <div class="elem-btn" @click="goAccept(showAwaitTestimony.id)">
+                                    <i class="fa-regular fa-circle-check"></i>
+                                    <p>Publier sur le site</p>
+                                </div>
+                                <div class="elem-btn" @click="goRefuse(showAwaitTestimony.id)">
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                    <p>Supprimer</p>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    </TransitionGroup>
+                </div>
         </section>
     </main>
 </template>

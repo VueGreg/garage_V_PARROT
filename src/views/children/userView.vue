@@ -1,7 +1,7 @@
 <script setup>
 
     import api from '../../baseURL/urlAPI';
-    import { ref, defineEmits } from 'vue'
+    import { ref, defineEmits, watch } from 'vue'
     import { useCookies } from 'vue3-cookies';
     import informationModal from '../../components/informationModal.vue';
 
@@ -17,6 +17,8 @@
     const rank = ref()
     const roleModify = ref(false)
     const memoryId = ref()
+
+    const show = ref()
 
     //Form variables
     const name = ref("")
@@ -45,7 +47,7 @@
                     console.error(e)
                     
                 })
-        }document.location.href='http://localhost:5173/erreur'
+        }
     }
 
     const getUsers = async() => {
@@ -171,9 +173,10 @@
 </script>
 
 <template>
-    <Transition name="fade">
-        <informationModal :messageModal="messageModal" @close="isModal = false" v-if="isModal" />
+    <Transition>
+        <informationModal v-if="isModal" :messageModal="messageModal" @close="isModal = false"/>
     </Transition>
+
     <main class="row">
         <section class="mobile">
             <h1 class="col-10">{{ countUsers }}</h1>
@@ -223,7 +226,7 @@
                     Ajouter un utilisateur
                 </a>
             </div>
-            <TransitionGroup>
+            <TransitionGroup name="slide-fade">
                 <div class="table__body col-md-10 col-xl-8" v-for="user in users" :key="user.id">
                     <div class="table__body-elem">
                         <span class="elem elem1">{{ user.nom }}</span>
@@ -245,7 +248,7 @@
             </TransitionGroup>
         </div>
     </section>
-    <Transition>
+    <Transition name="scale-slide">
         <div class="message none col-9 col-md-10 col-lg-8" id="addUser" :class="{ active: isAction }">
                 <div class="message__element">
                     <h6>Ajouter un utilisateur</h6>
@@ -614,16 +617,6 @@
         opacity: 1;
     }
 
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.5s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
-
     @media screen and (min-width: 768px) {
         .mobile {
             display: none;
@@ -636,6 +629,68 @@
         .form {
             width: 50%;
         }
+    }
+
+</style>
+
+<style>
+
+    /* ---- Simple transition---- */
+
+    .v-enter-active {
+        animation: bounce-in 0.8s;
+    }
+    .v-leave-active {
+        animation: bounce-in 1s reverse;
+    }
+        @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.25);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .scale-slide-enter-active,
+    .scale-slide-leave-active {
+    position: absolute;
+    transition: all 0.85s ease;
+    }
+
+    .scale-slide-enter-from {
+    left: -100%;
+    }
+
+    .scale-slide-enter-to {
+    left: 0%;
+    }
+
+    .scale-slide-leave-from {
+    transform: scale(1);
+    }
+
+    .scale-slide-leave-to {
+    transform: scale(0.8);
+    }
+
+    /* ---- Transition group ---- */
+
+    .slide-fade-enter-active {
+        transition: all 0.3s ease-out;
+    }
+
+    .slide-fade-leave-active {
+        transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+    }
+
+    .slide-fade-enter-from,
+    .slide-fade-leave-to {
+        transform: translateX(20px);
+        opacity: 0;
     }
 
 </style>

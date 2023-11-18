@@ -90,6 +90,7 @@
                     message.value = ""
                     tel.value = ""
                     email.value = ""
+
                 }
                 
             })
@@ -114,7 +115,9 @@
 
 <template>
     <carouselHome/>
-    <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    <Transition>
+        <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
+    </Transition>
     <!-- Modal -->
     <div class="container__modal" v-if="success">
         <div class="container__modal-message">

@@ -45,8 +45,7 @@
 
     const userAuthorized = () => {
         if (userPermissions != null) {
-                api
-                .post('/authorize.php', {
+                api.post('/authorize.php', {
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == true) {
@@ -194,9 +193,9 @@
 </script>
 
 <template>
-    <TransitionGroup>
+    <Transition>
         <informationModal :messageModal="messageModal" v-if="isModal" @close="isModal = false" />
-    </TransitionGroup>
+    </Transition>
     <main id="top">
         <section class="row" v-for="information in informations">
             <h2>INFORMATIONS GENERALE</h2>
