@@ -1,5 +1,5 @@
 <script setup>
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import ReseauxSociaux from '../components/reseauxSociaux.vue';
     import carouselHome from '../components/carouselHome.vue';
     import { ref } from "vue";
@@ -71,7 +71,7 @@
                 display: inline-block;
                 height: 2rem;
                 width: 2rem;
-                background-image: url('http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png');
+                background-image: url('https://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png');
                 background-size: contain;
                 background-repeat: no-repeat;
             }

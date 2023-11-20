@@ -1,9 +1,10 @@
 <script setup>
 
-    import api from '../../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref, defineEmits } from 'vue';
     import { useCookies } from 'vue3-cookies';
-    import informationModal from '../../components/informationModal.vue';
+    import informationModal from '../components/informationModal.vue';
+    import { useRouter } from 'vue-router';
 
     const countMessages = ref()
     const temoignages = ref([])
@@ -12,6 +13,7 @@
     const rank = ref()
     const activeItem = ref(false)
     const activeTestimony = ref([])
+    const router = useRouter()
 
     const { cookies } = useCookies()
     const userPermissions = cookies.get('userPermissions')
@@ -31,9 +33,9 @@
                     if (response.data.success == true) {
                         rank.value = response.data.rang
                         if (rank.value > 2) {
-                            document.location.href='http://localhost:5173/erreur'
+                            router.push({ name: 'erreur'})
                         }
-                    }else document.location.href='http://localhost:5173/erreur'
+                    }else router.push({ name: 'erreur'})
                 }).catch (e => {
                     console.error(e)
                 })

@@ -1,9 +1,9 @@
 <script setup>
 
-    import api from '../../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { useRoute } from 'vue-router';
     import { ref } from 'vue';
-    import informationModal from '../../components/informationModal.vue';
+    import informationModal from '../components/informationModal.vue';
 
     const route = useRoute()
     const vehicules = ref ([])

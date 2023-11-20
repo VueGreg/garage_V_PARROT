@@ -14,26 +14,30 @@ if ($request_method == 'POST') {
 
 function getAuthorized() {
 
-        $_GET = json_decode(file_get_contents("php://input"),true);
+        try {
 
-        if (isset($_GET['permissions'])) {
+                $_GET = json_decode(file_get_contents("php://input"),true);
 
-            $sql = "SELECT utilisateurs.token, permissions.rang AS rank 
-                    FROM utilisateurs
-                    INNER JOIN permissions ON permissions.id = id_permissions
-                    WHERE utilisateurs.token LIKE :permissions";
+                if (isset($_GET['permissions'])) {
 
-            global $data;
+                $sql = "SELECT utilisateurs.token, permissions.rang AS p_rank 
+                        FROM utilisateurs
+                        INNER JOIN permissions ON permissions.id = id_permissions
+                        WHERE utilisateurs.token LIKE :permissions";
 
-            $statement = $data->prepare($sql);
-            $statement->bindParam(':permissions', $_GET['permissions']);
-            $statement->execute();
-            $result = $statement-> fetch(PDO::FETCH_ASSOC);
-            $rank['rang'] = $result['rank'];
+                global $data;
 
-            if ($result['token'] == $_GET['permissions']) {
-                return_json(true, 'autorized', $rank);
-            }else return_json(false, 'nok', $result);
-        }
+                $statement = $data->prepare($sql);
+                $statement->bindParam(':permissions', $_GET['permissions'], PDO::PARAM_STR);
+                $statement->execute();
+                $result = $statement-> fetch(PDO::FETCH_ASSOC);
+                $rank['rang'] = $result['p_rank'];
+
+                        if ($result['token'] == $_GET['permissions']) {
+                                return_json(true, 'autorized', $rank);
+                        }else return_json(false, 'nok', $rank);
+                }
+
+        } catch (PDOException $e) {return_json(false, $e->getMessage());}
 
 }

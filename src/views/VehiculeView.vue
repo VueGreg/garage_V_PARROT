@@ -1,6 +1,6 @@
 <script setup>
 
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { useRoute } from 'vue-router';
     import { ref } from 'vue';
     import carouselHome from '../components/carouselHome.vue';

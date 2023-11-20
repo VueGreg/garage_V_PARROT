@@ -1,21 +1,24 @@
 <script setup>
 
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref, defineEmits } from "vue";
     import { useCookies } from "vue3-cookies";
     import informationModal from "../components/informationModal.vue";
+    import { useRouter } from 'vue-router';
     
     const email = ref("")
     const password = ref("")
     const { cookies } = useCookies()
     const mailValide = ref(false)
+    const router = useRouter()
 
     //-----Modal response
     const isModal = ref(false)
     const emit = defineEmits(['close'])
     const messageModal = ref()
 
-    const postConnect = () => {
+    const postConnect = (e) => {
+        e.preventDefault()
         if (password.value!="" && email.value!="") {
 
             api.post('/userConnection.php', {
@@ -23,15 +26,13 @@
                 password: password.value
             })
             .then(response => {
-                console.log(response.data)
                 if (response.data.success === true) {
                     document.cookie = `userName = ${response.data.name}`
                     document.cookie = `userSurname = ${response.data.surname}`
                     document.cookie = `userPermissions = ${response.data.permissions}`
-                    document.location.href='http://localhost:5173/dashboard/messages'
+                    document.location = 'https://gregory-wolff.com'
                 }
                 else {
-                    console.log(response.data)
                     cookies.remove('userName')
                     cookies.remove('userSurname')
                     cookies.remove('userPermissions')
@@ -78,7 +79,7 @@
                 <span class="form__input-alert"></span>
             </div>
         </form>
-        <button class="form__btn col-6 col-sm-4 col-md-2 col-lg-1" @click="postConnect()">Connexion</button>
+        <button class="form__btn col-6 col-sm-4 col-md-2 col-lg-1" @click="postConnect($event)">Connexion</button>
     </main>
 
 </template>

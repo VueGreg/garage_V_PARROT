@@ -1,4 +1,4 @@
-USE dbs12140067;
+USE dbs12291078;
 
 
 -- Creation des tables
@@ -33,7 +33,7 @@ CREATE TABLE `horaires` (
 
 CREATE TABLE `permissions` ( 
     `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-    `nom` VARCHAR(50) NOT NULL , 
+    `type` VARCHAR(50) NOT NULL , 
     `rang` INT(5) NOT NULL 
 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_general_ci; 
 
@@ -103,7 +103,7 @@ CREATE TABLE `list_equipements` (
 ALTER TABLE `list_equipements`
 ADD CONSTRAINT `equipements` FOREIGN KEY (`id_equipements`) REFERENCES `equipements`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
 ALTER TABLE `list_equipements`
-ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonce`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ADD CONSTRAINT `annonces` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonce`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE `galeries` ( 
     `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -114,7 +114,7 @@ CREATE TABLE `galeries` (
 ALTER TABLE `galeries`
 ADD CONSTRAINT `images` FOREIGN KEY (`id_images`) REFERENCES `images`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
 ALTER TABLE `galeries`
-ADD CONSTRAINT `references` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonce`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ADD CONSTRAINT `references` FOREIGN KEY (`id_annonces`) REFERENCES `annonces`(`numero_annonce`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE `messages` ( 
     `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -130,9 +130,6 @@ CREATE TABLE `messages` (
 
 ALTER TABLE `messages` 
 ADD CONSTRAINT `annonce` FOREIGN KEY (`num_annonce`) REFERENCES `annonces`(`numero_annonce`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
-
-ALTER TABLE `messages` 
-ADD CONSTRAINT `annonce` FOREIGN KEY (`num_annonce`) REFERENCES `annonces`(`numero_annonce`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE `temoignages` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -229,7 +226,7 @@ VALUES
     (NULL, 'Transmission', "Montage embrayage (Pièces non incluses)"),
     (NULL, 'Transmission', "Montage du soufflet de transmission");
 
-INSERT INTO horaires (`id`, `jour_semaine`, `h_debut_matin`, `h_fin_matin`, `h_debut_soir`, `h_fin_soir`) 
+INSERT INTO horaires (`id`, `jour_semaine`, `h_debut`, `h_fin`) 
 VALUES
     (NULL, 'Lundi', '08:00:00', '18:00:00'),
     (NULL, 'Mardi', '08:00:00', '18:00:00'),
@@ -238,7 +235,7 @@ VALUES
     (NULL, 'Vendredi', '08:00:00', '18:00:00'),
     (NULL, 'Samedi', '08:00:00', '18:00:00'),
 
-INSERT INTO permissions (`id`, `nom`, `rang`) 
+INSERT INTO permissions (`id`, `type`, `rang`) 
 VALUES
     (NULL, 'admin', '1'),
     (NULL, 'modérateur', '2'),
@@ -349,62 +346,62 @@ INSERT INTO energies (`id`, `nom`) VALUES
     (34, 'Pétrole lampant');
 
 INSERT INTO `images` (`id`, `adresse`, `nom`, `alt`) VALUES
-    (NULL, 'http://gregory-wolff.com/images/audi-q3-occasion-2016-avant-droit.jpg', 'Audi Q3 avant droit', "Photo d'une Audi Q3 noire sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/audi-q3-occasion-2016-avant-gauche.jpg', 'Audi Q3 avant gauche', "Photo d'une Audi Q3 noire sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/audi-q3-occasion-2016-ensemble-tableau-bord.jpg', 'Audi Q3 tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/audi-q3-occasion-2016-moteur.jpg', 'Audi Q3 moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/audi-q3-occasion-2016-profil-arriere-droit.jpg', 'Audi Q3 arriere', "Photo d'une Audi Q3 noire vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-avant-droit.jpg', 'BMW Serie 3 avant droit', "Photo d'une BMW série 3 bleue sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-avant-gauche.jpg', 'BMW Serie 3 avant gauche', "Photo d'une BMW série 3 bleue sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-ensemble-tableau-bord.jpg', 'BMW Serie 3 tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-moteur.jpg', 'BMW Serie 3 moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-profil-arriere-droit.jpg', 'BMW Serie 3 arriere', "Photo d'une BMW série 3 bleue vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-avant-droit.jpg', 'Citröen C4 Picasso avant droit', "Photo d'une Citröen C4 Picasso grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-avant-gauche.jpg', 'Citröen C4 Picasso avant gauche', "Photo d'une Citröen C4 Picasso grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-ensemble-tableau-bord.jpg', 'Citröen C4 Picasso tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-moteur.jpg', 'Citröen C4 Picasso moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-profil-arriere-droit.jpg', 'Citröen C4 Picasso arriere', "Photo d'une Citröen C4 Picasso grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-avant-droit.jpg', 'HYUNDAI KONA avant droit', "Photo d'une HYUNDAI KONA blanche sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-avant-gauche.jpg', 'HYUNDAI KONA avant gauche', "Photo d'une HYUNDAI KONA blanche sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-ensemble-tableau-bord.jpg', 'HYUNDAI KONA tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-moteur.jpg', 'HYUNDAI KONA moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-profil-arriere-droit.jpg', 'HYUNDAI KONA arriere', "Photo d'une HYUNDAI KONA blanche vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-avant-droit.jpg', 'LAND ROVER DISCOVERY avant droit', "Photo d'une LAND ROVER DISCOVERY grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-avant-gauche.jpg', 'LAND ROVER DISCOVERY avant gauche', "Photo d'une LAND ROVER DISCOVERY grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-ensemble-tableau-bord.jpg', 'LAND ROVER DISCOVERY tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-moteur.jpg', 'LAND ROVER DISCOVERY moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-profil-arriere-droit.jpg', 'LAND ROVER DISCOVERY arriere', "Photo d'une LAND ROVER DISCOVERY grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-avant-droit.jpg', 'Mercedes Classe C avant droit', "Photo d'une Mercedes Classe C grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-avant-gauche.jpg', 'Mercedes Classe C avant gauche', "Photo d'une Mercedes Classe C grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-ensemble-tableau-bord.jpg', 'Mercedes Classe C tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-moteur.jpg', 'Mercedes Classe C moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-profil-arriere-droit.jpg', 'Mercedes Classe C arriere', "Photo d'une Mercedes Classe C grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-avant-droit.jpg', 'Mini avant droit', "Photo d'une Mini blanche sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-avant-gauche.jpg', 'Mini avant gauche', "Photo d'une Mini blanche sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-ensemble-tableau-bord.jpg', 'Mini tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-moteur.jpg', 'Mini moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-profil-arriere-droit.jpg', 'Mini arriere', "Photo d'une Mini blanche noire vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-avant-droit.jpg', 'PEUGEOT 308 SW avant droit', "Photo d'une PEUGEOT 308 SW grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-avant-gauche.jpg', 'PEUGEOT 308 SW avant gauche', "Photo d'une PEUGEOT 308 SW grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-ensemble-tableau-bord.jpg', 'PEUGEOT 308 SW tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-moteur.jpg', 'PEUGEOT 308 SW moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-profil-arriere-droit.jpg', 'PEUGEOT 308 SW arriere', "Photo d'une PEUGEOT 308 SW grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-508-business-occasion-2020-avant-droit.jpg', 'PEUGEOT 508 avant droit', "Photo d'une PEUGEOT 508 grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-508-business-occasion-2020-avant-gauche.jpg', 'PEUGEOT 508 avant gauche', "Photo d'une PEUGEOT 508 grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-508-business-occasion-2020-ensemble-tableau-bord.jpg', 'PEUGEOT 508 tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-508-business-occasion-2020-moteur.jpg', 'PEUGEOT 508 moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/peugeot-508-business-occasion-2020-profil-arriere-droit.jpg', 'PEUGEOT 508 arriere', "Photo d'une PEUGEOT 508 grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/volkswagen-golf-occasion-2014-avant-droit.jpg', 'volkswagen golf avant droit', "Photo d'une volkswagen golf grise sur son flan droit"),
-    (NULL, 'http://gregory-wolff.com/images/volkswagen-golf-occasion-2014-avant-gauche.jpg', 'volkswagen golf avant gauche', "Photo d'une volkswagen golf grise sur son flan gauche"),
-    (NULL, 'http://gregory-wolff.com/images/volkswagen-golf-occasion-2014-ensemble-tableau-bord.jpg', 'volkswagen golf tableau de bord', "Photo du tableau de bord du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/volkswagen-golf-occasion-2014-moteur.jpg', 'volkswagen golf moteur', "Photo du moteur du véhicule"),
-    (NULL, 'http://gregory-wolff.com/images/volkswagen-golf-occasion-2014-profil-arriere-droit.jpg', 'volkswagen golf arriere', "Photo d'une volkswagen golf grise vu de l'arriere"),
-    (NULL, 'http://gregory-wolff.com/images/slide__repair-background.png', 'Mécanicien', "Photo d'un mécanicien souriant dans son atelier"),
-    (NULL, 'http://gregory-wolff.com/images/123919893_l_normal_none.jpg', 'Mécanicien moteur', "Photo d'un mécanicien travaillant sur un moteur de voiture"),
-    (NULL, 'http://gregory-wolff.com/images/198373918_l_normal_none 1.png', 'Voiture montage', "Photo d'une voiture en image de synthèse"),
-    (NULL, 'http://gregory-wolff.com/images/198647702_l_normal_none.jpg', 'Voiture ancienne', "Photo d'une voiture ancienne dans un décor désertique"),
-    (NULL, 'http://gregory-wolff.com/images/212596211_l_normal_none.jpg', 'Femme mail', "Photo d'une femme envoyant un mail depuis son ordinateur"),
-    (NULL, 'http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png', 'Logo', "Logo de l'enseigne représentant un V et un P enmêlé");
+    (NULL, 'https://gregory-wolff.com/images/audi-q3-occasion-2016-avant-droit.jpg', 'Audi Q3 avant droit', "Photo d'une Audi Q3 noire sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/audi-q3-occasion-2016-avant-gauche.jpg', 'Audi Q3 avant gauche', "Photo d'une Audi Q3 noire sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/audi-q3-occasion-2016-ensemble-tableau-bord.jpg', 'Audi Q3 tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/audi-q3-occasion-2016-moteur.jpg', 'Audi Q3 moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/audi-q3-occasion-2016-profil-arriere-droit.jpg', 'Audi Q3 arriere', "Photo d'une Audi Q3 noire vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-avant-droit.jpg', 'BMW Serie 3 avant droit', "Photo d'une BMW série 3 bleue sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-avant-gauche.jpg', 'BMW Serie 3 avant gauche', "Photo d'une BMW série 3 bleue sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-ensemble-tableau-bord.jpg', 'BMW Serie 3 tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-moteur.jpg', 'BMW Serie 3 moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/bmw-serie-3-f30-lci-occasion-2016-profil-arriere-droit.jpg', 'BMW Serie 3 arriere', "Photo d'une BMW série 3 bleue vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-avant-droit.jpg', 'Citröen C4 Picasso avant droit', "Photo d'une Citröen C4 Picasso grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-avant-gauche.jpg', 'Citröen C4 Picasso avant gauche', "Photo d'une Citröen C4 Picasso grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-ensemble-tableau-bord.jpg', 'Citröen C4 Picasso tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-moteur.jpg', 'Citröen C4 Picasso moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/citroen-c4-picasso-occasion-2016-profil-arriere-droit.jpg', 'Citröen C4 Picasso arriere', "Photo d'une Citröen C4 Picasso grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-avant-droit.jpg', 'HYUNDAI KONA avant droit', "Photo d'une HYUNDAI KONA blanche sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-avant-gauche.jpg', 'HYUNDAI KONA avant gauche', "Photo d'une HYUNDAI KONA blanche sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-ensemble-tableau-bord.jpg', 'HYUNDAI KONA tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-moteur.jpg', 'HYUNDAI KONA moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/hyundai-kona-electric-occasion-2021-profil-arriere-droit.jpg', 'HYUNDAI KONA arriere', "Photo d'une HYUNDAI KONA blanche vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-avant-droit.jpg', 'LAND ROVER DISCOVERY avant droit', "Photo d'une LAND ROVER DISCOVERY grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-avant-gauche.jpg', 'LAND ROVER DISCOVERY avant gauche', "Photo d'une LAND ROVER DISCOVERY grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-ensemble-tableau-bord.jpg', 'LAND ROVER DISCOVERY tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-moteur.jpg', 'LAND ROVER DISCOVERY moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/land-rover-discovery-sport-business-occasion-2016-profil-arriere-droit.jpg', 'LAND ROVER DISCOVERY arriere', "Photo d'une LAND ROVER DISCOVERY grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-avant-droit.jpg', 'Mercedes Classe C avant droit', "Photo d'une Mercedes Classe C grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-avant-gauche.jpg', 'Mercedes Classe C avant gauche', "Photo d'une Mercedes Classe C grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-ensemble-tableau-bord.jpg', 'Mercedes Classe C tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-moteur.jpg', 'Mercedes Classe C moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/mercedes-classe-c-occasion-2010-profil-arriere-droit.jpg', 'Mercedes Classe C arriere', "Photo d'une Mercedes Classe C grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-avant-droit.jpg', 'Mini avant droit', "Photo d'une Mini blanche sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-avant-gauche.jpg', 'Mini avant gauche', "Photo d'une Mini blanche sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-ensemble-tableau-bord.jpg', 'Mini tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-moteur.jpg', 'Mini moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/mini-mini-clubman-f54-lci-occasion-2020-profil-arriere-droit.jpg', 'Mini arriere', "Photo d'une Mini blanche noire vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-avant-droit.jpg', 'PEUGEOT 308 SW avant droit', "Photo d'une PEUGEOT 308 SW grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-avant-gauche.jpg', 'PEUGEOT 308 SW avant gauche', "Photo d'une PEUGEOT 308 SW grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-ensemble-tableau-bord.jpg', 'PEUGEOT 308 SW tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-moteur.jpg', 'PEUGEOT 308 SW moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-308-sw-business-occasion-2015-profil-arriere-droit.jpg', 'PEUGEOT 308 SW arriere', "Photo d'une PEUGEOT 308 SW grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-508-business-occasion-2020-avant-droit.jpg', 'PEUGEOT 508 avant droit', "Photo d'une PEUGEOT 508 grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-508-business-occasion-2020-avant-gauche.jpg', 'PEUGEOT 508 avant gauche', "Photo d'une PEUGEOT 508 grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-508-business-occasion-2020-ensemble-tableau-bord.jpg', 'PEUGEOT 508 tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-508-business-occasion-2020-moteur.jpg', 'PEUGEOT 508 moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/peugeot-508-business-occasion-2020-profil-arriere-droit.jpg', 'PEUGEOT 508 arriere', "Photo d'une PEUGEOT 508 grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/volkswagen-golf-occasion-2014-avant-droit.jpg', 'volkswagen golf avant droit', "Photo d'une volkswagen golf grise sur son flan droit"),
+    (NULL, 'https://gregory-wolff.com/images/volkswagen-golf-occasion-2014-avant-gauche.jpg', 'volkswagen golf avant gauche', "Photo d'une volkswagen golf grise sur son flan gauche"),
+    (NULL, 'https://gregory-wolff.com/images/volkswagen-golf-occasion-2014-ensemble-tableau-bord.jpg', 'volkswagen golf tableau de bord', "Photo du tableau de bord du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/volkswagen-golf-occasion-2014-moteur.jpg', 'volkswagen golf moteur', "Photo du moteur du véhicule"),
+    (NULL, 'https://gregory-wolff.com/images/volkswagen-golf-occasion-2014-profil-arriere-droit.jpg', 'volkswagen golf arriere', "Photo d'une volkswagen golf grise vu de l'arriere"),
+    (NULL, 'https://gregory-wolff.com/images/slide__repair-background.png', 'Mécanicien', "Photo d'un mécanicien souriant dans son atelier"),
+    (NULL, 'https://gregory-wolff.com/images/123919893_l_normal_none.jpg', 'Mécanicien moteur', "Photo d'un mécanicien travaillant sur un moteur de voiture"),
+    (NULL, 'https://gregory-wolff.com/images/198373918_l_normal_none 1.png', 'Voiture montage', "Photo d'une voiture en image de synthèse"),
+    (NULL, 'https://gregory-wolff.com/images/198647702_l_normal_none.jpg', 'Voiture ancienne', "Photo d'une voiture ancienne dans un décor désertique"),
+    (NULL, 'https://gregory-wolff.com/images/212596211_l_normal_none.jpg', 'Femme mail', "Photo d'une femme envoyant un mail depuis son ordinateur"),
+    (NULL, 'https://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png', 'Logo', "Logo de l'enseigne représentant un V et un P enmêlé");
 
 INSERT INTO `vehicules` (`id`, `marque`, `modele`) VALUES
     (1, 'AIWAYS', 'U5'),
@@ -2233,7 +2230,7 @@ VALUES
     (NULL, '49', '10'),
     (NULL, '50', '10');
 
-INSERT INTO `temoignages` (`id`, `date`, `nom`, `prenom`, `commentaire`, `note`, `id_image`) 
+INSERT INTO `temoignages` (`id`, `date`, `nom`, `prenom`, `commentaire`, `note`, `etat`) 
 VALUES 
     (NULL, '2023-10-04', 'De la Fontaine', 'Jean', 'Très bon garage, je recommande les yeux fermé', '5', 1),
     (NULL, '2023-09-26', 'Dupont', 'Georges', 'Très professionnel...cherche à faire le meilleur prix avec des pièces compatibles Toujours bien reçu Je recommande ce garage ', '5', 1),

@@ -35,9 +35,13 @@ function getMessages() {
                 FROM messages";
         $messages['messages'] = simple_fetch_data($sql);
 
-        foreach ($messages as $message) {
-            if ($message['status'] == 0) {
-                $messages['nombres'] +=1;
+        if (count($messages) < 1) {
+            $messages['nombres'] = 0;
+        }else {
+            foreach ($messages as $message) {
+                if ($message['status'] == 0) {
+                    $messages['nombres'] +=1;
+                }
             }
         }
 

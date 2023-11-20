@@ -1,5 +1,5 @@
 <script setup>
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref, watch, defineEmits } from 'vue';
     import { useCookies } from 'vue3-cookies';
     import appBar from '../components/appBar.vue';

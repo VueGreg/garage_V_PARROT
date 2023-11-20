@@ -5,13 +5,13 @@
     import LastVehicule from '../components/lastVehicule.vue';
     import ReseauxSociaux from '../components/reseauxSociaux.vue';
     import TemoignageSection from '../components/temoignageSection.vue'
-    import api from '../baseURL/urlAPI';
+    import axios from 'axios';
     import { ref } from 'vue';
 
     const temoignages = ref([])
 
     const getTemoignages = async() => {
-        await api.get('/vitrine.php')
+        await axios.get('https://gregory-wolff.com/api/vitrine.php')
         .then (response => {
             response.data.temoignages.forEach(temoignage => {
                 if (temoignage.etat == 1) {

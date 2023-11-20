@@ -1,5 +1,5 @@
 <script setup>
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref } from 'vue';
     import { RouterLink } from 'vue-router';
 

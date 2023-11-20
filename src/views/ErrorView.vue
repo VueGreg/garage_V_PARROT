@@ -1,3 +1,4 @@
+
 <template>
     <div class="error error-img">
         <i class="fa-solid fa-triangle-exclamation"></i>
@@ -9,7 +10,7 @@
 <style lang="scss" scoped>
 
     .error-img {
-        background: url("http://gregory-wolff.com/images/198373918_l_normal_none 1(5).png");
+        background: url("https://gregory-wolff.com/images/198373918_l_normal_none 1(5).png");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: top center;

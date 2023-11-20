@@ -1,9 +1,9 @@
 <script setup>
 
-    import api from '../../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref, reactive, defineEmits, watch } from 'vue'
     import { useCookies } from 'vue3-cookies'
-    import informationModal from '../../components/informationModal.vue'
+    import informationModal from '../components/informationModal.vue'
 
     const { cookies } = useCookies()
 

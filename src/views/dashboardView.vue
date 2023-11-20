@@ -1,14 +1,16 @@
 <script setup>
 
     import { useCookies } from 'vue3-cookies';
-    import { RouterView } from "vue-router";
-    import api from '../baseURL/urlAPI';
+    import { RouterView, useRouter } from "vue-router";
+    import api from '../../urlAPI';
 
     const { cookies } = useCookies();
 
     const userPermissions = cookies.get('userPermissions')
     const name = cookies.get('userName')
     const surname = cookies.get('userSurname')
+
+    const router = useRouter()
 
 
     const userAuthorized = () => {
@@ -17,13 +19,12 @@
                     permissions: userPermissions
                 }).then (response => {
                     if (response.data.success == false) {
-                        document.location.href='http://localhost:5173/erreur'
+                        router.push({ name: 'erreur'})
                     }
                 }).catch (e => {
-                    document.location.href='http://localhost:5173/erreur'
-                    
+                    router.push({ name: 'erreur'}) 
                 })
-        }else document.location.href='http://localhost:5173/erreur'
+        }
     }
 
     userAuthorized()
@@ -43,7 +44,7 @@
 <style lang="scss" scoped>
 
     .dashboard__header {
-        background-image: url('http://gregory-wolff.com/images/198647702_l_normal_none.jpg');
+        background-image: url('https://gregory-wolff.com/images/198647702_l_normal_none.jpg');
         height: 35vh;
         width: auto;
         background-repeat: no-repeat;

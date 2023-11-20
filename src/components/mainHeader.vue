@@ -1,14 +1,15 @@
 <script setup>
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { RouterLink } from 'vue-router';
     import { useCookies } from 'vue3-cookies';
     import { ref, watch } from "vue";
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const { cookies } = useCookies()
     const userPermissions = cookies.get('userPermissions')
     const isConnect = ref(false)
     const route = useRoute()
+    const router = useRouter()
 
     watch(() => route.path, () => {
         if (userPermissions != null) {
@@ -21,7 +22,7 @@
             }).catch (e => {
                 console.error(e)
             })
-        }else isConnect.value = false
+        }
     })
 
     const removeCookie = () => {
@@ -29,7 +30,7 @@
         cookies.remove('userName')
         cookies.remove('userSurname')
         isConnect.value = false
-        document.location.href="http://localhost:5173"
+        document.location = "https://gregory-wolff.com"
     }
 
 
@@ -40,7 +41,7 @@
     <header>
         <RouterLink to="/" style="text-decoration: none;">
         <div class="logo">
-            <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
+            <img class="logo__image" src="https://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
             <p class="logo__text">GARAGE V.PARROT</p>
         </div>
         </RouterLink>

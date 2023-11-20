@@ -7,11 +7,11 @@ import ReparationView from "../views/ReparationView.vue"
 import ContactView from "../views/ContactView.vue"
 import ConnexionView from "../views/connexionView.vue"
 import DashboardView from "../views/dashboardView.vue"
-import MessagesView from "../views/children/messageView.vue"
-import UserView from "../views/children/userView.vue"
-import SettingView from "../views/children/settingView.vue"
-import carView from "../views/children/carView.vue"
-import testimonyView from "../views/children/testimonyView.vue"
+import MessagesView from "../views/messageView.vue"
+import UserView from "../views/userView.vue"
+import SettingView from "../views/settingView.vue"
+import carView from "../views/carView.vue"
+import testimonyView from "../views/testimonyView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +33,7 @@ const router = createRouter({
     },
     {
       path: '/erreur',
-      name: '404 not found',
+      name: 'erreur',
       component: ErrorView
     },
     {
@@ -56,23 +56,28 @@ const router = createRouter({
       component: DashboardView,
       children: [
         {
-          path: 'messages',
+          path: '/dashboard/messages',
+          name: 'messages',
           component: MessagesView
         },
         {
-          path: 'utilisateurs',
+          path: '/dashboard/utilisateurs',
+          name: 'utilisateurs',
           component: UserView
         },
         {
-          path: 'parametre',
+          path: '/dashboard/parametre',
+          name: 'parametre',
           component: SettingView
         },
         {
-          path: 'vehicule/:id',
+          path: '/dashboard/vehicule/:id',
+          name: 'vehicule',
           component: carView
         },
         {
-          path: 'temoignage',
+          path: '/dashboard/temoignage',
+          name: 'temoignage',
           component: testimonyView
         },
       ]

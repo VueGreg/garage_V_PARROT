@@ -63,10 +63,10 @@ function addNewCar() {
             
                             $file_name = $_FILES['image']['name'][$key];
                             $tmp_name = $_FILES['image']['tmp_name'][$key];
-                            $adresse = "http://localhost/src/assets/images/.$file_name";
+                            $adresse = "https://gregory-wolff.com/images/.$file_name";
                             $nom = "Photo du véhicule";
                 
-                            $chemin_fichier = $_SERVER['DOCUMENT_ROOT']."/src/assets/images/.$file_name";
+                            $chemin_fichier = $_SERVER['DOCUMENT_ROOT']."/images/.$file_name";
     
                             if (!file_exists($chemin_fichier)) {
     

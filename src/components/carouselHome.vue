@@ -5,9 +5,6 @@
     const route = useRoute()
     const path = route.path
 
-
-    console.log(path)
-
 </script>
 
 <template>
@@ -81,19 +78,19 @@
 <style lang="scss" scoped>
 
     .carousel-img-1 {
-        background: url("http://gregory-wolff.com/images/slide__repair-background(3).png");
+        background: url("https://gregory-wolff.com/images/slide__repair-background(3).png");
     }
 
     .carousel-img-2 {
-        background: url("http://gregory-wolff.com/images/198373918_l_normal_none 1(5).png");
+        background: url("https://gregory-wolff.com/images/198373918_l_normal_none 1(5).png");
     }
 
     .carousel-img-3 {
-        background: url("http://gregory-wolff.com/images/212596211_l_normal_none.jpg");
+        background: url("https://gregory-wolff.com/images/212596211_l_normal_none.jpg");
     }
 
     .carousel-img-4 {
-        background: url('http://gregory-wolff.com/images/198647702_l_normal_none.jpg');
+        background: url('https://gregory-wolff.com/images/198647702_l_normal_none.jpg');
     }
 
     .carousel-image {

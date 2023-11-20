@@ -1,5 +1,5 @@
 <script setup>
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref } from 'vue';
 
     const informations = ref([])
@@ -20,7 +20,7 @@
     <footer class="row">
         <div class="enseigne col-12 col-lg-4">
             <div class="logo">
-                <img class="logo__image" src="http://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
+                <img class="logo__image" src="https://gregory-wolff.com/images/wepik-geometric-gradient-brandname-logo-20230927155932MPVN.png" alt="Logo de l'entreprise Vincent PARROT">
                 <p class="logo__text">GARAGE V.PARROT</p>
             </div>
             <div class="action">

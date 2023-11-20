@@ -2,8 +2,8 @@
 
     import { ref } from 'vue';
     import { RouterLink } from 'vue-router';
-    import informationModal from '../../components/informationModal.vue';
-    import api from '../../baseURL/urlAPI';
+    import informationModal from '../components/informationModal.vue';
+    import api from '../../urlAPI';
 
     const countMessages = ref()
     const messages = ref([])

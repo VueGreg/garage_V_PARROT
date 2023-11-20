@@ -2,7 +2,7 @@
 
     import { RouterLink, useRoute } from 'vue-router';
     import { ref , watch } from "vue";
-    import api from '../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { useCookies } from 'vue3-cookies';
 
     const route = useRoute()
@@ -19,6 +19,7 @@
     //------ WATCHER
     watch(() => route.path, () => {
         path.value = route.path
+        userAuthorized()
     })
 
     //------HTTP REQUEST
@@ -70,7 +71,7 @@
                 }).catch (e => {
                     console.error(e)
                 })
-        } isConnect.value = false
+        }
     }
 
     userAuthorized()
@@ -79,7 +80,7 @@
 </script>
 
 <template>
-    <nav class="row" v-if="isConnect && path != '/connexion' && path != '/erreur'">
+    <nav class="row" v-if="isConnect && path != '/connexion' && path != '/erreur'" :class="{ 'appBar' : isConnect }">
         <div class="bar col-10 col-sm-8 m-auto">
             <RouterLink class="link" to="/dashboard/utilisateurs" v-if="rank<2">
                 <div class="bar__btn" :class="{'active': path == '/dashboard/utilisateurs'}">
@@ -175,6 +176,10 @@
 
     nav {
         display: none;
+    }
+
+    .appBar {
+        display: block;
     }
 
     .link {

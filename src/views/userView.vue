@@ -1,9 +1,10 @@
 <script setup>
 
-    import api from '../../baseURL/urlAPI';
+    import api from '../../urlAPI';
     import { ref, defineEmits, watch } from 'vue'
     import { useCookies } from 'vue3-cookies';
-    import informationModal from '../../components/informationModal.vue';
+    import informationModal from '../components/informationModal.vue';
+    import { useRouter } from 'vue-router';
 
     const { cookies } = useCookies()
 
@@ -17,6 +18,7 @@
     const rank = ref()
     const roleModify = ref(false)
     const memoryId = ref()
+    const router = useRouter()
 
     const show = ref()
 
@@ -40,9 +42,9 @@
                     if (response.data.success == true) {
                         rank.value = response.data.rang
                         if (rank.value > 1) {
-                            document.location.href='http://localhost:5173/erreur'
+                            router.push({ name: 'erreur' })
                         }
-                    }else document.location.href='http://localhost:5173/erreur'
+                    }else router.push({ name: 'erreur' })
                 }).catch (e => {
                     console.error(e)
                     
@@ -54,7 +56,6 @@
         await api.post('/dashboard.php', {
             utilisateurs: 'getUsers'
         }).then (response => {
-            console.log(response.data)
             users.value = response.data.utilisateurs
             listPermissions.value = response.data.list_permissions
             countUsers.value = response.data.nombres

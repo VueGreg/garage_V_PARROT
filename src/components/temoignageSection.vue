@@ -10,7 +10,7 @@
         <h2 class="col-10 col-sm-7 col-md-10">NOS CLIENTS TEMOIGNES</h2>
         <div class="testimony__card col-8 col-sm-7 col-md-3" v-for="temoignage in temoignages" :key="temoignage.id">
             <div class="testimony__card-person">
-                <img src="http://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
+                <img src="https://gregory-wolff.com/images/anonymous1_avatars_grey_circles.jpg" alt="">
             </div>
             <div class="testimony__card-stars" v-if="temoignage.note === 1">
                 <i class="fa-solid fa-star" style="color: #f36639;"></i>
