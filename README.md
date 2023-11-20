@@ -1,29 +1,17 @@
 # Garage_V_PARROT
 
-This template should help get you started developing with Vue 3 in Vite.
+Site en production sur https://gregory-wolff.com/
 
-## Recommended IDE Setup
+Simple visiteur => Acceuil - Réparation -Véhicule d'occasion(avec filtre) - Contact
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Pour utilisateur du garage:
+- Mr Vincent PARROT (Admin) => Adresse: v.parrot@gmail.com
+                            => mdp: MotDePasse
 
-## Customize configuration
+- Mr John DOE (modérateur) => Adresse: j.doe@gmail.com
+                            => mdp: MotDePasse
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- Mr Stephane KING (Vendeur) => Adresse s.king@gmail.com
+                            => mdp: MotDePasse
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Configurez la page depuis le tableau de bord dédié
